@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/utils/notifications.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -41,10 +42,19 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _lifecycle; // start listening
     context.read<DeviceService>().startAutoSync();
+    DeskNotifications.onOpen = _openReminders;
+  }
+
+  /// The morning summary was tapped: close any open page and show the reminder lists.
+  void _openReminders() {
+    if (!mounted) return;
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    context.read<ShellController>().goTo(ShellTabs.reminders);
   }
 
   @override
   void dispose() {
+    if (DeskNotifications.onOpen == _openReminders) DeskNotifications.onOpen = null;
     _lifecycle.dispose();
     super.dispose();
   }

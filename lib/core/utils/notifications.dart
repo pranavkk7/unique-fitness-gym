@@ -18,6 +18,9 @@ class DeskNotifications {
   static bool _ready = false;
   static String _lastScheduled = '';
 
+  /// Called when staff tap the summary; the app shell points this at the Reminders tab.
+  static VoidCallback? onOpen;
+
   static bool get supported => !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 
   static Future<void> _init() async {
@@ -30,7 +33,11 @@ class DeskNotifications {
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         iOS: DarwinInitializationSettings(requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false),
       ),
+      onDidReceiveNotificationResponse: (_) => onOpen?.call(),
     );
+    // The app was closed and opened by tapping the summary: go straight to the reminders.
+    final launch = await _plugin.getNotificationAppLaunchDetails();
+    if (launch?.didNotificationLaunchApp ?? false) onOpen?.call();
     await _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
     await _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(alert: true, badge: true, sound: true);
     _ready = true;

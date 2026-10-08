@@ -103,7 +103,7 @@ extension GymReports on GymProvider {
       if (followUps > 0) '$followUps follow-up${followUps == 1 ? '' : 's'}',
     ];
     if (parts.isEmpty) return null;
-    return (title: 'Good morning, ${settings.branchName}', body: '${parts.join(' · ')}. Open the app to send the reminders.');
+    return (title: 'Good morning, ${settings.branchName}', body: '${parts.join(' · ')}. Tap to send the reminders.');
   }
 
   /// The WhatsApp version: the editable intro from the templates, then the numbers.

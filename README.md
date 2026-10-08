@@ -157,7 +157,7 @@ flutter run -d chrome       # or try it in the browser
 ## Test
 ```bash
 flutter analyze
-flutter test        # 95 tests: business rules, Face ID protocol, storage, demo data, screens
+flutter test        # 96 tests: business rules, Face ID protocol, storage, demo data, screens
 ```
 - **CI** analyzes, tests and builds the web app on every push.
 - **On `main`** it also builds an Android APK (downloadable from the run's artifacts) and an

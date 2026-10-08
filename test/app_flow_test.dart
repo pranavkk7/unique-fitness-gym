@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unique_fitness_gym/core/utils/notifications.dart';
 import 'package:unique_fitness_gym/data/gym_store.dart';
 import 'package:unique_fitness_gym/main.dart';
 import 'package:unique_fitness_gym/models/models.dart';
@@ -235,5 +236,18 @@ void main() {
     await tester.tap(find.text('Members'));
     await tester.pumpAndSettle();
     expect(find.text('MEMBERS'), findsOneWidget);
+  });
+
+  testWidgets('tapping the morning summary closes open pages and shows the reminders', (tester) async {
+    await _launch(tester, demo: true);
+    await _tab(tester, 'More');
+    await tester.tap(find.text('Payments'));
+    await tester.pumpAndSettle();
+    expect(find.text('PAYMENTS'), findsOneWidget);
+
+    DeskNotifications.onOpen!(); // what the notification plugin calls on a tap
+    await tester.pumpAndSettle();
+    expect(find.text('PAYMENTS'), findsNothing);
+    expect(find.text('REMINDERS'), findsOneWidget);
   });
 }
