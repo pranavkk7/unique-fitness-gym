@@ -126,7 +126,8 @@ follow-ups. It is rescheduled whenever the data changes.
 lib/
   models/      members, plans, payments, PT packages, products, offers, plans, feedback, settings
   data/        GymStore interface, HiveGymStore (device), MemoryGymStore (tests), seed and demo data
-  providers/   GymProvider (every business rule) + GymAnalytics, GymMessages, GymReports
+  providers/   GymProvider (state + rules), split by area: memberships, sales, desk, records,
+               setup; plus GymAnalytics, GymMessages, GymReports
   device/      eSSL/ZK protocol, TCP client, demo terminal, DeviceService (sync, enrol, door rules)
   core/        theme, widgets (cards, charts, PIN pad, motion), PDF kit, notifications
   features/    dashboard, members, admission, checkin, device, reminders, reports, money, shop,
