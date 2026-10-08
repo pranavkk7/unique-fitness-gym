@@ -62,6 +62,10 @@ class UniqueFitnessApp extends StatelessWidget {
   }
 }
 
+/// The public web demo is built with `--dart-define=LIVE_DEMO=true`: it opens straight onto the
+/// fictional demo data, so a visitor sees a working gym instead of an empty app.
+const liveDemo = bool.fromEnvironment('LIVE_DEMO');
+
 /// The logo glows in while saved data loads, then the app fades in.
 class _Splash extends StatefulWidget {
   final Duration splashTime;
@@ -73,7 +77,13 @@ class _Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<_Splash> {
-  late final Future<void> _ready = Future.wait([context.read<GymProvider>().init(), Future<void>.delayed(widget.splashTime)]);
+  late final Future<void> _ready = Future.wait([_load(), Future<void>.delayed(widget.splashTime)]);
+
+  Future<void> _load() async {
+    final gym = context.read<GymProvider>();
+    await gym.init();
+    if (liveDemo && !gym.hasMembers) await gym.loadDemoData();
+  }
 
   @override
   Widget build(BuildContext context) {

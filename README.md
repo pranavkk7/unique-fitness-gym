@@ -8,6 +8,9 @@ personal training, class batches, day close and the owner's revenue report. It i
 gym, with its own logo, plans and timetable, and runs on **Android phones, Android tablets and
 iPhone/iPad**.
 
+**[▶ Try the live demo](https://pranavkk7.github.io/unique-fitness-gym/)** in your browser. It opens on two
+years of fictional members, so every screen has data. The Face ID door is simulated in the browser.
+
 Designed and developed by **Pranav KK**.
 
 | Dashboard | New admission | Face ID registration |
@@ -148,7 +151,8 @@ flutter run                 # Android phone/tablet, iPhone/iPad, or emulator
 flutter run -d chrome       # or try it in the browser
 ```
 - On first launch the app has the gym's real plans, coaches, timetable and workout/diet templates.
-- Tap **Load demo** to explore two years of fictional members. While demo data is loaded, WhatsApp
+- Tap **Load demo** to explore two years of fictional members (the
+  [live demo](https://pranavkk7.github.io/unique-fitness-gym/) does this for you). While demo data is loaded, WhatsApp
   and calls show a preview instead of contacting anyone, and the UPI QR is a sample.
 - The gym's UPI ID is not in this repository. The gym's own build passes it with
   `--dart-define-from-file=private/gym.json` (a git-ignored file); otherwise it is entered once in

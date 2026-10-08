@@ -19,6 +19,40 @@ jobs:
       - run: flutter test
       - run: flutter build web --release
 
+  web-demo:
+    # The live demo on GitHub Pages: the web build, opening on fictional demo data.
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build web --release --base-href /unique-fitness-gym/ --dart-define=LIVE_DEMO=true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: web-demo
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
   android:
     # An installable APK on every push to main (Actions > this run > Artifacts).
     needs: test
