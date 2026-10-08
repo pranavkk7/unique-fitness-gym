@@ -1,7 +1,7 @@
 name: unique_fitness_gym
 description: "Front-desk app for Unique Fitness Gym: admissions, renewals, reminders, attendance and revenue."
 publish_to: 'none'
-version: 2.0.0+2
+version: 3.0.0+3
 
 environment:
   sdk: ^3.13.5
@@ -39,37 +39,39 @@ flutter:
   assets:
     - assets/brand/
 
-  # Barlow for text and Barlow Condensed italics for poster-style headlines (SIL Open Font
-  # License). UfgSymbols is the rupee sign cut from Roboto (Apache 2.0), as Barlow has no ₹.
-  # Licences are in assets/fonts.
+  # Archivo (SIL Open Font License) in two widths: normal for text, expanded for titles and figures.
+  # Static instances cut from the variable font, so FontWeight works everywhere; the PDFs use the same
+  # files. UfgSymbols is a rupee-sign fallback cut from Roboto (Apache 2.0). Licences in assets/fonts.
   fonts:
-    - family: Barlow
+    - family: Archivo
       fonts:
-        - asset: assets/fonts/Barlow-Regular.ttf
+        - asset: assets/fonts/Archivo-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Barlow-Medium.ttf
+        - asset: assets/fonts/Archivo-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Barlow-SemiBold.ttf
+        - asset: assets/fonts/Archivo-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Barlow-Bold.ttf
+        - asset: assets/fonts/Archivo-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Barlow-ExtraBold.ttf
+        - asset: assets/fonts/Archivo-ExtraBold.ttf
           weight: 800
-    - family: BarlowCondensed
+    - family: ArchivoExpanded
       fonts:
-        - asset: assets/fonts/BarlowCondensed-SemiBold.ttf
+        - asset: assets/fonts/ArchivoExpanded-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/ArchivoExpanded-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/BarlowCondensed-Bold.ttf
+        - asset: assets/fonts/ArchivoExpanded-Bold.ttf
           weight: 700
-        - asset: assets/fonts/BarlowCondensed-BoldItalic.ttf
-          weight: 700
-          style: italic
-        - asset: assets/fonts/BarlowCondensed-ExtraBoldItalic.ttf
+        - asset: assets/fonts/ArchivoExpanded-ExtraBold.ttf
           weight: 800
-          style: italic
-        - asset: assets/fonts/BarlowCondensed-BlackItalic.ttf
-          weight: 900
-          style: italic
+    # Phosphor icons (MIT), regular and fill.
+    - family: PhosphorRegular
+      fonts:
+        - asset: assets/fonts/Phosphor-Regular.ttf
+    - family: PhosphorFill
+      fonts:
+        - asset: assets/fonts/Phosphor-Fill.ttf
     - family: UfgSymbols
       fonts:
         - asset: assets/fonts/UfgSymbols-Regular.ttf

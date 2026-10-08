@@ -24,9 +24,9 @@ class PdfKit {
     final a = bundle ?? rootBundle;
     Future<pw.Font> font(String name) async => pw.Font.ttf(await a.load('assets/fonts/$name.ttf'));
     return PdfKit._(
-      await font('Barlow-Regular'),
-      await font('Barlow-Bold'),
-      await font('BarlowCondensed-BlackItalic'),
+      await font('Archivo-Regular'),
+      await font('Archivo-Bold'),
+      await font('ArchivoExpanded-Bold'),
       await font('UfgSymbols-Bold'),
       pw.MemoryImage((await a.load(BrandLogo.originalAsset)).buffer.asUint8List()),
     );
@@ -43,7 +43,7 @@ class PdfKit {
             pw.SizedBox(width: 12),
             pw.Expanded(
               child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-                pw.Text(s.gymName.toUpperCase(), style: t(18, font: heavy)),
+                pw.Text(s.gymName, style: t(18, font: heavy)),
                 pw.Text('${s.branchName} branch', style: t(9.5, font: bold, color: red)),
                 if (s.phone.isNotEmpty) pw.Text('Phone ${[s.phone, s.altPhone].where((p) => p.isNotEmpty).join(' / ')}', style: t(8.5, color: grey)),
               ]),
@@ -52,7 +52,7 @@ class PdfKit {
           pw.SizedBox(height: 12),
           pw.Container(height: 3, color: red),
           pw.SizedBox(height: 12),
-          pw.Text(title.toUpperCase(), style: t(17, font: heavy)),
+          pw.Text(title, style: t(17, font: heavy)),
           if (subtitle.isNotEmpty) pw.Text(subtitle, style: t(10, color: grey)),
           pw.SizedBox(height: 12),
         ],

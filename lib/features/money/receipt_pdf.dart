@@ -21,9 +21,9 @@ Future<Uint8List> buildReceiptPdf(GymProvider gym, String receiptNo, {AssetBundl
   final s = gym.settings;
   final total = lines.fold(0.0, (sum, p) => sum + p.amount);
 
-  final regular = pw.Font.ttf(await assets.load('assets/fonts/Barlow-Regular.ttf'));
-  final bold = pw.Font.ttf(await assets.load('assets/fonts/Barlow-Bold.ttf'));
-  final heavy = pw.Font.ttf(await assets.load('assets/fonts/BarlowCondensed-BlackItalic.ttf'));
+  final regular = pw.Font.ttf(await assets.load('assets/fonts/Archivo-Regular.ttf'));
+  final bold = pw.Font.ttf(await assets.load('assets/fonts/Archivo-Bold.ttf'));
+  final heavy = pw.Font.ttf(await assets.load('assets/fonts/ArchivoExpanded-Bold.ttf'));
   final symbols = pw.Font.ttf(await assets.load('assets/fonts/UfgSymbols-Bold.ttf'));
   final logo = pw.MemoryImage((await assets.load(BrandLogo.originalAsset)).buffer.asUint8List());
 
@@ -53,7 +53,7 @@ Future<Uint8List> buildReceiptPdf(GymProvider gym, String receiptNo, {AssetBundl
             pw.SizedBox(width: 14),
             pw.Expanded(
               child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-                pw.Text(s.gymName.toUpperCase(), style: t(20, font: heavy)),
+                pw.Text(s.gymName, style: t(20, font: heavy)),
                 pw.Text('${s.branchName} branch', style: t(10, font: bold, color: red)),
                 if (s.address.isNotEmpty) pw.Text(s.address, style: t(9, color: grey)),
                 if (s.tagline.isNotEmpty) pw.Text(s.tagline, style: t(9, color: grey)),
@@ -66,7 +66,7 @@ Future<Uint8List> buildReceiptPdf(GymProvider gym, String receiptNo, {AssetBundl
         pw.Container(height: 3, color: red),
         pw.SizedBox(height: 14),
         pw.Row(children: [
-          pw.Expanded(child: pw.Text('PAYMENT RECEIPT', style: t(15, font: heavy))),
+          pw.Expanded(child: pw.Text('Payment receipt', style: t(15, font: heavy))),
           pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
             pw.Text(receiptNo, style: t(11, font: bold)),
             pw.Text('${formatDate(lines.first.date)}, ${formatTime(lines.first.date)}', style: t(9, color: grey)),
@@ -79,14 +79,14 @@ Future<Uint8List> buildReceiptPdf(GymProvider gym, String receiptNo, {AssetBundl
           child: pw.Row(children: [
             pw.Expanded(
               child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-                pw.Text('RECEIVED FROM', style: t(8, font: bold, color: grey)),
+                pw.Text('Received from', style: t(8, font: bold, color: grey)),
                 pw.Text(gym.payerOf(lines.first), style: t(12, font: bold)),
                 if (member != null) pw.Text('${memberCode(member.number)} · ${member.phone}', style: t(9, color: grey)),
               ]),
             ),
             if (member != null && lines.any((p) => p.kind == PaymentKind.membership || p.kind == PaymentKind.admission))
               pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
-                pw.Text('VALID TILL', style: t(8, font: bold, color: grey)),
+                pw.Text('Valid till', style: t(8, font: bold, color: grey)),
                 pw.Text(formatDate(member.endDate), style: t(12, font: bold)),
                 pw.Text(gym.planById(member.planId)?.name ?? '', style: t(9, color: grey)),
               ]),
