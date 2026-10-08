@@ -1,0 +1,78 @@
+name: unique_fitness_gym
+description: "Front-desk app for Unique Fitness Gym: admissions, renewals, reminders, attendance and revenue."
+publish_to: 'none'
+version: 2.0.0+2
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  crypto: ^3.0.7
+  file_picker: ^13.1.0
+  fl_chart: ^1.2.0
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+  flutter_local_notifications: ^22.0.0
+  hive_ce: ^2.20.2
+  hive_ce_flutter: ^2.4.0
+  image_picker: ^1.2.4
+  intl: ^0.20.3
+  pdf: ^3.13.1
+  printing: ^5.15.1
+  provider: ^6.1.5+1
+  qr_flutter: ^4.1.0
+  share_plus: ^13.3.1
+  timezone: ^0.11.1
+  url_launcher: ^6.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  path: ^1.9.1
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/brand/
+
+  # Barlow for text and Barlow Condensed italics for poster-style headlines (SIL Open Font
+  # License). UfgSymbols is the rupee sign cut from Roboto (Apache 2.0), as Barlow has no ₹.
+  # Licences are in assets/fonts.
+  fonts:
+    - family: Barlow
+      fonts:
+        - asset: assets/fonts/Barlow-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Barlow-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Barlow-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Barlow-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Barlow-ExtraBold.ttf
+          weight: 800
+    - family: BarlowCondensed
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/BarlowCondensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/BarlowCondensed-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/BarlowCondensed-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/BarlowCondensed-BlackItalic.ttf
+          weight: 900
+          style: italic
+    - family: UfgSymbols
+      fonts:
+        - asset: assets/fonts/UfgSymbols-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/UfgSymbols-Bold.ttf
+          weight: 700

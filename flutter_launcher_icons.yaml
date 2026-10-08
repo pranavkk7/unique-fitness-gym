@@ -1,0 +1,13 @@
+# App icons from the gym logo (tool/icon). Regenerate with: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "tool/icon/app_icon.png"
+  android: "ic_launcher"
+  adaptive_icon_background: "#09090B"
+  adaptive_icon_foreground: "tool/icon/app_icon_foreground.png"
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "tool/icon/app_icon.png"
+    background_color: "#09090B"
+    theme_color: "#F0262E"
