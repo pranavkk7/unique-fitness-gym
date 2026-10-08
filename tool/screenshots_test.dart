@@ -20,16 +20,18 @@ final _now = DateTime(2026, 10, 15, 18, 20); // Thursday evening: the boxing cla
 
 Future<void> _loadFonts() async {
   Future<ByteData> asset(String path) => rootBundle.load(path);
-  final barlow = FontLoader('Barlow');
+  final archivo = FontLoader('Archivo');
   for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
-    barlow.addFont(asset('assets/fonts/Barlow-$w.ttf'));
+    archivo.addFont(asset('assets/fonts/Archivo-$w.ttf'));
   }
-  await barlow.load();
-  final condensed = FontLoader('BarlowCondensed');
-  for (final w in ['SemiBold', 'Bold', 'BoldItalic', 'ExtraBoldItalic', 'BlackItalic']) {
-    condensed.addFont(asset('assets/fonts/BarlowCondensed-$w.ttf'));
+  await archivo.load();
+  final expanded = FontLoader('ArchivoExpanded');
+  for (final w in ['Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
+    expanded.addFont(asset('assets/fonts/ArchivoExpanded-$w.ttf'));
   }
-  await condensed.load();
+  await expanded.load();
+  await (FontLoader('PhosphorRegular')..addFont(asset('assets/fonts/Phosphor-Regular.ttf'))).load();
+  await (FontLoader('PhosphorFill')..addFont(asset('assets/fonts/Phosphor-Fill.ttf'))).load();
   await (FontLoader('UfgSymbols')
         ..addFont(asset('assets/fonts/UfgSymbols-Regular.ttf'))
         ..addFont(asset('assets/fonts/UfgSymbols-Bold.ttf')))
@@ -139,17 +141,17 @@ void main() {
     await _tap(tester, find.byTooltip('New admission'));
     await tester.enterText(find.widgetWithText(TextFormField, 'Full name'), 'Ravi Kumar');
     await tester.enterText(find.widgetWithText(TextFormField, 'Phone (WhatsApp)'), '9847012345');
-    await _tap(tester, find.text('CONTINUE'));
+    await _tap(tester, find.text('Continue'));
     await tester.enterText(find.widgetWithText(TextFormField, 'Height'), '176');
     await tester.enterText(find.widgetWithText(TextFormField, 'Weight'), '74');
     await _shot(tester, '08_admission_health');
-    await _tap(tester, find.text('CONTINUE'));
+    await _tap(tester, find.text('Continue'));
     await _shot(tester, '09_admission_plan');
-    await _tap(tester, find.text('CONTINUE'));
+    await _tap(tester, find.text('Continue'));
     await tester.enterText(find.widgetWithText(TextFormField, 'Discount'), '500');
     await _tap(tester, find.text('UPI'));
     await _shot(tester, '10_admission_payment');
-    await _tap(tester, find.text('CONFIRM ADMISSION'));
+    await _tap(tester, find.text('Confirm admission'));
     await _shot(tester, '11_admission_done');
   });
 
@@ -157,7 +159,7 @@ void main() {
     await _open(tester);
     await _tab(tester, 'Check-in');
     await _shot(tester, '12_checkin');
-    await _tap(tester, find.text('CHECK IN').first);
+    await _tap(tester, find.text('Check in').first);
     await _shot(tester, '13_checkin_result');
     await tester.pump(const Duration(seconds: 3));
     await tester.pumpAndSettle();
@@ -210,7 +212,7 @@ void main() {
     await _open(tester);
     await more('Shop & stock');
     await _shot(tester, '20_shop');
-    await _tap(tester, find.text('NEW SALE'));
+    await _tap(tester, find.text('New sale'));
     await _tap(tester, find.bySemanticsLabel(RegExp('^BCAA drink, ')).last);
     await _tap(tester, find.bySemanticsLabel(RegExp('^Protein bar, ')).last);
     await _shot(tester, '21_shop_sale');
@@ -255,7 +257,7 @@ void main() {
       await tester.scrollUntilVisible(find.text('Face ID device'), 250, scrollable: find.byType(Scrollable).first);
       await _tap(tester, find.text('Face ID device'));
       await _shot(tester, '${prefix}_face_id_first_time');
-      await _tap(tester, find.text('OPEN SETUP GUIDE'));
+      await _tap(tester, find.text('Open setup guide'));
       await _shot(tester, '${prefix == '31' ? '32' : '34'}_face_id_setup_guide');
     }
     tester.view.reset();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -20,7 +21,7 @@ class FaceIdSetupGuide extends StatelessWidget {
 
   static const _steps = <({IconData icon, String title, String body, List<String> points, String? tip})>[
     (
-      icon: Icons.checklist_rounded,
+      icon: AppIcons.checklist,
       title: 'Before you start',
       body: 'You need three things:',
       points: [
@@ -31,7 +32,7 @@ class FaceIdSetupGuide extends StatelessWidget {
       tip: 'Safety first: back up the terminal once. On the device: Menu > Data Mgt. > Backup Data (to a USB stick).',
     ),
     (
-      icon: Icons.router_rounded,
+      icon: AppIcons.router,
       title: 'Find the terminal\'s IP address',
       body: 'On the Face ID terminal:',
       points: [
@@ -42,7 +43,7 @@ class FaceIdSetupGuide extends StatelessWidget {
       tip: 'Set DHCP to OFF and keep this IP fixed. Otherwise the address can change after a power cut and the app loses the door.',
     ),
     (
-      icon: Icons.vpn_key_rounded,
+      icon: AppIcons.key,
       title: 'Check the port and Comm Key',
       body: 'Still in Comm.:',
       points: [
@@ -53,7 +54,7 @@ class FaceIdSetupGuide extends StatelessWidget {
       tip: null,
     ),
     (
-      icon: Icons.edit_note_rounded,
+      icon: AppIcons.editNote,
       title: 'Enter the details in this app',
       body: 'On the Face ID device page, under Connection:',
       points: [
@@ -64,7 +65,7 @@ class FaceIdSetupGuide extends StatelessWidget {
       tip: null,
     ),
     (
-      icon: Icons.link_rounded,
+      icon: AppIcons.link,
       title: 'Link the members who already use the door',
       body: 'Faces enrolled before this app are already on the terminal:',
       points: [
@@ -75,7 +76,7 @@ class FaceIdSetupGuide extends StatelessWidget {
       tip: null,
     ),
     (
-      icon: Icons.sync_rounded,
+      icon: AppIcons.sync,
       title: 'Run the first sync',
       body: 'Tap SYNC NOW at the top of the Face ID page:',
       points: [
@@ -86,7 +87,7 @@ class FaceIdSetupGuide extends StatelessWidget {
       tip: null,
     ),
     (
-      icon: Icons.face_retouching_natural_rounded,
+      icon: AppIcons.faceId,
       title: 'New members from now on',
       body: 'After an admission, tap FACE ID (or Add Face ID on the profile):',
       points: [
@@ -134,7 +135,7 @@ class FaceIdSetupGuide extends StatelessWidget {
             glow: true,
             padding: const EdgeInsets.all(18),
             child: Row(children: [
-              const Icon(Icons.face_retouching_natural_rounded, color: Colors.white, size: 40),
+              const Icon(AppIcons.faceId, color: Colors.white, size: 40),
               const SizedBox(width: 14),
               Expanded(
                 child: Text(
@@ -159,7 +160,7 @@ class FaceIdSetupGuide extends StatelessWidget {
           for (var i = 0; i < _steps.length; i++) _Step(number: i + 1, step: _steps[i], last: i == _steps.length - 1).entrance(context, index: i + 1),
           if (onOpenConnection != null && !device.isDemo) ...[
             const SizedBox(height: 4),
-            FilledButton.icon(onPressed: onOpenConnection, icon: const Icon(Icons.router_rounded), label: const Text('ENTER THE DEVICE DETAILS')),
+            FilledButton.icon(onPressed: onOpenConnection, icon: const Icon(AppIcons.router), label: const Text('Enter the device details')),
           ],
           const SectionHeader('If something goes wrong'),
           AppCard(
@@ -169,7 +170,7 @@ class FaceIdSetupGuide extends StatelessWidget {
                 Theme(
                   data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                   child: ExpansionTile(
-                    leading: const Icon(Icons.help_outline_rounded, color: AppColors.warning),
+                    leading: const Icon(AppIcons.help, color: AppColors.warning),
                     title: Text(title, style: AppText.body.copyWith(fontWeight: FontWeight.w700)),
                     childrenPadding: const EdgeInsets.fromLTRB(56, 0, 16, 14),
                     expandedAlignment: Alignment.centerLeft,
@@ -235,7 +236,7 @@ class _Step extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Padding(padding: EdgeInsets.only(top: 6, right: 8), child: Icon(Icons.circle, size: 6, color: AppColors.primaryBright)),
+                      const Padding(padding: EdgeInsets.only(top: 6, right: 8), child: Icon(AppIcons.dot, size: 6, color: AppColors.primaryBright)),
                       Expanded(child: Text(p, style: AppText.body.copyWith(fontSize: 14.5, height: 1.35))),
                     ]),
                   ),
@@ -245,7 +246,7 @@ class _Step extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(color: AppColors.warning.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.warning.withValues(alpha: 0.3))),
                     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Icon(Icons.lightbulb_rounded, size: 16, color: AppColors.warning),
+                      const Icon(AppIcons.tip, size: 16, color: AppColors.warning),
                       const SizedBox(width: 8),
                       Expanded(child: Text(step.tip!, style: AppText.small.copyWith(color: AppColors.warning, height: 1.35))),
                     ]),

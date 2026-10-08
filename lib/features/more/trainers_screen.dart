@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -29,11 +30,11 @@ class TrainersScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => _showTrainerSheet(context),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('TRAINER', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('Trainer', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: gym.trainers.isEmpty
-          ? EmptyState(icon: Icons.sports_rounded, title: 'No trainers yet', subtitle: 'Add your coaches to assign members and classes.', actionLabel: 'ADD TRAINER', onAction: () => _showTrainerSheet(context))
+          ? EmptyState(icon: AppIcons.trainer, title: 'No trainers yet', subtitle: 'Add your coaches to assign members and classes.', actionLabel: 'Add trainer', onAction: () => _showTrainerSheet(context))
           : ListView(
               padding: const EdgeInsets.fromLTRB(18, 8, 18, 100),
               children: [
@@ -77,13 +78,13 @@ class _TrainerCard extends StatelessWidget {
                   Text(trainer.speciality, style: AppText.small.copyWith(color: AppColors.muted)),
                 ]),
               ),
-              IconButton(tooltip: 'Call', icon: const Icon(Icons.call_rounded), onPressed: () => callNumber(context, trainer.phone)),
+              IconButton(tooltip: 'Call', icon: const Icon(AppIcons.call), onPressed: () => callNumber(context, trainer.phone)),
             ]),
             const SizedBox(height: 12),
             Row(children: [
-              StatusPill('${clients.length} clients', color: AppColors.categorical[0], icon: Icons.groups_rounded),
+              StatusPill('${clients.length} clients', color: AppColors.categorical[0], icon: AppIcons.groups),
               const SizedBox(width: 8),
-              StatusPill('$classes classes', color: AppColors.categorical[2], icon: Icons.event_rounded),
+              StatusPill('$classes classes', color: AppColors.categorical[2], icon: AppIcons.event),
               const Spacer(),
               if (trainer.monthlySalary > 0 && gym.ownerUnlocked) Text('${formatMoney(trainer.monthlySalary)}/mo', style: AppText.small.copyWith(color: AppColors.muted)),
             ]),
@@ -147,11 +148,11 @@ class _TrainerSheetState extends State<_TrainerSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SheetHeader(widget.trainer == null ? 'New trainer' : 'Edit trainer'),
-            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(Icons.person_rounded)), validator: (v) => requiredText(v, 'Enter a name')),
+            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
             const SizedBox(height: 12),
-            TextFormField(controller: _speciality, decoration: const InputDecoration(labelText: 'Speciality', hintText: 'Boxing, strength, Zumba...', prefixIcon: Icon(Icons.sports_mma_rounded))),
+            TextFormField(controller: _speciality, decoration: const InputDecoration(labelText: 'Speciality', hintText: 'Boxing, strength, Zumba...', prefixIcon: Icon(AppIcons.boxing))),
             const SizedBox(height: 12),
-            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(Icons.call_rounded))),
+            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(AppIcons.call))),
             if (gym.ownerUnlocked) ...[
               const SizedBox(height: 12),
               AmountField(controller: _salary, label: 'Monthly salary (optional)'),
@@ -169,7 +170,7 @@ class _TrainerSheetState extends State<_TrainerSheet> {
                 ));
                 if (context.mounted) Navigator.pop(context);
               },
-              child: const Text('SAVE'),
+              child: const Text('Save'),
             ),
             if (widget.trainer != null)
               TextButton(

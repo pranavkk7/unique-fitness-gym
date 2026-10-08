@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -32,7 +33,7 @@ Future<void> showFaceIdSheet(BuildContext context, Member member) {
               Navigator.pop(sheetContext);
               if (await ensureOwner(context) && context.mounted) openPage(context, const DeviceScreen());
             },
-            child: const Text('SET UP THE DEVICE'),
+            child: const Text('Set up the device'),
           ),
         ]),
       ),
@@ -125,7 +126,7 @@ class _FaceRegisterState extends State<_FaceRegister> {
             const SizedBox(height: 6),
             AnimatedSwitcher(
               duration: Motion.fast,
-              child: Text(title.toUpperCase(), key: ValueKey(title), textAlign: TextAlign.center, style: AppText.display.copyWith(fontSize: 30)),
+              child: Text(title, key: ValueKey(title), textAlign: TextAlign.center, style: AppText.display.copyWith(fontSize: 30)),
             ),
             const SizedBox(height: 8),
             Text(sub, textAlign: TextAlign.center, style: AppText.body.copyWith(color: AppColors.textSecondary)),
@@ -139,9 +140,9 @@ class _FaceRegisterState extends State<_FaceRegister> {
             ],
             const SizedBox(height: 18),
             if (done)
-              FilledButton(onPressed: () => Navigator.pop(context), child: const Text('DONE'))
+              FilledButton(onPressed: () => Navigator.pop(context), child: const Text('Done'))
             else if (failed)
-              FilledButton(onPressed: _start, child: const Text('TRY AGAIN'))
+              FilledButton(onPressed: _start, child: const Text('Try again'))
             else if (_stage == FaceStage.waitingForFace)
               OutlinedButton(
                 style: OutlinedButton.styleFrom(minimumSize: const Size(0, 52)),
@@ -150,7 +151,7 @@ class _FaceRegisterState extends State<_FaceRegister> {
                   await device.confirmFace(gym.memberById(widget.memberId)!);
                   if (mounted) setState(() => _stage = FaceStage.done);
                 },
-                child: const Text('FACE IS ADDED ON THE DEVICE'),
+                child: const Text('Face is added on the device'),
               ),
             TextButton(
               onPressed: () {
@@ -189,14 +190,14 @@ class _FaceStatus extends StatelessWidget {
               padding: const EdgeInsets.all(14),
               child: Column(children: [
                 Row(children: [
-                  const Icon(Icons.face_retouching_natural_rounded, color: AppColors.success),
+                  const Icon(AppIcons.faceId, color: AppColors.success),
                   const SizedBox(width: 10),
                   const Expanded(child: Text('Face registered on the device', style: AppText.body)),
-                  const StatusPill('Enrolled', color: AppColors.success, icon: Icons.check_rounded),
+                  const StatusPill('Enrolled', color: AppColors.success, icon: AppIcons.check),
                 ]),
                 const Divider(height: 22),
                 Row(children: [
-                  Icon(allowed ? Icons.door_front_door_rounded : Icons.block_rounded, color: allowed ? AppColors.success : AppColors.danger),
+                  Icon(allowed ? AppIcons.door : AppIcons.block, color: allowed ? AppColors.success : AppColors.danger),
                   const SizedBox(width: 10),
                   Expanded(child: Text(allowed ? 'Door opens for them' : 'Blocked at the door until they renew', style: AppText.body)),
                   StatusPill(allowed ? 'Allowed' : 'Blocked', color: allowed ? AppColors.success : AppColors.danger),
@@ -215,8 +216,8 @@ class _FaceStatus extends StatelessWidget {
                   if (context.mounted) showMessage(context, device.error ?? 'Could not reach the device.');
                 }
               },
-              icon: const Icon(Icons.sync_rounded),
-              label: const Text('SYNC WITH DEVICE'),
+              icon: const Icon(AppIcons.sync),
+              label: const Text('Sync with device'),
             ),
             TextButton(
               style: TextButton.styleFrom(foregroundColor: AppColors.danger),

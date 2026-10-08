@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -41,15 +42,15 @@ class ProgressReportsScreen extends StatelessWidget {
             glow: true,
             padding: const EdgeInsets.all(20),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('READY TO SEND', style: AppText.label.copyWith(color: Colors.white70)),
+              Text('Ready to send', style: AppText.label.copyWith(color: Colors.white70)),
               CountUp(value: pending.toDouble(), style: AppText.stat.copyWith(color: Colors.white, fontSize: 46)),
               Text('${(members.length - pending).clamp(0, members.length)} already sent · ${avg.toStringAsFixed(1)} workouts per member on average', style: AppText.small.copyWith(color: Colors.white)),
               const SizedBox(height: 14),
               FilledButton.icon(
                 style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: Colors.black),
                 onPressed: pending == 0 ? null : () => runReminderQueue(context, ReminderKind.progress),
-                icon: const Icon(Icons.send_rounded),
-                label: Text(pending == 0 ? 'ALL SENT' : 'SEND ALL ON WHATSAPP'),
+                icon: const Icon(AppIcons.send),
+                label: Text(pending == 0 ? 'All sent' : 'Send all on WhatsApp'),
               ),
             ]),
           ).entrance(context),
@@ -58,7 +59,7 @@ class ProgressReportsScreen extends StatelessWidget {
             AppCard(child: RankedBars(items: [for (final r in reports.take(5)) (r.member.name, r.visits.toDouble(), '${r.visits} visits')], color: AppColors.categorical[2])),
           ],
           const SectionHeader('Members'),
-          if (reports.isEmpty) const EmptyState(icon: Icons.insights_rounded, title: 'No visits yet', subtitle: 'Reports appear once members check in this month.'),
+          if (reports.isEmpty) const EmptyState(icon: AppIcons.insights, title: 'No visits yet', subtitle: 'Reports appear once members check in this month.'),
           for (var i = 0; i < reports.length; i++)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
@@ -105,12 +106,12 @@ class _ReportTile extends StatelessWidget {
         ),
         AnimatedSwitcher(
           duration: Motion.fast,
-          child: sent ? const Padding(padding: EdgeInsets.only(right: 4), child: Icon(Icons.done_all_rounded, color: AppColors.success, size: 20)) : const SizedBox.shrink(),
+          child: sent ? const Padding(padding: EdgeInsets.only(right: 4), child: Icon(AppIcons.doneAll, color: AppColors.success, size: 20)) : const SizedBox.shrink(),
         ),
-        IconButton(tooltip: 'Share PDF', icon: const Icon(Icons.picture_as_pdf_rounded, color: AppColors.muted), onPressed: () => shareProgressPdf(context, r.member)),
+        IconButton(tooltip: 'Share PDF', icon: const Icon(AppIcons.pdf, color: AppColors.muted), onPressed: () => shareProgressPdf(context, r.member)),
         IconButton(
           tooltip: 'Send on WhatsApp',
-          icon: const Icon(Icons.chat_rounded, color: AppColors.whatsapp),
+          icon: const Icon(AppIcons.chat, color: AppColors.whatsapp),
           onPressed: () async {
             final ok = await openWhatsApp(context, r.member.phone, gym.progressText(r));
             if (ok) await gym.logReminder(ReminderKind.progress, r.member.id);

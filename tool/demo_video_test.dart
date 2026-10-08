@@ -33,16 +33,18 @@ const _preview = bool.fromEnvironment('PREVIEW');
 
 Future<void> _loadFonts() async {
   Future<ByteData> asset(String path) => rootBundle.load(path);
-  final barlow = FontLoader('Barlow');
+  final archivo = FontLoader('Archivo');
   for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
-    barlow.addFont(asset('assets/fonts/Barlow-$w.ttf'));
+    archivo.addFont(asset('assets/fonts/Archivo-$w.ttf'));
   }
-  await barlow.load();
-  final condensed = FontLoader('BarlowCondensed');
-  for (final w in ['SemiBold', 'Bold', 'BoldItalic', 'ExtraBoldItalic', 'BlackItalic']) {
-    condensed.addFont(asset('assets/fonts/BarlowCondensed-$w.ttf'));
+  await archivo.load();
+  final expanded = FontLoader('ArchivoExpanded');
+  for (final w in ['Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
+    expanded.addFont(asset('assets/fonts/ArchivoExpanded-$w.ttf'));
   }
-  await condensed.load();
+  await expanded.load();
+  await (FontLoader('PhosphorRegular')..addFont(asset('assets/fonts/Phosphor-Regular.ttf'))).load();
+  await (FontLoader('PhosphorFill')..addFont(asset('assets/fonts/Phosphor-Fill.ttf'))).load();
   await (FontLoader('UfgSymbols')
         ..addFont(asset('assets/fonts/UfgSymbols-Regular.ttf'))
         ..addFont(asset('assets/fonts/UfgSymbols-Bold.ttf')))
@@ -468,7 +470,7 @@ void main() {
     await r.tap(find.textContaining('No Face ID'), after: 0.4);
     await r.tap(find.byType(MemberTile).first, after: 0.6);
     await r.tap(find.text('Add Face ID'), after: 2.6);
-    await r.tap(find.text('DONE'), after: 0.25);
+    await r.tap(find.text('Done'), after: 0.25);
     await r.tap(find.byTooltip('Back'), after: 0.25);
 
     // 5. Close the day.

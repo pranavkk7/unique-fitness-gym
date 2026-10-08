@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -88,9 +89,9 @@ class _RunnerState extends State<_Runner> {
                     child: Row(children: [
                       Icon(widget.kind.icon, color: widget.kind.color),
                       const SizedBox(width: 10),
-                      Expanded(child: Text(widget.kind.label.toUpperCase(), style: AppText.headline.copyWith(fontSize: 20))),
+                      Expanded(child: Text(widget.kind.label, style: AppText.headline.copyWith(fontSize: 20))),
                       Text(_finished ? '$total of $total' : '${_index + 1} of $total', style: AppText.small.copyWith(color: AppColors.muted)),
-                      IconButton(tooltip: 'Close', icon: const Icon(Icons.close_rounded), onPressed: () => Navigator.pop(context)),
+                      IconButton(tooltip: 'Close', icon: const Icon(AppIcons.close), onPressed: () => Navigator.pop(context)),
                     ]),
                   ),
                   Padding(
@@ -123,17 +124,17 @@ class _RunnerState extends State<_Runner> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
                     child: _finished
-                        ? SizedBox(width: double.infinity, child: FilledButton(onPressed: () => Navigator.pop(context), child: const Text('DONE')))
+                        ? SizedBox(width: double.infinity, child: FilledButton(onPressed: () => Navigator.pop(context), child: const Text('Done')))
                         : Row(children: [
-                            IconButton(tooltip: 'Previous', onPressed: _index == 0 ? null : _back, icon: const Icon(Icons.chevron_left_rounded)),
+                            IconButton(tooltip: 'Previous', onPressed: _index == 0 ? null : _back, icon: const Icon(AppIcons.chevronLeft)),
                             TextButton(onPressed: _advance, child: const Text('Skip')),
                             const SizedBox(width: 8),
                             Expanded(
                               child: FilledButton.icon(
-                                style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.black),
+                                style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.white),
                                 onPressed: _send,
-                                icon: const Icon(Icons.send_rounded),
-                                label: const Text('SEND'),
+                                icon: const Icon(AppIcons.send),
+                                label: const Text('Send'),
                               ),
                             ),
                           ]),
@@ -165,7 +166,7 @@ class _Card extends StatelessWidget {
           else
             CircleAvatar(radius: 42, backgroundColor: AppColors.surfaceHigher, child: Text(initials(target.name), style: AppText.headline)),
           const SizedBox(height: 12),
-          Text(target.name.toUpperCase(), style: AppText.display.copyWith(fontSize: 28), textAlign: TextAlign.center),
+          Text(target.name, style: AppText.display.copyWith(fontSize: 28), textAlign: TextAlign.center),
           const SizedBox(height: 4),
           Text('${target.phone} · ${target.detail}', style: AppText.small.copyWith(color: target.kind.color, fontWeight: FontWeight.w700)),
           const SizedBox(height: 16),
@@ -199,7 +200,7 @@ class _Done extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         const SuccessBurst(size: 130),
-        Text(sent == total ? 'ALL $total SENT' : '$sent OF $total SENT', style: AppText.display.copyWith(fontSize: 32)),
+        Text(sent == total ? 'All $total sent' : '$sent of $total sent', style: AppText.display.copyWith(fontSize: 32)),
         const SizedBox(height: 6),
         Text(sent == total ? 'Everyone on this list has their reminder.' : 'Skipped people stay on the list for later.', style: AppText.bodyMuted, textAlign: TextAlign.center),
       ]),

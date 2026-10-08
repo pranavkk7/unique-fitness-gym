@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -40,7 +41,7 @@ class ShopScreen extends StatelessWidget {
     return SubPage(
       title: 'Shop',
       subtitle: '${products.length} items · ${gym.lowStock.length} low on stock',
-      actions: [IconButton(tooltip: 'Add item', icon: const Icon(Icons.add_box_rounded), onPressed: () => showProductSheet(context))],
+      actions: [IconButton(tooltip: 'Add item', icon: const Icon(AppIcons.addBox), onPressed: () => showProductSheet(context))],
       floatingAction: products.isEmpty
           ? null
           : FloatingActionButton.extended(
@@ -48,15 +49,15 @@ class ShopScreen extends StatelessWidget {
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               onPressed: () => showSellSheet(context),
-              icon: const Icon(Icons.shopping_bag_rounded),
-              label: const Text('NEW SALE', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+              icon: const Icon(AppIcons.bag),
+              label: const Text('New sale', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
             ),
       child: products.isEmpty
           ? EmptyState(
-              icon: Icons.storefront_rounded,
+              icon: AppIcons.store,
               title: 'No items yet',
               subtitle: 'Add the supplements, drinks and T-shirts sold at the counter.',
-              actionLabel: 'ADD ITEM',
+              actionLabel: 'Add item',
               onAction: () => showProductSheet(context),
             )
           : ListView(
@@ -77,10 +78,10 @@ class ShopScreen extends StatelessWidget {
                     child: Column(children: [
                       for (final p in gym.lowStock)
                         ListTile(
-                          leading: IconBadge(Icons.inventory_2_rounded, color: p.stock == 0 ? AppColors.danger : AppColors.warning, size: 38),
+                          leading: IconBadge(AppIcons.stock, color: p.stock == 0 ? AppColors.danger : AppColors.warning, size: 38),
                           title: Text(p.name),
                           subtitle: Text(p.stock == 0 ? 'Out of stock' : 'Only ${p.stock} left'),
-                          trailing: TextButton(onPressed: () => showRestockSheet(context, p), child: const Text('RESTOCK')),
+                          trailing: TextButton(onPressed: () => showRestockSheet(context, p), child: const Text('Restock')),
                         ),
                     ]),
                   ).entrance(context, index: 1),
@@ -107,7 +108,7 @@ class ShopScreen extends StatelessWidget {
                           ]),
                         ),
                         StatusPill('${products[i].stock} in stock', color: products[i].lowStock ? AppColors.warning : AppColors.success),
-                        IconButton(tooltip: 'Restock ${products[i].name}', icon: const Icon(Icons.add_circle_outline_rounded, color: AppColors.muted), onPressed: () => showRestockSheet(context, products[i])),
+                        IconButton(tooltip: 'Restock ${products[i].name}', icon: const Icon(AppIcons.addCircleOutline, color: AppColors.muted), onPressed: () => showRestockSheet(context, products[i])),
                       ]),
                     ),
                   ).entrance(context, index: i + 2),
@@ -201,7 +202,7 @@ class _SellSheetState extends State<_SellSheet> {
           PickerField(
             label: 'Member (optional)',
             value: _member?.name,
-            icon: Icons.person_rounded,
+            icon: AppIcons.person,
             onTap: () async {
               final m = await pickMember(context, title: 'Who is buying?');
               if (m != null) setState(() => _member = m);
@@ -224,8 +225,8 @@ class _SellSheetState extends State<_SellSheet> {
           const SizedBox(height: 18),
           FilledButton.icon(
             onPressed: _saving || _cart.isEmpty ? null : _save,
-            icon: const Icon(Icons.check_rounded),
-            label: Text(_cart.isEmpty ? 'ADD AN ITEM' : 'TAKE ${formatMoney(total)}'),
+            icon: const Icon(AppIcons.check),
+            label: Text(_cart.isEmpty ? 'Add an item' : 'Take ${formatMoney(total)}'),
           ),
         ],
       ),
@@ -361,7 +362,7 @@ class _ProductSheetState extends State<_ProductSheet> {
               Expanded(child: TextFormField(controller: _low, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Warn at'))),
             ]),
             const SizedBox(height: 18),
-            FilledButton(onPressed: _save, child: Text(editing ? 'SAVE ITEM' : 'ADD ITEM')),
+            FilledButton(onPressed: _save, child: Text(editing ? 'Save item' : 'Add item')),
             if (editing) ...[
               const SizedBox(height: 8),
               TextButton(
@@ -412,9 +413,9 @@ class _RestockSheetState extends State<_RestockSheet> {
         children: [
           SheetHeader('Restock', subtitle: '${widget.product.name} · ${widget.product.stock} in stock now'),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            IconButton.filledTonal(tooltip: 'Fewer', onPressed: _qty > 1 ? () => setState(() => _qty--) : null, icon: const Icon(Icons.remove_rounded)),
+            IconButton.filledTonal(tooltip: 'Fewer', onPressed: _qty > 1 ? () => setState(() => _qty--) : null, icon: const Icon(AppIcons.remove)),
             SizedBox(width: 90, child: Text('$_qty', textAlign: TextAlign.center, style: AppText.stat)),
-            IconButton.filledTonal(tooltip: 'More', onPressed: () => setState(() => _qty++), icon: const Icon(Icons.add_rounded)),
+            IconButton.filledTonal(tooltip: 'More', onPressed: () => setState(() => _qty++), icon: const Icon(AppIcons.add)),
           ]),
           const SizedBox(height: 14),
           AmountField(controller: _cost, label: 'Cost per item (optional)', onChanged: (_) => setState(() {})),
@@ -428,7 +429,7 @@ class _RestockSheetState extends State<_RestockSheet> {
                 showMessage(context, '${widget.product.name}: ${widget.product.stock + _qty} in stock.');
               }
             },
-            child: Text('ADD $_qty TO STOCK'),
+            child: Text('Add $_qty to stock'),
           ),
         ],
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -52,7 +53,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
           children: [
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                RevealText('CHECK-IN', style: AppText.display),
+                RevealText('Check-in', style: AppText.display),
                 Text('${today.length} in today · ${gym.recentlyIn()} in the last 90 min', style: AppText.small.copyWith(color: AppColors.muted)),
               ]),
             ),
@@ -63,7 +64,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              IconBadge(Icons.face_retouching_natural_rounded, color: AppColors.categorical[0], size: 48),
+              IconBadge(AppIcons.faceId, color: AppColors.categorical[0], size: 48),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -90,7 +91,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                             if (context.mounted) showMessage(context, device.error ?? 'Could not reach the device.');
                           }
                         },
-                  icon: device.busy ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.4)) : const Icon(Icons.sync_rounded),
+                  icon: device.busy ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.4)) : const Icon(AppIcons.sync),
                 ),
             ],
           ),
@@ -128,8 +129,8 @@ class _CheckInScreenState extends State<CheckInScreen> {
           onChanged: (_) => setState(() {}),
           decoration: InputDecoration(
             hintText: 'Name, phone or UFG code',
-            prefixIcon: const Icon(Icons.search_rounded),
-            suffixIcon: _search.text.isEmpty ? null : IconButton(tooltip: 'Clear search', icon: const Icon(Icons.close_rounded), onPressed: () => setState(_search.clear)),
+            prefixIcon: const Icon(AppIcons.search),
+            suffixIcon: _search.text.isEmpty ? null : IconButton(tooltip: 'Clear search', icon: const Icon(AppIcons.close), onPressed: () => setState(_search.clear)),
           ),
         ),
         const SizedBox(height: 4),
@@ -140,7 +141,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
           title: Text('Show expired members', style: AppText.body.copyWith(color: AppColors.textSecondary)),
         ),
         if (list.isEmpty)
-          EmptyState(icon: Icons.person_search_rounded, title: gym.hasMembers ? 'Nobody found' : 'No members yet', subtitle: gym.hasMembers ? 'Try another name or number.' : 'Add a member first.')
+          EmptyState(icon: AppIcons.personSearch, title: gym.hasMembers ? 'Nobody found' : 'No members yet', subtitle: gym.hasMembers ? 'Try another name or number.' : 'Add a member first.')
         else
           for (var i = 0; i < list.length && i < 60; i++) _Row(member: list[i]).entrance(context, index: i),
       ],
@@ -168,7 +169,7 @@ class _Row extends StatelessWidget {
                 key: const ValueKey('done'),
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const StatusPill('In', color: AppColors.success, icon: Icons.check_rounded),
+                  const StatusPill('In', color: AppColors.success, icon: AppIcons.check),
                   const SizedBox(height: 4),
                   Text(formatTime(done.time), style: AppText.small.copyWith(color: AppColors.muted, fontSize: 11)),
                 ],
@@ -177,7 +178,7 @@ class _Row extends StatelessWidget {
                 key: const ValueKey('go'),
                 style: FilledButton.styleFrom(minimumSize: const Size(0, 42), padding: const EdgeInsets.symmetric(horizontal: 16)),
                 onPressed: () => runCheckIn(context, member),
-                child: const Text('CHECK IN'),
+                child: const Text('Check in'),
               ),
       ),
     );

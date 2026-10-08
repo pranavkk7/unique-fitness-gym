@@ -49,65 +49,65 @@ Future<void> _scrollTo(WidgetTester tester, Finder finder) async {
 void main() {
   testWidgets('a fresh install shows the welcome card', (tester) async {
     await _launch(tester);
-    expect(find.textContaining('WELCOME TO'), findsOneWidget);
-    expect(find.text('LOAD DEMO'), findsOneWidget);
-    expect(find.text('PINARAYI'), findsOneWidget);
+    expect(find.textContaining('Welcome to'), findsOneWidget);
+    expect(find.text('Load demo'), findsOneWidget);
+    expect(find.text('Pinarayi'), findsOneWidget);
   });
 
   testWidgets('demo data fills the dashboard', (tester) async {
     final gym = await _launch(tester, demo: true);
-    expect(find.text('TODAY AT THE DESK'), findsOneWidget);
-    expect(find.text('ACTIVE MEMBERS'), findsOneWidget);
+    expect(find.text('In today'), findsOneWidget);
+    expect(find.text('Active members'), findsOneWidget);
     await _scrollTo(tester, find.textContaining('reminders ready to send'));
     expect(find.textContaining('reminders ready to send'), findsOneWidget);
-    expect(find.text('RUSH HOURS TODAY'), findsOneWidget);
+    expect(find.text('Rush hours today'), findsOneWidget);
     expect(gym.pendingReminderCount, greaterThan(0));
   });
 
   testWidgets('a new admission goes through four steps and celebrates', (tester) async {
     final gym = await _launch(tester);
-    await tester.tap(find.text('NEW ADMISSION').first);
+    await tester.tap(find.text('New admission').first);
     await tester.pumpAndSettle();
     expect(find.text('Step 1 of 4 · Personal'), findsOneWidget);
 
     await tester.enterText(find.widgetWithText(TextFormField, 'Full name'), 'Ravi Kumar');
     await tester.enterText(find.widgetWithText(TextFormField, 'Phone (WhatsApp)'), '9847012345');
-    await tester.tap(find.text('CONTINUE'));
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
     expect(find.text('Step 2 of 4 · Health & goals'), findsOneWidget);
 
     await tester.enterText(find.widgetWithText(TextFormField, 'Height'), '175');
     await tester.enterText(find.widgetWithText(TextFormField, 'Weight'), '70');
     await tester.pumpAndSettle();
-    expect(find.text('HEALTHY'), findsOneWidget); // live BMI
-    await tester.tap(find.text('CONTINUE'));
+    expect(find.text('Healthy'), findsOneWidget); // live BMI
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
     expect(find.text('Step 3 of 4 · Plan'), findsOneWidget);
     await tester.tap(find.bySemanticsLabel(RegExp('^Silver 1 Month')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('CONTINUE'));
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
     expect(find.text('Step 4 of 4 · Payment'), findsOneWidget);
     expect(find.text('₹1,500'), findsWidgets); // the plan price is the whole bill: no joining fee
     expect(find.textContaining('Admission fee'), findsNothing);
-    await tester.tap(find.text('CONFIRM ADMISSION'));
+    await tester.tap(find.text('Confirm admission'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('UNIQUE FAMILY'), findsOneWidget);
+    expect(find.textContaining('Unique family'), findsOneWidget);
     final m = gym.members.single;
     expect(m.name, 'Ravi Kumar');
     expect(m.balanceDue, 0);
     expect(gym.paymentsFor(m.id).map((p) => p.receiptNo).toSet().length, 1);
-    expect(find.text('SEND WELCOME ON WHATSAPP'), findsOneWidget);
+    expect(find.text('Send welcome on WhatsApp'), findsOneWidget);
   });
 
   testWidgets('admission step 1 checks the name and phone', (tester) async {
     final gym = await _launch(tester);
-    await tester.tap(find.text('NEW ADMISSION').first);
+    await tester.tap(find.text('New admission').first);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('CONTINUE'));
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
     expect(find.text("Enter the member's name"), findsOneWidget);
     expect(find.text('Enter a valid 10-digit number'), findsOneWidget);
@@ -124,7 +124,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.widgetWithText(TextFormField, 'Full name'), 'Someone Else');
     await tester.enterText(find.widgetWithText(TextFormField, 'Phone (WhatsApp)'), '9847012345');
-    await tester.tap(find.text('CONTINUE'));
+    await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Already registered: Sneha Pillai'), findsOneWidget);
   });
@@ -134,16 +134,16 @@ void main() {
     await gym.admit(name: 'Sneha Pillai', phone: '9876543210', gender: Gender.female, planId: 'silver-1m', amountPaid: 2000);
     await tester.pumpAndSettle();
     await _tab(tester, 'Check-in');
-    await _scrollTo(tester, find.text('CHECK IN'));
-    await tester.tap(find.text('CHECK IN'));
+    await _scrollTo(tester, find.text('Check in'));
+    await tester.tap(find.text('Check in'));
     await tester.pumpAndSettle();
 
-    expect(find.text('CHECKED IN'), findsOneWidget);
-    expect(find.text('SNEHA PILLAI'), findsOneWidget);
+    expect(find.text('Checked in'), findsOneWidget);
+    expect(find.text('Sneha Pillai'), findsWidgets);
     expect(gym.checkInsToday, hasLength(1));
     await tester.pump(const Duration(seconds: 3)); // the card closes itself
     await tester.pumpAndSettle();
-    expect(find.text('CHECKED IN'), findsNothing);
+    expect(find.text('Checked in'), findsNothing);
   });
 
   testWidgets('an expired member is stopped at check-in with a renew option', (tester) async {
@@ -153,11 +153,11 @@ void main() {
     await _tab(tester, 'Check-in');
     await tester.tap(find.text('Show expired members'));
     await tester.pumpAndSettle();
-    await _scrollTo(tester, find.text('CHECK IN'));
-    await tester.tap(find.text('CHECK IN'));
+    await _scrollTo(tester, find.text('Check in'));
+    await tester.tap(find.text('Check in'));
     await tester.pumpAndSettle();
-    expect(find.text('MEMBERSHIP EXPIRED'), findsOneWidget);
-    expect(find.text('RENEW NOW'), findsOneWidget);
+    expect(find.text('Membership expired'), findsOneWidget);
+    expect(find.text('Renew now'), findsOneWidget);
     await tester.tap(find.text('Allow once'));
     await tester.pumpAndSettle();
     expect(gym.checkInsToday, hasLength(1));
@@ -172,20 +172,20 @@ void main() {
     }
     await tester.pumpAndSettle();
     await _tab(tester, 'Reminders');
-    expect(find.text('SEND ALL 2'), findsOneWidget);
-    await tester.tap(find.text('SEND ALL 2'));
+    expect(find.text('Send all 2'), findsOneWidget);
+    await tester.tap(find.text('Send all 2'));
     await tester.pumpAndSettle();
     expect(find.text('1 of 2'), findsOneWidget);
-    expect(find.text('ASHA NAIR'), findsOneWidget);
+    expect(find.text('Asha Nair'), findsWidgets);
     await tester.tap(find.text('Skip'));
     await tester.pumpAndSettle();
-    expect(find.text('BINU RAJ'), findsOneWidget);
+    expect(find.text('Binu Raj'), findsWidgets);
     await tester.tap(find.text('Skip'));
     await tester.pumpAndSettle();
-    expect(find.text('0 OF 2 SENT'), findsOneWidget);
-    await tester.tap(find.text('DONE'));
+    expect(find.text('0 of 2 sent'), findsOneWidget);
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(find.text('SEND ALL 2'), findsOneWidget); // skipped people stay on the list
+    expect(find.text('Send all 2'), findsOneWidget); // skipped people stay on the list
   });
 
   testWidgets('with an owner PIN, revenue stays locked until the PIN is entered', (tester) async {
@@ -197,7 +197,7 @@ void main() {
     await _tab(tester, 'More');
     await tester.tap(find.text('Revenue & reports'));
     await tester.pumpAndSettle();
-    expect(find.text('OWNER PIN'), findsOneWidget);
+    expect(find.text('Owner PIN'), findsOneWidget);
 
     Future<void> enter(String pin) async {
       for (final d in pin.split('')) {
@@ -209,33 +209,33 @@ void main() {
 
     await enter('1111');
     expect(gym.ownerUnlocked, isFalse);
-    expect(find.text('OWNER PIN'), findsOneWidget);
+    expect(find.text('Owner PIN'), findsOneWidget);
     await enter('2580');
     expect(gym.ownerUnlocked, isTrue);
-    expect(find.text('MONTHLY INCOME'), findsOneWidget);
+    expect(find.text('Monthly income'), findsOneWidget);
   });
 
   testWidgets('the bottom bar reaches every tab', (tester) async {
     await _launch(tester, demo: true);
     await _tab(tester, 'Members');
-    expect(find.text('MEMBERS'), findsOneWidget);
+    expect(find.text('Search name, phone or UFG code'), findsOneWidget);
     await _tab(tester, 'Check-in');
     expect(find.text('Face ID at the door'), findsOneWidget);
     await _tab(tester, 'Reminders');
-    expect(find.text('REMINDERS'), findsOneWidget);
+    expect(find.textContaining('Send all'), findsOneWidget);
     await _tab(tester, 'More');
     expect(find.text('Revenue & reports'), findsOneWidget);
     await _tab(tester, 'Home');
-    expect(find.text('TODAY AT THE DESK'), findsOneWidget);
+    expect(find.text('In today'), findsOneWidget);
   });
 
   testWidgets('a tablet gets the side rail instead of the bottom bar', (tester) async {
     await _launch(tester, demo: true, size: const Size(3840, 2400));
-    expect(find.text('NEW ADMISSION'), findsWidgets);
-    expect(find.text('UNIQUE FITNESS'), findsOneWidget);
-    await tester.tap(find.text('Members'));
+    expect(find.text('New admission'), findsWidgets);
+    expect(find.text('Unique Fitness'), findsOneWidget);
+    await tester.tap(find.text('Members').first);
     await tester.pumpAndSettle();
-    expect(find.text('MEMBERS'), findsOneWidget);
+    expect(find.text('Search name, phone or UFG code'), findsOneWidget);
   });
 
   testWidgets('tapping the morning summary closes open pages and shows the reminders', (tester) async {
@@ -243,11 +243,11 @@ void main() {
     await _tab(tester, 'More');
     await tester.tap(find.text('Payments'));
     await tester.pumpAndSettle();
-    expect(find.text('PAYMENTS'), findsOneWidget);
+    expect(find.text('Payments'), findsWidgets);
 
     DeskNotifications.onOpen!(); // what the notification plugin calls on a tap
     await tester.pumpAndSettle();
-    expect(find.text('PAYMENTS'), findsNothing);
-    expect(find.text('REMINDERS'), findsOneWidget);
+    expect(find.byTooltip('Back'), findsNothing); // the Payments page is closed
+    expect(find.textContaining('Send all'), findsOneWidget);
   });
 }

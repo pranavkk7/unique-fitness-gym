@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -40,13 +41,13 @@ class MemberProfileScreen extends StatelessWidget {
     final gym = context.watch<GymProvider>();
     final m = gym.memberById(memberId);
     if (m == null) {
-      return const SubPage(title: 'Member', child: EmptyState(icon: Icons.person_off_rounded, title: 'Member not found', subtitle: 'They may have been deleted.'));
+      return const SubPage(title: 'Member', child: EmptyState(icon: AppIcons.personOff, title: 'Member not found', subtitle: 'They may have been deleted.'));
     }
     return SubPage(
       title: m.firstName,
       subtitle: memberCode(m.number),
       actions: [
-        IconButton(tooltip: 'Edit details', icon: const Icon(Icons.edit_rounded), onPressed: () => openPage(context, MemberEditScreen(memberId: m.id))),
+        IconButton(tooltip: 'Edit details', icon: const Icon(AppIcons.edit), onPressed: () => openPage(context, MemberEditScreen(memberId: m.id))),
         _MoreMenu(member: m),
       ],
       child: ListView(
@@ -105,13 +106,13 @@ class _Community extends StatelessWidget {
           if (referrer != null)
             ListTile(
               onTap: () => openPage(context, MemberProfileScreen(memberId: referrer.id)),
-              leading: IconBadge(Icons.call_received_rounded, color: AppColors.categorical[2], size: 38),
+              leading: IconBadge(AppIcons.callReceived, color: AppColors.categorical[2], size: 38),
               title: Text('Referred by ${referrer.name}'),
               subtitle: Text(memberCode(referrer.number)),
             ),
           if (referrals.isNotEmpty)
             ListTile(
-              leading: IconBadge(Icons.card_giftcard_rounded, color: AppColors.categorical[2], size: 38),
+              leading: IconBadge(AppIcons.gift, color: AppColors.categorical[2], size: 38),
               title: Text('Brought ${referrals.length} ${referrals.length == 1 ? 'friend' : 'friends'}'),
               subtitle: Text(referrals.map((r) => r.firstName).join(', '), maxLines: 1, overflow: TextOverflow.ellipsis),
               trailing: gym.settings.referralRewardDays > 0 ? Text('+${referrals.length * gym.settings.referralRewardDays}d', style: AppText.number.copyWith(color: AppColors.success)) : null,
@@ -165,16 +166,16 @@ class _MoreMenu extends StatelessWidget {
       },
       itemBuilder: (_) => [
         if (frozen)
-          const PopupMenuItem(value: 'unfreeze', child: ListTile(leading: Icon(Icons.play_arrow_rounded), title: Text('End freeze'), contentPadding: EdgeInsets.zero))
+          const PopupMenuItem(value: 'unfreeze', child: ListTile(leading: Icon(AppIcons.play), title: Text('End freeze'), contentPadding: EdgeInsets.zero))
         else if (gym.isRunning(member))
-          const PopupMenuItem(value: 'freeze', child: ListTile(leading: Icon(Icons.ac_unit_rounded), title: Text('Freeze membership'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'measure', child: ListTile(leading: Icon(Icons.monitor_weight_rounded), title: Text('Add body check'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'face', child: ListTile(leading: Icon(Icons.face_retouching_natural_rounded), title: Text('Face ID'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'pt', child: ListTile(leading: Icon(Icons.sports_rounded), title: Text('Sell PT package'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'sale', child: ListTile(leading: Icon(Icons.shopping_bag_rounded), title: Text('Shop sale'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'report', child: ListTile(leading: Icon(Icons.insights_rounded), title: Text('Progress report PDF'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'feedback', child: ListTile(leading: Icon(Icons.rate_review_rounded), title: Text('Note feedback'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'delete', child: ListTile(leading: Icon(Icons.delete_outline_rounded, color: AppColors.danger), title: Text('Delete member'), contentPadding: EdgeInsets.zero)),
+          const PopupMenuItem(value: 'freeze', child: ListTile(leading: Icon(AppIcons.freeze), title: Text('Freeze membership'), contentPadding: EdgeInsets.zero)),
+        const PopupMenuItem(value: 'measure', child: ListTile(leading: Icon(AppIcons.scale), title: Text('Add body check'), contentPadding: EdgeInsets.zero)),
+        const PopupMenuItem(value: 'face', child: ListTile(leading: Icon(AppIcons.faceId), title: Text('Face ID'), contentPadding: EdgeInsets.zero)),
+        const PopupMenuItem(value: 'pt', child: ListTile(leading: Icon(AppIcons.trainer), title: Text('Sell PT package'), contentPadding: EdgeInsets.zero)),
+        const PopupMenuItem(value: 'sale', child: ListTile(leading: Icon(AppIcons.bag), title: Text('Shop sale'), contentPadding: EdgeInsets.zero)),
+        const PopupMenuItem(value: 'report', child: ListTile(leading: Icon(AppIcons.insights), title: Text('Progress report PDF'), contentPadding: EdgeInsets.zero)),
+        const PopupMenuItem(value: 'feedback', child: ListTile(leading: Icon(AppIcons.review), title: Text('Note feedback'), contentPadding: EdgeInsets.zero)),
+        const PopupMenuItem(value: 'delete', child: ListTile(leading: Icon(AppIcons.delete, color: AppColors.danger), title: Text('Delete member'), contentPadding: EdgeInsets.zero)),
       ],
     );
   }
@@ -208,7 +209,7 @@ class _Header extends StatelessWidget {
                   tooltip: member.hasPhoto ? 'Change photo' : 'Add photo',
                   iconSize: 18,
                   visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.photo_camera_rounded, color: Colors.white),
+                  icon: const Icon(AppIcons.camera, color: Colors.white),
                   onPressed: () async {
                     final bytes = await pickMemberPhoto(context, allowRemove: member.hasPhoto);
                     if (bytes == null) return;
@@ -220,7 +221,7 @@ class _Header extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 14),
-        Text(member.name.toUpperCase(), style: AppText.display.copyWith(fontSize: 30), textAlign: TextAlign.center).entrance(context),
+        Text(member.name, style: AppText.display.copyWith(fontSize: 30), textAlign: TextAlign.center).entrance(context),
         const SizedBox(height: 6),
         Text('${memberCode(member.number)}  ·  ${member.phone}', style: AppText.small.copyWith(color: AppColors.muted)),
         const SizedBox(height: 10),
@@ -248,12 +249,12 @@ class _ContactActions extends StatelessWidget {
         );
     return Row(
       children: [
-        action(Icons.call_rounded, 'Call', AppColors.textSecondary, () => callNumber(context, member.phone)),
+        action(AppIcons.call, 'Call', AppColors.textSecondary, () => callNumber(context, member.phone)),
         const SizedBox(width: 10),
-        action(Icons.chat_rounded, 'WhatsApp', AppColors.whatsapp, () => _pickMessage(context, gym)),
+        action(AppIcons.chat, 'WhatsApp', AppColors.whatsapp, () => _pickMessage(context, gym)),
         const SizedBox(width: 10),
         action(
-          Icons.face_retouching_natural_rounded,
+          AppIcons.faceId,
           member.faceEnrolled ? 'Face ID' : 'Add Face ID',
           member.faceEnrolled ? (gym.doorAccessAllowed(member) ? AppColors.success : AppColors.danger) : AppColors.warning,
           () => showFaceIdSheet(context, member),
@@ -291,7 +292,7 @@ class _ContactActions extends StatelessWidget {
                   onTap: () => Navigator.pop(sheetContext, k),
                 ),
               ListTile(
-                leading: const IconBadge(Icons.edit_note_rounded, color: AppColors.textSecondary, size: 38),
+                leading: const IconBadge(AppIcons.editNote, color: AppColors.textSecondary, size: 38),
                 title: const Text('Blank message'),
                 onTap: () => Navigator.pop(sheetContext, null),
               ),
@@ -334,7 +335,7 @@ class _MembershipCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('${left.abs()}', style: AppText.display.copyWith(fontSize: 34)),
-                    Text(left < 0 ? 'DAYS AGO' : (left == 1 ? 'DAY LEFT' : 'DAYS LEFT'), style: AppText.label.copyWith(fontSize: 9)),
+                    Text(left < 0 ? 'Days ago' : (left == 1 ? 'Day left' : 'Days left'), style: AppText.label.copyWith(fontSize: 9)),
                   ],
                 ),
               ),
@@ -343,7 +344,7 @@ class _MembershipCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('CURRENT PLAN', style: AppText.label.copyWith(fontSize: 10.5)),
+                    Text('Current plan', style: AppText.label.copyWith(fontSize: 10.5)),
                     const SizedBox(height: 4),
                     if (plan != null && plan.tier != PlanTier.other)
                       TierText(plan.name, tier: plan.tier, style: AppText.headline.copyWith(fontSize: 26))
@@ -353,7 +354,7 @@ class _MembershipCard extends StatelessWidget {
                     Text('${formatDate(member.startDate)}  –  ${formatDate(member.endDate)}', style: AppText.small),
                     if (freeze != null) ...[
                       const SizedBox(height: 8),
-                      StatusPill('Frozen till ${formatDayMonth(freeze.end)}', color: AppColors.frozen, icon: Icons.ac_unit_rounded),
+                      StatusPill('Frozen till ${formatDayMonth(freeze.end)}', color: AppColors.frozen, icon: AppIcons.freeze),
                     ],
                   ],
                 ),
@@ -366,8 +367,8 @@ class _MembershipCard extends StatelessWidget {
               Expanded(
                 child: FilledButton.icon(
                   onPressed: () => showRenewSheet(context, member),
-                  icon: const Icon(Icons.autorenew_rounded),
-                  label: const Text('RENEW'),
+                  icon: const Icon(AppIcons.renew),
+                  label: const Text('Renew'),
                 ),
               ),
               const SizedBox(width: 10),
@@ -375,8 +376,8 @@ class _MembershipCard extends StatelessWidget {
                 child: OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(minimumSize: const Size(0, 54)),
                   onPressed: () => showCollectPayment(context, member: member),
-                  icon: const Icon(Icons.currency_rupee_rounded),
-                  label: const Text('PAYMENT'),
+                  icon: const Icon(AppIcons.rupee),
+                  label: const Text('Payment'),
                 ),
               ),
             ],
@@ -401,7 +402,7 @@ class _DueBanner extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
       child: Row(
         children: [
-          const Icon(Icons.error_outline_rounded, color: AppColors.danger),
+          const Icon(AppIcons.error, color: AppColors.danger),
           const SizedBox(width: 12),
           Expanded(child: Text('${formatMoney(member.balanceDue)} balance due', style: AppText.title.copyWith(color: AppColors.danger, fontSize: 15.5))),
           TextButton(
@@ -432,7 +433,7 @@ class _Attendance extends StatelessWidget {
     Widget stat(String value, String label) => Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(value, style: AppText.headline.copyWith(fontSize: 22)), Text(label.toUpperCase(), style: AppText.label.copyWith(fontSize: 9.5))],
+            children: [Text(value, style: AppText.headline.copyWith(fontSize: 22)), Text(label, style: AppText.label.copyWith(fontSize: 9.5))],
           ),
         );
     return AppCard(
@@ -449,19 +450,19 @@ class _Attendance extends StatelessWidget {
           const SizedBox(height: 16),
           WeekColumns(counts: weeks),
           const SizedBox(height: 6),
-          Row(children: [Text('12 WEEKS AGO', style: AppText.label.copyWith(fontSize: 9)), const Spacer(), Text('THIS WEEK', style: AppText.label.copyWith(fontSize: 9))]),
+          Row(children: [Text('12 weeks ago', style: AppText.label.copyWith(fontSize: 9)), const Spacer(), Text('This week', style: AppText.label.copyWith(fontSize: 9))]),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
             child: today
-                ? const StatusPill('Checked in today', color: AppColors.success, icon: Icons.check_circle_rounded)
+                ? const StatusPill('Checked in today', color: AppColors.success, icon: AppIcons.checkCircle)
                 : OutlinedButton.icon(
                     onPressed: () async {
                       final r = await gym.checkIn(member.id, allowExpired: true);
                       if (context.mounted) showMessage(context, r == CheckInOutcome.recorded ? '${member.firstName} checked in.' : 'Already checked in today.');
                     },
-                    icon: const Icon(Icons.login_rounded),
-                    label: const Text('CHECK IN NOW'),
+                    icon: const Icon(AppIcons.login),
+                    label: const Text('Check in now'),
                   ),
           ),
         ],
@@ -484,7 +485,7 @@ class _Progress extends StatelessWidget {
         onTap: () => showMeasurementSheet(context, member),
         child: Row(
           children: [
-            IconBadge(Icons.monitor_weight_rounded, color: AppColors.categorical[2]),
+            IconBadge(AppIcons.scale, color: AppColors.categorical[2]),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
@@ -492,7 +493,7 @@ class _Progress extends StatelessWidget {
                 style: AppText.bodyMuted,
               ),
             ),
-            const Icon(Icons.add_rounded, color: AppColors.muted),
+            const Icon(AppIcons.add, color: AppColors.muted),
           ],
         ),
       );
@@ -517,7 +518,7 @@ class _Progress extends StatelessWidget {
               Text('${last.toStringAsFixed(1)} kg', style: AppText.headline.copyWith(fontSize: 26)),
               const SizedBox(width: 10),
               StatusPill('${diff >= 0 ? '+' : '−'}${diff.abs().toStringAsFixed(1)} kg since ${formatShortMonth(list.first.date)}',
-                  color: goodDirection ? AppColors.success : AppColors.warning, icon: diff <= 0 ? Icons.south_east_rounded : Icons.north_east_rounded),
+                  color: goodDirection ? AppColors.success : AppColors.warning, icon: diff <= 0 ? AppIcons.arrowDownRight : AppIcons.arrowUpRight),
             ],
           ),
           const SizedBox(height: 14),
@@ -542,7 +543,7 @@ class _Progress extends StatelessWidget {
                       reservedSize: 24,
                       getTitlesWidget: (v, meta) => v != v.roundToDouble() || v < 0 || v >= list.length
                           ? const SizedBox.shrink()
-                          : SideTitleWidget(meta: meta, child: Text(formatShortMonth(list[v.toInt()].date).toUpperCase(), style: AppText.label.copyWith(fontSize: 9))),
+                          : SideTitleWidget(meta: meta, child: Text(formatShortMonth(list[v.toInt()].date), style: AppText.label.copyWith(fontSize: 9))),
                     ),
                   ),
                 ),
@@ -586,14 +587,14 @@ class _Details extends StatelessWidget {
     final dob = member.dateOfBirth;
     final age = dob == null ? null : (gym.today.difference(dob).inDays / 365.25).floor();
     return DetailCard(children: [
-      InfoRow(icon: Icons.call_rounded, label: 'Phone', value: member.phone),
-      if (member.email.isNotEmpty) InfoRow(icon: Icons.mail_rounded, label: 'Email', value: member.email),
-      InfoRow(icon: Icons.cake_rounded, label: 'Birthday', value: dob == null ? '' : '${formatDate(dob)} ($age)'),
-      InfoRow(icon: Icons.wc_rounded, label: 'Gender', value: member.gender.label),
-      InfoRow(icon: Icons.flag_rounded, label: 'Goal', value: member.goal),
-      InfoRow(icon: Icons.sports_rounded, label: 'Trainer', value: gym.trainerById(member.trainerId)?.name ?? 'None'),
+      InfoRow(icon: AppIcons.call, label: 'Phone', value: member.phone),
+      if (member.email.isNotEmpty) InfoRow(icon: AppIcons.mail, label: 'Email', value: member.email),
+      InfoRow(icon: AppIcons.cake, label: 'Birthday', value: dob == null ? '' : '${formatDate(dob)} ($age)'),
+      InfoRow(icon: AppIcons.gender, label: 'Gender', value: member.gender.label),
+      InfoRow(icon: AppIcons.flag, label: 'Goal', value: member.goal),
+      InfoRow(icon: AppIcons.trainer, label: 'Trainer', value: gym.trainerById(member.trainerId)?.name ?? 'None'),
       InfoRow(
-        icon: Icons.straighten_rounded,
+        icon: AppIcons.ruler,
         label: 'Body',
         value: [
           if (member.heightCm != null) '${member.heightCm!.round()} cm',
@@ -601,19 +602,19 @@ class _Details extends StatelessWidget {
           if (member.bmi != null) 'BMI ${member.bmi!.toStringAsFixed(1)}',
         ].join(' · '),
       ),
-      if (member.medicalNotes.isNotEmpty) InfoRow(icon: Icons.medical_information_rounded, label: 'Health notes', value: member.medicalNotes),
-      InfoRow(icon: Icons.emergency_rounded, label: 'Emergency', value: [member.emergencyName, member.emergencyPhone].where((s) => s.isNotEmpty).join(' · ')),
-      if (member.address.isNotEmpty) InfoRow(icon: Icons.home_rounded, label: 'Address', value: member.address),
+      if (member.medicalNotes.isNotEmpty) InfoRow(icon: AppIcons.medical, label: 'Health notes', value: member.medicalNotes),
+      InfoRow(icon: AppIcons.emergency, label: 'Emergency', value: [member.emergencyName, member.emergencyPhone].where((s) => s.isNotEmpty).join(' · ')),
+      if (member.address.isNotEmpty) InfoRow(icon: AppIcons.home, label: 'Address', value: member.address),
       InfoRow(
-        icon: Icons.face_retouching_natural_rounded,
+        icon: AppIcons.faceId,
         label: 'Face ID',
         value: member.deviceUserId == null
             ? 'Not registered'
             : '${member.faceEnrolled ? 'Registered' : 'On the device, face pending'} · ID ${member.deviceUserId}${gym.doorAccessAllowed(member) ? '' : ' · blocked at the door'}',
       ),
-      InfoRow(icon: Icons.campaign_rounded, label: 'Heard via', value: member.source.label),
-      InfoRow(icon: Icons.event_rounded, label: 'Joined', value: formatDate(member.joinDate)),
-      if (member.notes.isNotEmpty) InfoRow(icon: Icons.notes_rounded, label: 'Notes', value: member.notes),
+      InfoRow(icon: AppIcons.campaign, label: 'Heard via', value: member.source.label),
+      InfoRow(icon: AppIcons.event, label: 'Joined', value: formatDate(member.joinDate)),
+      if (member.notes.isNotEmpty) InfoRow(icon: AppIcons.notes, label: 'Notes', value: member.notes),
     ]);
   }
 }
@@ -713,7 +714,7 @@ class _Payments extends StatelessWidget {
               isThreeLine: true,
               trailing: IconButton(
                 tooltip: 'Share receipt',
-                icon: const Icon(Icons.ios_share_rounded),
+                icon: const Icon(AppIcons.share),
                 onPressed: () => showReceiptActions(context, e.key),
               ),
             ),

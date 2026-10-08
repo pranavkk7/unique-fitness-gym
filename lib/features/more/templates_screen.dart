@@ -37,7 +37,7 @@ class TemplatesScreen extends StatelessWidget {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Row(children: [
                         Text(kinds[i].label, style: AppText.title.copyWith(fontSize: 15.5)),
-                        if (gym.settings.templates.texts.containsKey(kinds[i])) ...[const SizedBox(width: 8), Text('EDITED', style: AppText.label.copyWith(fontSize: 9, color: AppColors.primaryBright))],
+                        if (gym.settings.templates.texts.containsKey(kinds[i])) ...[const SizedBox(width: 8), Text('Edited', style: AppText.label.copyWith(fontSize: 9, color: AppColors.primaryBright))],
                       ]),
                       const SizedBox(height: 4),
                       Text(gym.settings.templates.of(kinds[i]), style: AppText.small.copyWith(color: AppColors.muted), maxLines: 3, overflow: TextOverflow.ellipsis),
@@ -106,7 +106,7 @@ class _TemplateSheetState extends State<_TemplateSheet> {
             for (final e in MessageTemplates.placeholders.entries) ActionChip(label: Text(e.key), tooltip: e.value, onPressed: () => _insert(e.key)),
           ]),
           const SizedBox(height: 16),
-          Text('PREVIEW', style: AppText.label),
+          Text('Preview', style: AppText.label),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(12),
@@ -122,7 +122,7 @@ class _TemplateSheetState extends State<_TemplateSheet> {
                 showMessage(context, 'Template saved.');
               }
             },
-            child: const Text('SAVE TEMPLATE'),
+            child: const Text('Save template'),
           ),
           TextButton(
             onPressed: () => setState(() => _text.text = MessageTemplates.defaults[widget.kind]!),

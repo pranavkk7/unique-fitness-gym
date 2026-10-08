@@ -38,7 +38,7 @@ Future<Uint8List> buildPlanPdf(GymProvider gym, TrainingPlan plan, {Member? memb
           padding: const pw.EdgeInsets.fromLTRB(12, 10, 12, 10),
           decoration: pw.BoxDecoration(border: pw.Border(left: pw.BorderSide(color: PdfKit.red, width: 3))),
           child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-            pw.Text(s.title.toUpperCase(), style: k.t(11.5, font: k.bold, color: PdfKit.red)),
+            pw.Text(s.title, style: k.t(11.5, font: k.bold, color: PdfKit.red)),
             pw.SizedBox(height: 4),
             for (final line in s.body.split('\n').where((l) => l.trim().isNotEmpty))
               pw.Padding(
@@ -52,7 +52,7 @@ Future<Uint8List> buildPlanPdf(GymProvider gym, TrainingPlan plan, {Member? memb
         ),
       if (plan.notes.isNotEmpty) ...[
         pw.SizedBox(height: 6),
-        pw.Text('NOTES', style: k.t(10, font: k.bold, color: PdfKit.grey)),
+        pw.Text('Notes', style: k.t(10, font: k.bold, color: PdfKit.grey)),
         pw.Text(plan.notes, style: k.t(10.5)),
       ],
     ],
@@ -74,7 +74,7 @@ Future<Uint8List> buildProgressPdf(GymProvider gym, String memberId, {DateTime? 
           padding: const pw.EdgeInsets.all(10),
           decoration: pw.BoxDecoration(color: PdfKit.panel, borderRadius: pw.BorderRadius.circular(6)),
           child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-            pw.Text(label.toUpperCase(), style: k.t(7.5, font: k.bold, color: PdfKit.grey)),
+            pw.Text(label, style: k.t(7.5, font: k.bold, color: PdfKit.grey)),
             pw.Text(value, style: k.t(20, font: k.heavy)),
             if (sub.isNotEmpty) pw.Text(sub, style: k.t(8, color: PdfKit.grey)),
           ]),
@@ -93,7 +93,7 @@ Future<Uint8List> buildProgressPdf(GymProvider gym, String memberId, {DateTime? 
         tile('Weight', r.lastWeight == null ? '—' : r.lastWeight!.weightKg.toStringAsFixed(1), sub: change == null ? 'kg' : 'kg · ${change <= 0 ? '' : '+'}${change.toStringAsFixed(1)}'),
       ]),
       pw.SizedBox(height: 12),
-      pw.Text('VISITS BY WEEK', style: k.t(8, font: k.bold, color: PdfKit.grey)),
+      pw.Text('Visits by week', style: k.t(8, font: k.bold, color: PdfKit.grey)),
       pw.SizedBox(height: 6),
       pw.SizedBox(
         height: 70,

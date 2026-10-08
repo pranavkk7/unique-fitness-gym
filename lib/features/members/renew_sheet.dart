@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/utils/contact.dart';
@@ -106,7 +107,7 @@ class _RenewSheetState extends State<_RenewSheet> {
             padding: const EdgeInsets.all(14),
             child: Row(
               children: [
-                const Icon(Icons.event_available_rounded, color: AppColors.success),
+                const Icon(AppIcons.eventAvailable, color: AppColors.success),
                 const SizedBox(width: 12),
                 Expanded(child: Text('New period ${formatDate(start)} – ${formatDate(end)}', style: AppText.body.copyWith(fontWeight: FontWeight.w700))),
               ],
@@ -119,7 +120,7 @@ class _RenewSheetState extends State<_RenewSheet> {
                 child: TextField(
                   controller: _discount,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Discount', prefixText: '₹ ', prefixIcon: Icon(Icons.local_offer_rounded)),
+                  decoration: const InputDecoration(labelText: 'Discount', prefixText: '₹ ', prefixIcon: Icon(AppIcons.tag)),
                   onChanged: (_) => setState(_syncPaid),
                 ),
               ),
@@ -128,7 +129,7 @@ class _RenewSheetState extends State<_RenewSheet> {
                 child: TextField(
                   controller: _paid,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Paid now', prefixText: '₹ ', prefixIcon: Icon(Icons.payments_rounded)),
+                  decoration: const InputDecoration(labelText: 'Paid now', prefixText: '₹ ', prefixIcon: Icon(AppIcons.cash)),
                   onChanged: (_) => setState(() => _paidEdited = true),
                 ),
               ),
@@ -164,7 +165,7 @@ class _RenewSheetState extends State<_RenewSheet> {
             ),
           ),
           const SizedBox(height: 18),
-          FilledButton.icon(onPressed: _saving ? null : _save, icon: const Icon(Icons.autorenew_rounded), label: Text('RENEW TILL ${formatDayMonth(end).toUpperCase()}')),
+          FilledButton.icon(onPressed: _saving ? null : _save, icon: const Icon(AppIcons.renew), label: Text('Renew till ${formatDayMonth(end)}')),
         ],
       ),
     );

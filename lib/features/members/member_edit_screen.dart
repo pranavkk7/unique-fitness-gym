@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/utils/contact.dart';
 import '../../core/utils/format.dart';
 import '../../core/widgets/forms.dart';
@@ -92,24 +93,24 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
     return SubPage(
       title: 'Edit details',
       subtitle: '${memberCode(_m.number)} · ${_m.name}',
-      bottom: Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 16), child: SizedBox(width: double.infinity, child: FilledButton(onPressed: _save, child: const Text('SAVE CHANGES')))),
+      bottom: Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 16), child: SizedBox(width: double.infinity, child: FilledButton(onPressed: _save, child: const Text('Save changes')))),
       child: Form(
         key: _form,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           children: [
-            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Full name', prefixIcon: Icon(Icons.person_rounded)), validator: (v) => requiredText(v, "Enter the member's name")),
+            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Full name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, "Enter the member's name")),
             const SizedBox(height: 12),
-            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone (WhatsApp)', prefixIcon: Icon(Icons.call_rounded)), validator: validatePhone),
+            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone (WhatsApp)', prefixIcon: Icon(AppIcons.call)), validator: validatePhone),
             const SizedBox(height: 12),
-            TextFormField(controller: _email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email (optional)', prefixIcon: Icon(Icons.mail_rounded))),
+            TextFormField(controller: _email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email (optional)', prefixIcon: Icon(AppIcons.mail))),
             const FieldLabel('Gender'),
             ChoiceChips<Gender>(options: Gender.values, selected: _gender, labelOf: (g) => g.label, onSelected: (g) => setState(() => _gender = g)),
             const SizedBox(height: 14),
             PickerField(
               label: 'Date of birth',
               value: _dob == null ? null : formatDate(_dob!),
-              icon: Icons.cake_rounded,
+              icon: AppIcons.cake,
               onClear: () => setState(() => _dob = null),
               onTap: () async {
                 final d = await pickDate(context, initial: _dob ?? DateTime(gym.today.year - 25), first: DateTime(1940), last: gym.today);
@@ -117,12 +118,12 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
               },
             ),
             const FieldLabel('Training'),
-            TextFormField(controller: _goal, decoration: const InputDecoration(labelText: 'Goal', prefixIcon: Icon(Icons.flag_rounded))),
+            TextFormField(controller: _goal, decoration: const InputDecoration(labelText: 'Goal', prefixIcon: Icon(AppIcons.flag))),
             const SizedBox(height: 12),
             DropdownButtonFormField<String?>(
               isExpanded: true,
               initialValue: _trainerId,
-              decoration: const InputDecoration(labelText: 'Trainer', prefixIcon: Icon(Icons.sports_rounded)),
+              decoration: const InputDecoration(labelText: 'Trainer', prefixIcon: Icon(AppIcons.trainer)),
               items: [
                 const DropdownMenuItem(value: null, child: Text('No trainer')),
                 for (final t in gym.trainers) DropdownMenuItem(value: t.id, child: Text(t.name)),
@@ -136,7 +137,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
               Expanded(child: TextFormField(controller: _weight, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Weight', suffixText: 'kg'))),
             ]),
             const SizedBox(height: 12),
-            TextFormField(controller: _medical, maxLines: 2, decoration: const InputDecoration(labelText: 'Health conditions or injuries', prefixIcon: Icon(Icons.medical_information_rounded))),
+            TextFormField(controller: _medical, maxLines: 2, decoration: const InputDecoration(labelText: 'Health conditions or injuries', prefixIcon: Icon(AppIcons.medical))),
             const FieldLabel('Emergency contact'),
             Row(children: [
               Expanded(child: TextFormField(controller: _eName, decoration: const InputDecoration(labelText: 'Name'))),
@@ -144,17 +145,17 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
               Expanded(child: TextFormField(controller: _ePhone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone'))),
             ]),
             const FieldLabel('Other'),
-            TextFormField(controller: _address, maxLines: 2, decoration: const InputDecoration(labelText: 'Address', prefixIcon: Icon(Icons.home_rounded))),
+            TextFormField(controller: _address, maxLines: 2, decoration: const InputDecoration(labelText: 'Address', prefixIcon: Icon(AppIcons.home))),
             const SizedBox(height: 12),
             DropdownButtonFormField<LeadSource>(
               isExpanded: true,
               initialValue: _source,
-              decoration: const InputDecoration(labelText: 'How they heard about us', prefixIcon: Icon(Icons.campaign_rounded)),
+              decoration: const InputDecoration(labelText: 'How they heard about us', prefixIcon: Icon(AppIcons.campaign)),
               items: [for (final s in LeadSource.values) DropdownMenuItem(value: s, child: Text(s.label))],
               onChanged: (v) => setState(() => _source = v ?? _source),
             ),
             const SizedBox(height: 12),
-            TextFormField(controller: _notes, maxLines: 2, decoration: const InputDecoration(labelText: 'Notes', prefixIcon: Icon(Icons.notes_rounded))),
+            TextFormField(controller: _notes, maxLines: 2, decoration: const InputDecoration(labelText: 'Notes', prefixIcon: Icon(AppIcons.notes))),
           ],
         ),
       ),

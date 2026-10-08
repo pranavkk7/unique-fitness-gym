@@ -74,7 +74,7 @@ class _MeasurementSheetState extends State<_MeasurementSheet> {
                   showMessage(context, 'Body check saved.');
                 }
               },
-              child: const Text('SAVE CHECK'),
+              child: const Text('Save check'),
             ),
           ],
         ),

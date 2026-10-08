@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/utils/contact.dart';
@@ -79,16 +80,16 @@ class _DayPassSheetState extends State<_DayPassSheet> {
             SheetHeader(_trial ? 'Free trial' : 'Day pass', subtitle: _trial ? '${gym.settings.trialDays} days free. Saved as an enquiry with a follow-up when it ends.' : 'One paid visit. Saved as an enquiry so the desk can call tomorrow.'),
             SegmentedButton<bool>(
               segments: const [
-                ButtonSegment(value: false, icon: Icon(Icons.confirmation_number_rounded), label: Text('Day pass')),
-                ButtonSegment(value: true, icon: Icon(Icons.hourglass_top_rounded), label: Text('Free trial')),
+                ButtonSegment(value: false, icon: Icon(AppIcons.ticket), label: Text('Day pass')),
+                ButtonSegment(value: true, icon: Icon(AppIcons.hourglassHigh), label: Text('Free trial')),
               ],
               selected: {_trial},
               onSelectionChanged: (v) => setState(() => _trial = v.first),
             ),
             const SizedBox(height: 16),
-            TextFormField(controller: _name, autofocus: true, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(Icons.person_rounded)), validator: (v) => requiredText(v, 'Enter a name')),
+            TextFormField(controller: _name, autofocus: true, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
             const SizedBox(height: 12),
-            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(Icons.phone_rounded)), validator: validatePhone),
+            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(AppIcons.phone)), validator: validatePhone),
             if (!_trial) ...[
               const SizedBox(height: 12),
               AmountField(controller: _price, label: 'Day pass price', onChanged: (_) => setState(() {}), validator: (v) => (parseAmount(v ?? '') ?? 0) <= 0 ? 'Enter the price' : null),
@@ -100,8 +101,8 @@ class _DayPassSheetState extends State<_DayPassSheet> {
             const SizedBox(height: 18),
             FilledButton.icon(
               onPressed: _saving ? null : _save,
-              icon: Icon(_trial ? Icons.play_arrow_rounded : Icons.check_rounded),
-              label: Text(_trial ? 'START TRIAL' : 'TAKE ${amount > 0 ? formatMoney(amount) : 'PAYMENT'}'),
+              icon: Icon(_trial ? AppIcons.play : AppIcons.check),
+              label: Text(_trial ? 'Start trial' : 'Take ${amount > 0 ? formatMoney(amount) : 'payment'}'),
             ),
             if (!_trial) Padding(padding: const EdgeInsets.only(top: 8), child: Text('Day pass visitors enter through the desk, not the Face ID door.', style: AppText.small.copyWith(color: AppColors.muted), textAlign: TextAlign.center)),
           ],

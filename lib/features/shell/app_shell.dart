@@ -1,9 +1,9 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/utils/notifications.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
@@ -87,7 +87,6 @@ class _AppShellState extends State<AppShell> {
       );
     }
     return Scaffold(
-      extendBody: true,
       body: GlowBackground(child: SafeArea(bottom: false, child: page)),
       bottomNavigationBar: _GlassNavBar(index: shell.tab, onSelect: shell.goTo),
     );
@@ -95,13 +94,15 @@ class _AppShellState extends State<AppShell> {
 }
 
 const _items = [
-  (Icons.space_dashboard_rounded, Icons.space_dashboard_outlined, 'Home'),
-  (Icons.groups_rounded, Icons.groups_outlined, 'Members'),
-  (Icons.how_to_reg_rounded, Icons.how_to_reg_outlined, 'Check-in'),
-  (Icons.notifications_active_rounded, Icons.notifications_none_rounded, 'Reminders'),
-  (Icons.grid_view_rounded, Icons.grid_view_outlined, 'More'),
+  (AppIcons.dashboard, AppIcons.dashboardOutline, 'Home'),
+  (AppIcons.groups, AppIcons.groupsOutline, 'Members'),
+  (AppIcons.checkIn, AppIcons.checkInOutline, 'Check-in'),
+  (AppIcons.notificationsActive, AppIcons.notifications, 'Reminders'),
+  (AppIcons.grid, AppIcons.gridOutline, 'More'),
 ];
 
+/// The phone tab bar: flat white, a hairline on top, and a short iron marker that slides to the
+/// selected tab. Check-in, the desk's most used action, is an iron key in the middle of the bar.
 class _GlassNavBar extends StatelessWidget {
   final int index;
   final ValueChanged<int> onSelect;
@@ -111,84 +112,46 @@ class _GlassNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pending = context.select<GymProvider, int>((g) => g.pendingReminderCount);
-    return SafeArea(
-      minimum: const EdgeInsets.fromLTRB(14, 0, 14, 12),
-      child: SizedBox(
-        height: 74,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Positioned.fill(
-              top: 6,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(34),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.surface.withValues(alpha: 0.78),
-                      borderRadius: BorderRadius.circular(34),
-                      border: Border.all(color: AppColors.borderStrong),
-                    ),
+    return DecoratedBox(
+      decoration: const BoxDecoration(color: AppColors.surface, border: Border(top: BorderSide(color: AppColors.border))),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64,
+          child: LayoutBuilder(builder: (context, box) {
+            final slot = box.maxWidth / _items.length;
+            return Stack(
+              children: [
+                AnimatedPositioned(
+                  duration: Motion.medium,
+                  curve: Motion.settle,
+                  left: slot * index + slot / 2 - 12,
+                  top: 0,
+                  child: AnimatedOpacity(
+                    duration: Motion.fast,
+                    opacity: index == ShellTabs.checkIn ? 0 : 1,
+                    child: Container(width: 24, height: 2.5, color: AppColors.text),
                   ),
                 ),
-              ),
-            ),
-            Positioned.fill(
-              top: 6,
-              child: LayoutBuilder(builder: (context, box) {
-                final slot = box.maxWidth / _items.length;
-                return Stack(
+                Row(
                   children: [
-                    // The glowing line under the selected tab slides between tabs.
-                    AnimatedPositioned(
-                      duration: Motion.medium,
-                      curve: Motion.settle,
-                      left: slot * index + slot / 2 - 14,
-                      bottom: 7,
-                      child: AnimatedOpacity(
-                        duration: Motion.fast,
-                        opacity: index == ShellTabs.checkIn ? 0 : 1,
-                        child: Container(
-                          width: 28,
-                          height: 3,
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(2),
-                            boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.8), blurRadius: 10)],
-                          ),
-                        ),
+                    for (var i = 0; i < _items.length; i++)
+                      Expanded(
+                        child: i == ShellTabs.checkIn
+                            ? Center(child: _CheckInButton(selected: index == ShellTabs.checkIn, onTap: () => _tap(i)))
+                            : _NavItem(
+                                icon: index == i ? _items[i].$1 : _items[i].$2,
+                                label: _items[i].$3,
+                                selected: index == i,
+                                badge: i == ShellTabs.reminders ? pending : 0,
+                                onTap: () => _tap(i),
+                              ),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        for (var i = 0; i < _items.length; i++)
-                          Expanded(
-                            child: i == ShellTabs.checkIn
-                                ? const SizedBox()
-                                : _NavItem(
-                                    icon: index == i ? _items[i].$1 : _items[i].$2,
-                                    label: _items[i].$3,
-                                    selected: index == i,
-                                    badge: i == ShellTabs.reminders ? pending : 0,
-                                    onTap: () => _tap(i),
-                                  ),
-                          ),
-                      ],
-                    ),
                   ],
-                );
-              }),
-            ),
-            // Raised centre button for the most used action at the desk.
-            Align(
-              alignment: Alignment.topCenter,
-              child: Transform.translate(
-                offset: const Offset(0, -10),
-                child: _CheckInButton(selected: index == ShellTabs.checkIn, onTap: () => _tap(ShellTabs.checkIn)),
-              ),
-            ),
-          ],
+                ),
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -219,19 +182,18 @@ class _NavItem extends StatelessWidget {
       excludeSemantics: true,
       child: InkResponse(
         onTap: onTap,
-        radius: 32,
+        radius: 30,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Badge(
               isLabelVisible: badge > 0,
-              backgroundColor: AppColors.primary,
-              label: Text(badge > 99 ? '99+' : '$badge', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800, fontSize: 10)),
-              child: AnimatedScale(scale: selected ? 1.12 : 1, duration: Motion.medium, curve: Motion.pop, child: Icon(icon, color: color, size: 24)),
+              backgroundColor: AppColors.brand,
+              label: Text(badge > 99 ? '99+' : '$badge', style: const TextStyle(fontFamily: AppText.bodyFont, fontWeight: FontWeight.w600, fontSize: 10, color: Colors.white)),
+              child: Icon(icon, color: color, size: 23),
             ),
-            const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: color, fontSize: 11, fontWeight: selected ? FontWeight.w800 : FontWeight.w600)),
-            const SizedBox(height: 8),
+            const SizedBox(height: 3),
+            Text(label, style: TextStyle(fontFamily: AppText.bodyFont, color: color, fontSize: 11.5, fontWeight: selected ? FontWeight.w600 : FontWeight.w500)),
           ],
         ),
       ),
@@ -254,19 +216,15 @@ class _CheckInButton extends StatelessWidget {
       excludeSemantics: true,
       child: Pressable(
         onTap: onTap,
-        pressedScale: 0.92,
+        pressedScale: 0.94,
         haptic: false,
         child: AnimatedContainer(
           duration: Motion.medium,
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: AppColors.redGradient,
-            border: Border.all(color: AppColors.background, width: 4),
-            boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: selected ? 0.8 : 0.45), blurRadius: selected ? 26 : 16, spreadRadius: selected ? 1 : 0)],
-          ),
-          child: const Icon(Icons.how_to_reg_rounded, color: Colors.white, size: 28),
+          curve: Motion.settle,
+          width: selected ? 60 : 52,
+          height: 40,
+          decoration: BoxDecoration(color: AppColors.text, borderRadius: BorderRadius.circular(12)),
+          child: const Icon(AppIcons.checkIn, color: Colors.white, size: 22),
         ),
       ),
     );
@@ -287,7 +245,7 @@ class _SideRail extends StatelessWidget {
     return Container(
       width: 232,
       decoration: const BoxDecoration(
-        color: Color(0xCC0E0E11),
+        color: AppColors.surface,
         border: Border(right: BorderSide(color: AppColors.border)),
       ),
       child: SafeArea(
@@ -303,10 +261,10 @@ class _SideRail extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Material(
-                    color: index == i ? AppColors.primary.withValues(alpha: 0.14) : Colors.transparent,
-                    borderRadius: BorderRadius.circular(14),
+                    color: index == i ? AppColors.surfaceHigh : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(10),
                       onTap: () {
                         HapticFeedback.selectionClick();
                         onSelect(i);
@@ -315,14 +273,14 @@ class _SideRail extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
                         child: Row(
                           children: [
-                            Icon(index == i ? _items[i].$1 : _items[i].$2, color: index == i ? AppColors.primaryBright : AppColors.muted, size: 22),
+                            Icon(index == i ? _items[i].$1 : _items[i].$2, color: index == i ? AppColors.text : AppColors.muted, size: 22),
                             const SizedBox(width: 14),
-                            Expanded(child: Text(_items[i].$3, style: AppText.body.copyWith(fontWeight: index == i ? FontWeight.w800 : FontWeight.w600, color: index == i ? AppColors.text : AppColors.textSecondary))),
+                            Expanded(child: Text(_items[i].$3, style: AppText.body.copyWith(fontWeight: index == i ? FontWeight.w600 : FontWeight.w400, color: index == i ? AppColors.text : AppColors.textSecondary))),
                             if (i == ShellTabs.reminders && pending > 0)
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(999)),
-                                child: Text('$pending', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800, fontSize: 12)),
+                                decoration: BoxDecoration(color: AppColors.brand, borderRadius: BorderRadius.circular(999)),
+                                child: Text('$pending', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w600, fontSize: 12, color: Colors.white)),
                               ),
                           ],
                         ),
@@ -333,8 +291,8 @@ class _SideRail extends StatelessWidget {
               const Spacer(),
               FilledButton.icon(
                 onPressed: () => openPage(context, const AdmissionScreen()),
-                icon: const Icon(Icons.person_add_alt_1_rounded),
-                label: const Text('NEW ADMISSION'),
+                icon: const Icon(AppIcons.personAdd),
+                label: const Text('New admission'),
               ),
             ],
           ),

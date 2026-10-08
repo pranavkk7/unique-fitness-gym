@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -109,14 +110,14 @@ class _MembersScreenState extends State<MembersScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        RevealText('MEMBERS', style: AppText.display),
+                        RevealText('Members', style: AppText.display),
                         Text('${counts[_Filter.active]} active · ${counts[_Filter.expiring]} expiring · ${gym.members.length} total', style: AppText.small.copyWith(color: AppColors.muted)),
                       ],
                     ),
                   ),
                   PopupMenuButton<_Sort>(
                     tooltip: 'Sort',
-                    icon: const Icon(Icons.sort_rounded),
+                    icon: const Icon(AppIcons.sort),
                     initialValue: _sort,
                     onSelected: (s) => setState(() => _sort = s),
                     itemBuilder: (_) => const [
@@ -136,12 +137,12 @@ class _MembersScreenState extends State<MembersScreen> {
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: 'Search name, phone or UFG code',
-                  prefixIcon: const Icon(Icons.search_rounded),
+                  prefixIcon: const Icon(AppIcons.search),
                   suffixIcon: _search.text.isEmpty
                       ? null
                       : IconButton(
                           tooltip: 'Clear search',
-                          icon: const Icon(Icons.close_rounded),
+                          icon: const Icon(AppIcons.close),
                           onPressed: () => setState(_search.clear),
                         ),
                 ),
@@ -176,10 +177,10 @@ class _MembersScreenState extends State<MembersScreen> {
                 child: list.isEmpty
                     ? EmptyState(
                         key: const ValueKey('empty'),
-                        icon: gym.hasMembers ? Icons.search_off_rounded : Icons.group_add_rounded,
+                        icon: gym.hasMembers ? AppIcons.searchOff : AppIcons.groupAdd,
                         title: gym.hasMembers ? 'No members match' : 'No members yet',
                         subtitle: gym.hasMembers ? 'Try another search or filter.' : 'Start with a new admission.',
-                        actionLabel: gym.hasMembers ? null : 'NEW ADMISSION',
+                        actionLabel: gym.hasMembers ? null : 'New admission',
                         onAction: () => openPage(context, const AdmissionScreen()),
                       )
                     : ListView.builder(
@@ -204,8 +205,8 @@ class _MembersScreenState extends State<MembersScreen> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             onPressed: () => openPage(context, const AdmissionScreen()),
-            icon: const Icon(Icons.person_add_alt_1_rounded),
-            label: const Text('ADMISSION', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+            icon: const Icon(AppIcons.personAdd),
+            label: const Text('Admission', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
           ),
         ),
       ],

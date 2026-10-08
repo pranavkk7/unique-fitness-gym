@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -37,8 +38,8 @@ class PlansScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => _showPlanSheet(context),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('PLAN', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('Plan', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 100),
@@ -124,7 +125,7 @@ class _PlanSheetState extends State<_PlanSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SheetHeader(widget.plan == null ? 'New plan' : 'Edit plan'),
-            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Plan name', prefixIcon: Icon(Icons.card_membership_rounded)), validator: (v) => requiredText(v, 'Enter a name')),
+            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Plan name', prefixIcon: Icon(AppIcons.membership)), validator: (v) => requiredText(v, 'Enter a name')),
             const SizedBox(height: 12),
             AmountField(controller: _price, label: 'Price', validator: (v) => (parseAmount(v ?? '') ?? 0) <= 0 ? 'Enter the price' : null),
             const FieldLabel('Tier'),
@@ -132,7 +133,7 @@ class _PlanSheetState extends State<_PlanSheet> {
             const FieldLabel('Duration'),
             ChoiceChips<int>(options: const [1, 2, 3, 4, 6, 12], selected: _months, labelOf: (m) => m == 1 ? '1 month' : '$m months', onSelected: (m) => setState(() => _months = m)),
             const SizedBox(height: 14),
-            TextFormField(controller: _perks, decoration: const InputDecoration(labelText: 'What is included', prefixIcon: Icon(Icons.auto_awesome_rounded))),
+            TextFormField(controller: _perks, decoration: const InputDecoration(labelText: 'What is included', prefixIcon: Icon(AppIcons.sparkle))),
             const SizedBox(height: 6),
             SwitchListTile(contentPadding: EdgeInsets.zero, value: _popular, onChanged: (v) => setState(() => _popular = v), title: const Text('Mark as popular'), subtitle: const Text('Pre-selected for new admissions')),
             SwitchListTile(contentPadding: EdgeInsets.zero, value: _active, onChanged: (v) => setState(() => _active = v), title: const Text('Offered at the desk'), subtitle: const Text('Turn off to retire a plan but keep its history')),
@@ -144,7 +145,7 @@ class _PlanSheetState extends State<_PlanSheet> {
                 await gym.savePlan(base.copyWith(name: _name.text.trim(), price: parseAmount(_price.text), months: _months, perks: _perks.text.trim(), popular: _popular, active: _active, tier: _tier));
                 if (context.mounted) Navigator.pop(context);
               },
-              child: const Text('SAVE PLAN'),
+              child: const Text('Save plan'),
             ),
             if (widget.plan != null)
               TextButton(

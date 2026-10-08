@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -196,7 +197,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
                     _BottomBar(
                       step: _step,
                       saving: _saving,
-                      nextLabel: _step == 3 ? 'CONFIRM ADMISSION' : 'CONTINUE',
+                      nextLabel: _step == 3 ? 'Confirm admission' : 'Continue',
                       onBack: _step == 0 ? null : () => _go(_step - 1),
                       onNext: _next,
                     ),
@@ -239,9 +240,9 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
               ),
               child: _photo == null
                   ? const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Icon(Icons.add_a_photo_rounded, color: AppColors.primaryBright, size: 30),
+                      Icon(AppIcons.addPhoto, color: AppColors.primaryBright, size: 30),
                       SizedBox(height: 4),
-                      Text('PHOTO', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1.2, color: AppColors.muted)),
+                      Text('Photo', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1.2, color: AppColors.muted)),
                     ])
                   : null,
             ),
@@ -253,7 +254,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
         controller: _name,
         textCapitalization: TextCapitalization.words,
         textInputAction: TextInputAction.next,
-        decoration: const InputDecoration(labelText: 'Full name', prefixIcon: Icon(Icons.person_rounded)),
+        decoration: const InputDecoration(labelText: 'Full name', prefixIcon: Icon(AppIcons.person)),
         validator: (v) => requiredText(v, "Enter the member's name"),
       ).entrance(context, index: 1),
       const SizedBox(height: 12),
@@ -261,7 +262,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
         controller: _phone,
         keyboardType: TextInputType.phone,
         textInputAction: TextInputAction.next,
-        decoration: const InputDecoration(labelText: 'Phone (WhatsApp)', prefixIcon: Icon(Icons.call_rounded)),
+        decoration: const InputDecoration(labelText: 'Phone (WhatsApp)', prefixIcon: Icon(AppIcons.call)),
         validator: (v) {
           final basic = validatePhone(v);
           if (basic != null) return basic;
@@ -275,7 +276,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
       PickerField(
         label: 'Date of birth (for birthday wishes)',
         value: _dob == null ? null : formatDate(_dob!),
-        icon: Icons.cake_rounded,
+        icon: AppIcons.cake,
         onClear: () => setState(() => _dob = null),
         onTap: () async {
           final d = await pickDate(context, initial: _dob ?? DateTime(gym.today.year - 22), first: DateTime(1940), last: gym.today);
@@ -283,9 +284,9 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
         },
       ),
       const SizedBox(height: 12),
-      TextFormField(controller: _email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email (optional)', prefixIcon: Icon(Icons.mail_rounded))),
+      TextFormField(controller: _email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email (optional)', prefixIcon: Icon(AppIcons.mail))),
       const SizedBox(height: 12),
-      TextFormField(controller: _address, maxLines: 2, decoration: const InputDecoration(labelText: 'Address (optional)', prefixIcon: Icon(Icons.home_rounded))),
+      TextFormField(controller: _address, maxLines: 2, decoration: const InputDecoration(labelText: 'Address (optional)', prefixIcon: Icon(AppIcons.home))),
     ]);
   }
 
@@ -306,9 +307,9 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
       ChoiceChips<String>(options: _goals, selected: _goal, labelOf: (g) => g, onSelected: (g) => setState(() => _goal = g)),
       const FieldLabel('Body'),
       Row(children: [
-        Expanded(child: TextFormField(controller: _height, keyboardType: TextInputType.number, onChanged: (_) => setState(() {}), decoration: const InputDecoration(labelText: 'Height', suffixText: 'cm', prefixIcon: Icon(Icons.height_rounded)))),
+        Expanded(child: TextFormField(controller: _height, keyboardType: TextInputType.number, onChanged: (_) => setState(() {}), decoration: const InputDecoration(labelText: 'Height', suffixText: 'cm', prefixIcon: Icon(AppIcons.height)))),
         const SizedBox(width: 10),
-        Expanded(child: TextFormField(controller: _weight, keyboardType: TextInputType.number, onChanged: (_) => setState(() {}), decoration: const InputDecoration(labelText: 'Weight', suffixText: 'kg', prefixIcon: Icon(Icons.monitor_weight_rounded)))),
+        Expanded(child: TextFormField(controller: _weight, keyboardType: TextInputType.number, onChanged: (_) => setState(() {}), decoration: const InputDecoration(labelText: 'Weight', suffixText: 'kg', prefixIcon: Icon(AppIcons.scale)))),
       ]),
       AnimatedSize(
         duration: Motion.medium,
@@ -330,7 +331,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
               ),
       ),
       const SizedBox(height: 12),
-      TextFormField(controller: _medical, maxLines: 2, decoration: const InputDecoration(labelText: 'Health conditions or injuries', hintText: 'e.g. knee injury, asthma, BP', prefixIcon: Icon(Icons.medical_information_rounded))),
+      TextFormField(controller: _medical, maxLines: 2, decoration: const InputDecoration(labelText: 'Health conditions or injuries', hintText: 'e.g. knee injury, asthma, BP', prefixIcon: Icon(AppIcons.medical))),
       const FieldLabel('Emergency contact'),
       Row(children: [
         Expanded(child: TextFormField(controller: _eName, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name'))),
@@ -355,13 +356,13 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
       PlanPicker(plans: gym.activePlans, selectedId: _planId, onSelected: (p) => setState(() => _planId = p.id)),
       if (plan != null && plan.tier == PlanTier.other && plan.perks.isNotEmpty) ...[
         const SizedBox(height: 12),
-        Row(children: [const Icon(Icons.auto_awesome_rounded, size: 16, color: AppColors.ember), const SizedBox(width: 8), Expanded(child: Text(plan.perks, style: AppText.small))]),
+        Row(children: [const Icon(AppIcons.sparkle, size: 16, color: AppColors.ember), const SizedBox(width: 8), Expanded(child: Text(plan.perks, style: AppText.small))]),
       ],
       const SizedBox(height: 16),
       PickerField(
         label: 'Starts on',
         value: '${formatDate(start)}${plan == null ? '' : '  ·  ends ${formatDate(addMonths(start, plan.months))}'}',
-        icon: Icons.event_rounded,
+        icon: AppIcons.event,
         onTap: () async {
           final d = await pickDate(context, initial: start, first: gym.today.subtract(const Duration(days: 30)), last: gym.today.add(const Duration(days: 60)));
           if (d != null) setState(() => _start = d);
@@ -371,7 +372,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
       DropdownButtonFormField<String?>(
         isExpanded: true,
         initialValue: _trainerId,
-        decoration: const InputDecoration(labelText: 'Personal trainer (optional)', prefixIcon: Icon(Icons.sports_rounded)),
+        decoration: const InputDecoration(labelText: 'Personal trainer (optional)', prefixIcon: Icon(AppIcons.trainer)),
         items: [
           const DropdownMenuItem(value: null, child: Text('No trainer')),
           for (final t in gym.trainers) DropdownMenuItem(value: t.id, child: Text('${t.name} · ${t.speciality}', overflow: TextOverflow.ellipsis)),
@@ -384,7 +385,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
       PickerField(
         label: 'Referred by a member (optional)',
         value: _referrer?.name,
-        icon: Icons.card_giftcard_rounded,
+        icon: AppIcons.gift,
         onTap: () async {
           final m = await pickMember(context, title: 'Who referred them?');
           if (m == null) return;
@@ -416,13 +417,13 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
         child: Row(children: [
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('TOTAL TO PAY', style: AppText.label.copyWith(color: Colors.white70)),
+              Text('Total to pay', style: AppText.label.copyWith(color: Colors.white70)),
               const SizedBox(height: 4),
-              CountUp(value: _bill, format: formatMoney, duration: Motion.medium, style: AppText.display.copyWith(fontSize: 42)),
+              CountUp(value: _bill, format: formatMoney, duration: Motion.medium, style: AppText.display.copyWith(fontSize: 40, color: Colors.white)),
               Text('${_name.text.trim().isEmpty ? 'New member' : _name.text.trim()} · ${plan.name}', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white70, fontWeight: FontWeight.w600)),
             ]),
           ),
-          const Icon(Icons.receipt_long_rounded, color: Colors.white54, size: 40),
+          const Icon(AppIcons.receipt, color: Colors.white54, size: 40),
         ]),
       ),
       const SizedBox(height: 14),
@@ -445,7 +446,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
           child: TextFormField(
             controller: _discount,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Discount', prefixText: '₹ ', prefixIcon: Icon(Icons.local_offer_rounded)),
+            decoration: const InputDecoration(labelText: 'Discount', prefixText: '₹ ', prefixIcon: Icon(AppIcons.tag)),
             onChanged: (_) => setState(_syncPaid),
             validator: (v) => (parseAmount(v ?? '') ?? 0) > plan.price ? 'More than the plan' : null,
           ),
@@ -455,7 +456,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
           child: TextFormField(
             controller: _paid,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Paid now', prefixText: '₹ ', prefixIcon: Icon(Icons.payments_rounded)),
+            decoration: const InputDecoration(labelText: 'Paid now', prefixText: '₹ ', prefixIcon: Icon(AppIcons.cash)),
             onChanged: (_) => setState(() => _paidEdited = true),
             validator: (v) => (parseAmount(v ?? '') ?? 0) < 0 ? 'Check the amount' : null,
           ),
@@ -476,7 +477,7 @@ class _AdmissionScreenState extends State<AdmissionScreen> {
             ? Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Row(children: [
-                  const Icon(Icons.info_outline_rounded, size: 18, color: AppColors.warning),
+                  const Icon(AppIcons.info, size: 18, color: AppColors.warning),
                   const SizedBox(width: 8),
                   Expanded(child: Text('${formatMoney(due)} will be saved as balance due, with a reminder.', style: AppText.small.copyWith(color: AppColors.warning))),
                 ]),
@@ -504,13 +505,13 @@ class _TopBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8, 6, 16, 6),
       child: Row(
         children: [
-          IconButton(tooltip: 'Close', icon: const Icon(Icons.close_rounded), onPressed: onClose),
+          IconButton(tooltip: 'Close', icon: const Icon(AppIcons.close), onPressed: onClose),
           const SizedBox(width: 4),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('NEW ADMISSION', style: AppText.display.copyWith(fontSize: 26)),
+                Text('New admission', style: AppText.display.copyWith(fontSize: 26)),
                 AnimatedSwitcher(
                   duration: Motion.fast,
                   child: Text('Step ${step + 1} of 4 · $title', key: ValueKey(step), style: AppText.small.copyWith(color: AppColors.primaryBright)),
@@ -548,7 +549,7 @@ class _BottomBar extends StatelessWidget {
                 ? const SizedBox.shrink()
                 : Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: OutlinedButton(onPressed: onBack, style: OutlinedButton.styleFrom(minimumSize: const Size(96, 54)), child: const Text('BACK')),
+                    child: OutlinedButton(onPressed: onBack, style: OutlinedButton.styleFrom(minimumSize: const Size(96, 54)), child: const Text('Back')),
                   ),
           ),
           Expanded(

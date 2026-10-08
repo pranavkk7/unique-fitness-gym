@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -37,8 +38,8 @@ class _TrainingPlansScreenState extends State<TrainingPlansScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => openPage(context, TrainingPlanEditor(kind: _kind)),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('NEW PLAN', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('New plan', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -64,7 +65,7 @@ class _TrainingPlansScreenState extends State<TrainingPlansScreen> {
                       Text([if (plans[i].goal.isNotEmpty) plans[i].goal, '${plans[i].sections.length} sections', '${usedBy(plans[i])} members'].join(' · '), style: AppText.small.copyWith(color: AppColors.muted)),
                     ]),
                   ),
-                  IconButton(tooltip: 'Share PDF', icon: const Icon(Icons.picture_as_pdf_rounded, color: AppColors.muted), onPressed: () => sharePlanPdf(context, plans[i])),
+                  IconButton(tooltip: 'Share PDF', icon: const Icon(AppIcons.pdf, color: AppColors.muted), onPressed: () => sharePlanPdf(context, plans[i])),
                 ]),
               ),
             ).entrance(context, index: i),
@@ -129,7 +130,7 @@ class _TrainingPlanEditorState extends State<TrainingPlanEditor> {
         if (widget.plan != null)
           IconButton(
             tooltip: 'Delete plan',
-            icon: const Icon(Icons.delete_outline_rounded),
+            icon: const Icon(AppIcons.delete),
             onPressed: () async {
               if (await confirmAction(context, title: 'Delete plan?', message: 'Members using it will have it removed.') && context.mounted) {
                 await context.read<GymProvider>().deleteTrainingPlan(widget.plan!.id);
@@ -138,7 +139,7 @@ class _TrainingPlanEditorState extends State<TrainingPlanEditor> {
             },
           ),
       ],
-      bottom: Padding(padding: const EdgeInsets.fromLTRB(18, 8, 18, 14), child: SizedBox(width: double.infinity, child: FilledButton(onPressed: _save, child: const Text('SAVE PLAN')))),
+      bottom: Padding(padding: const EdgeInsets.fromLTRB(18, 8, 18, 14), child: SizedBox(width: double.infinity, child: FilledButton(onPressed: _save, child: const Text('Save plan')))),
       child: Form(
         key: _form,
         child: ListView(
@@ -158,7 +159,7 @@ class _TrainingPlanEditorState extends State<TrainingPlanEditor> {
                     child: Column(children: [
                       Row(children: [
                         Expanded(child: TextField(controller: _sections[i].$1, decoration: InputDecoration(hintText: diet ? 'Breakfast' : 'Monday · Chest', border: InputBorder.none, filled: false), style: AppText.title)),
-                        IconButton(tooltip: 'Remove section', icon: const Icon(Icons.close_rounded, size: 18, color: AppColors.muted), onPressed: () => setState(() => _sections.removeAt(i))),
+                        IconButton(tooltip: 'Remove section', icon: const Icon(AppIcons.close, size: 18, color: AppColors.muted), onPressed: () => setState(() => _sections.removeAt(i))),
                       ]),
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
@@ -168,7 +169,7 @@ class _TrainingPlanEditorState extends State<TrainingPlanEditor> {
                   ),
                 ),
               ),
-            OutlinedButton.icon(onPressed: () => setState(() => _sections.add((TextEditingController(), TextEditingController()))), icon: const Icon(Icons.add_rounded), label: const Text('ADD SECTION')),
+            OutlinedButton.icon(onPressed: () => setState(() => _sections.add((TextEditingController(), TextEditingController()))), icon: const Icon(AppIcons.add), label: const Text('Add section')),
             const SizedBox(height: 14),
             TextFormField(controller: _notes, maxLines: null, decoration: const InputDecoration(labelText: 'Notes (optional)')),
           ],
@@ -201,8 +202,8 @@ class TrainingPlansSection extends StatelessWidget {
                 title: Text(plan?.name ?? 'No ${kind.label.toLowerCase()}'),
                 subtitle: Text(plan == null ? 'Tap to assign one' : plan.goal),
                 trailing: plan == null
-                    ? const Icon(Icons.add_circle_outline_rounded, color: AppColors.muted)
-                    : IconButton(tooltip: 'Share ${kind.label} PDF', icon: const Icon(Icons.ios_share_rounded), onPressed: () => sharePlanPdf(context, plan, member: member)),
+                    ? const Icon(AppIcons.addCircleOutline, color: AppColors.muted)
+                    : IconButton(tooltip: 'Share ${kind.label} PDF', icon: const Icon(AppIcons.share), onPressed: () => sharePlanPdf(context, plan, member: member)),
               );
             }),
         ]),
@@ -227,7 +228,7 @@ class TrainingPlansSection extends StatelessWidget {
                   await gym.assignTrainingPlan(member.id, kind, p.id);
                   if (sheet.mounted) Navigator.pop(sheet);
                 },
-                leading: Icon(p.id == current?.id ? Icons.radio_button_checked_rounded : Icons.radio_button_unchecked_rounded, color: p.id == current?.id ? AppColors.primaryBright : AppColors.muted),
+                leading: Icon(p.id == current?.id ? AppIcons.radioOn : AppIcons.radioOff, color: p.id == current?.id ? AppColors.primaryBright : AppColors.muted),
                 title: Text(p.name),
                 subtitle: p.goal.isEmpty ? null : Text(p.goal),
               ),

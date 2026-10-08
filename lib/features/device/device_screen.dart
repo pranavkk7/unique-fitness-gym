@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -33,7 +34,7 @@ class DeviceScreen extends StatelessWidget {
     return SubPage(
       title: 'Face ID device',
       subtitle: device.configured ? device.label : 'eSSL / ZKTeco terminal',
-      actions: [IconButton(tooltip: 'Setup guide', icon: const Icon(Icons.help_outline_rounded), onPressed: () => _openGuide(context))],
+      actions: [IconButton(tooltip: 'Setup guide', icon: const Icon(AppIcons.help), onPressed: () => _openGuide(context))],
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 40),
         children: [
@@ -90,7 +91,7 @@ class DeviceScreen extends StatelessWidget {
                 trailing: FilledButton(
                   style: FilledButton.styleFrom(minimumSize: const Size(0, 40), padding: const EdgeInsets.symmetric(horizontal: 14)),
                   onPressed: () => showFaceIdSheet(context, m),
-                  child: const Text('REGISTER'),
+                  child: const Text('Register'),
                 ),
               ),
           if (blocked.isNotEmpty) ...[
@@ -99,14 +100,14 @@ class DeviceScreen extends StatelessWidget {
               MemberTile(
                 member: m,
                 subtitle: 'Device ID ${m.deviceUserId} · ${gym.statusOf(m) == MemberStatus.frozen ? 'frozen' : (gym.daysLeft(m) < 0 ? 'plan ended' : 'unpaid dues')}',
-                trailing: const Icon(Icons.block_rounded, color: AppColors.danger),
+                trailing: const Icon(AppIcons.block, color: AppColors.danger),
               ),
           ],
           const SectionHeader('Members already on the device'),
           AppCard(
             onTap: device.busy ? null : () => _showLinkSheet(context),
             child: Row(children: [
-              const IconBadge(Icons.link_rounded, color: AppColors.seriesCompare),
+              const IconBadge(AppIcons.link, color: AppColors.seriesCompare),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -114,7 +115,7 @@ class DeviceScreen extends StatelessWidget {
                   Text('For faces enrolled before the app. Names are matched for you.', style: AppText.small.copyWith(color: AppColors.muted)),
                 ]),
               ),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.muted),
+              const Icon(AppIcons.chevronRight, color: AppColors.muted),
             ]),
           ),
           if (!device.isDemo && device.configured) ...[
@@ -148,9 +149,9 @@ class _FirstTimeCard extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          const IconBadge(Icons.rocket_launch_rounded, color: AppColors.primaryBright),
+          const IconBadge(AppIcons.rocket, color: AppColors.primaryBright),
           const SizedBox(width: 12),
-          Expanded(child: Text('FIRST-TIME SETUP', style: AppText.headline.copyWith(fontSize: 20))),
+          Expanded(child: Text('First-time setup', style: AppText.headline.copyWith(fontSize: 20))),
         ]),
         const SizedBox(height: 10),
         Text(
@@ -158,7 +159,7 @@ class _FirstTimeCard extends StatelessWidget {
           style: AppText.body.copyWith(color: AppColors.textSecondary, height: 1.4),
         ),
         const SizedBox(height: 14),
-        SizedBox(width: double.infinity, child: FilledButton.icon(onPressed: onGuide, icon: const Icon(Icons.menu_book_rounded), label: const Text('OPEN SETUP GUIDE'))),
+        SizedBox(width: double.infinity, child: FilledButton.icon(onPressed: onGuide, icon: const Icon(AppIcons.guide), label: const Text('Open setup guide'))),
       ]),
     );
   }
@@ -190,24 +191,24 @@ class _StatusHero extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                !device.configured ? 'NOT SET UP' : (device.error != null ? 'CANNOT REACH DEVICE' : syncAgo(gym.settings.lastDeviceSync, gym.now).toUpperCase()),
-                style: AppText.label.copyWith(color: Colors.white, letterSpacing: 2),
+                !device.configured ? 'Not set up' : (device.error != null ? 'Cannot reach the device' : syncAgo(gym.settings.lastDeviceSync, gym.now)),
+                style: AppText.small.copyWith(color: Colors.white70),
               ),
             ),
-            const Icon(Icons.face_retouching_natural_rounded, color: Colors.white70, size: 30),
+            const Icon(AppIcons.faceId, color: Colors.white70, size: 30),
           ]),
           const SizedBox(height: 14),
           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            CountUp(value: linked, style: AppText.display.copyWith(fontSize: 56, height: 0.9)),
+            CountUp(value: linked, style: AppText.display.copyWith(fontSize: 52, height: 0.95, color: Colors.white)),
             const SizedBox(width: 10),
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
-              child: Text('MEMBERS LINKED\nTO FACE ID', style: AppText.label.copyWith(color: Colors.white70, height: 1.3)),
+              child: Text('Members linked\nto Face ID', style: AppText.label.copyWith(color: Colors.white70, height: 1.3)),
             ),
             const Spacer(),
             if (info != null)
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text('${info.faces} faces', style: AppText.headline.copyWith(fontSize: 20)),
+                Text('${info.faces} faces', style: AppText.headline.copyWith(fontSize: 20, color: Colors.white)),
                 Text('${info.records} door entries stored', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
               ]),
           ]),
@@ -230,13 +231,13 @@ class _StatusHero extends StatelessWidget {
                       },
                 icon: device.busy
                     ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2.4, color: AppColors.primaryDeep))
-                    : const Icon(Icons.sync_rounded),
-                label: Text(device.busy ? 'SYNCING' : 'SYNC NOW'),
+                    : const Icon(AppIcons.sync),
+                label: Text(device.busy ? 'Syncing' : 'Sync now'),
               ),
             ),
             const SizedBox(width: 10),
             OutlinedButton(
-              style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.white54), minimumSize: const Size(0, 54)),
+              style: OutlinedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.transparent, side: const BorderSide(color: Colors.white54), minimumSize: const Size(0, 54)),
               onPressed: !device.configured || device.busy
                   ? null
                   : () async {
@@ -245,7 +246,7 @@ class _StatusHero extends StatelessWidget {
                         if (context.mounted) showMessage(context, 'Connected: ${i.users} users and ${i.faces} faces on the device.');
                       } catch (_) {/* shown on the card */}
                     },
-              child: const Text('TEST'),
+              child: const Text('Test'),
             ),
           ]),
         ],
@@ -264,7 +265,7 @@ class _ReportCard extends StatelessWidget {
     Widget stat(String value, String label, Color color) => Expanded(
           child: Column(children: [
             Text(value, style: AppText.headline.copyWith(fontSize: 24, color: color)),
-            Text(label.toUpperCase(), textAlign: TextAlign.center, style: AppText.label.copyWith(fontSize: 9)),
+            Text(label, textAlign: TextAlign.center, style: AppText.label.copyWith(fontSize: 9)),
           ]),
         );
     return AppCard(
@@ -305,7 +306,7 @@ class _ConnectionFormState extends State<_ConnectionForm> {
     return AppCard(
       padding: const EdgeInsets.all(16),
       child: Column(children: [
-        TextField(controller: _host, keyboardType: TextInputType.url, decoration: const InputDecoration(labelText: 'Device IP address', hintText: 'e.g. 192.168.1.201', prefixIcon: Icon(Icons.router_rounded))),
+        TextField(controller: _host, keyboardType: TextInputType.url, decoration: const InputDecoration(labelText: 'Device IP address', hintText: 'e.g. 192.168.1.201', prefixIcon: Icon(AppIcons.router))),
         const SizedBox(height: 12),
         Row(children: [
           Expanded(child: TextField(controller: _port, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Port'))),
@@ -329,11 +330,11 @@ class _ConnectionFormState extends State<_ConnectionForm> {
                 if (context.mounted) showMessage(context, 'Connected: ${i.users} users, ${i.faces} faces.');
               } catch (_) {
                 if (context.mounted) {
-                  showMessage(context, device.error ?? 'Could not reach the device.', actionLabel: 'GUIDE', onAction: () => _openGuide(context));
+                  showMessage(context, device.error ?? 'Could not reach the device.', actionLabel: 'Guide', onAction: () => _openGuide(context));
                 }
               }
             },
-            child: const Text('SAVE AND TEST'),
+            child: const Text('Save and test'),
           ),
         ),
       ]),
@@ -374,7 +375,7 @@ class _LinkSheet extends StatelessWidget {
           SheetHeader('Match device users', subtitle: '${unlinked.length} people on the device are not linked to a member.'),
           Expanded(
             child: unlinked.isEmpty
-                ? const EmptyState(icon: Icons.task_alt_rounded, title: 'All matched', subtitle: 'Every person on the device is linked to a member.')
+                ? const EmptyState(icon: AppIcons.taskDone, title: 'All matched', subtitle: 'Every person on the device is linked to a member.')
                 : ListView.builder(
                     itemCount: unlinked.length,
                     itemBuilder: (context, i) {

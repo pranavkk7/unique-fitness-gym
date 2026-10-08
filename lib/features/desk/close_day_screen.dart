@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -97,7 +98,7 @@ class _CloseDayScreenState extends State<CloseDayScreen> {
     final total = s.cash + s.upi + s.card + s.bank;
     final closed = gym.closeFor(gym.today);
     final history = gym.dayCloses.where((c) => !sameDay(c.date, gym.today)).toList()..sort((a, b) => b.date.compareTo(a.date));
-    final colors = [AppColors.categorical[2], AppColors.categorical[0], AppColors.categorical[3], AppColors.categorical[1]];
+    const colors = AppColors.payMethods;
 
     return SubPage(
       title: 'Close the day',
@@ -110,7 +111,7 @@ class _CloseDayScreenState extends State<CloseDayScreen> {
             glow: true,
             padding: const EdgeInsets.all(20),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('COLLECTED TODAY', style: AppText.label.copyWith(color: Colors.white70)),
+              Text('Collected today', style: AppText.label.copyWith(color: Colors.white70)),
               CountUp(value: total, format: formatMoney, style: AppText.stat.copyWith(color: Colors.white, fontSize: 44)),
               Text('${s.receipts} receipts · ${s.admissions} admissions · ${s.renewals} renewals · ${s.checkIns} check-ins', style: AppText.small.copyWith(color: Colors.white)),
             ]),
@@ -152,7 +153,7 @@ class _CloseDayScreenState extends State<CloseDayScreen> {
                         child: StatusPill(
                           diff.abs() < 1 ? 'Drawer matches' : '${diff > 0 ? 'Extra' : 'Short by'} ${formatMoney(diff.abs())}',
                           color: diff.abs() < 1 ? AppColors.success : diff > 0 ? AppColors.warning : AppColors.danger,
-                          icon: diff.abs() < 1 ? Icons.check_circle_rounded : Icons.error_outline_rounded,
+                          icon: diff.abs() < 1 ? AppIcons.checkCircle : AppIcons.error,
                         ),
                       ),
               ),
@@ -162,10 +163,10 @@ class _CloseDayScreenState extends State<CloseDayScreen> {
           ),
           const SizedBox(height: 18),
           FilledButton.icon(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.black),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.white),
             onPressed: _saving ? null : _close,
-            icon: const Icon(Icons.lock_clock_rounded),
-            label: Text(closed == null ? 'CLOSE DAY & SEND TO OWNER' : 'UPDATE & SEND AGAIN'),
+            icon: const Icon(AppIcons.closeDay),
+            label: Text(closed == null ? 'Close day & send to owner' : 'Update & send again'),
           ),
           if (history.isNotEmpty) ...[
             const SectionHeader('Earlier days'),
@@ -174,7 +175,7 @@ class _CloseDayScreenState extends State<CloseDayScreen> {
               child: Column(children: [
                 for (final c in history.take(14))
                   ListTile(
-                    leading: IconBadge(c.difference.abs() < 1 ? Icons.check_rounded : Icons.priority_high_rounded, color: c.difference.abs() < 1 ? AppColors.success : AppColors.danger, size: 36),
+                    leading: IconBadge(c.difference.abs() < 1 ? AppIcons.check : AppIcons.priority, color: c.difference.abs() < 1 ? AppColors.success : AppColors.danger, size: 36),
                     title: Text('${formatWeekday(c.date)}, ${formatDayMonth(c.date)}'),
                     subtitle: Text(c.difference.abs() < 1 ? 'Drawer matched${c.note.isEmpty ? '' : ' · ${c.note}'}' : '${c.difference > 0 ? 'Extra' : 'Short'} ${formatMoney(c.difference.abs())}${c.note.isEmpty ? '' : ' · ${c.note}'}', maxLines: 1, overflow: TextOverflow.ellipsis),
                     trailing: Text(formatMoney(c.total), style: AppText.number),

@@ -1,9 +1,8 @@
-import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../desk/close_day_screen.dart';
 import '../desk/day_pass_sheet.dart';
 import '../shop/shop_screen.dart';
@@ -64,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final wide = MediaQuery.sizeOf(context).width >= AppShell.wideBreakpoint;
 
     final left = <Widget>[
-      if (!gym.hasMembers) const _WelcomeCard() else const SheenSweep(radius: BorderRadius.all(Radius.circular(22)), child: _TodayHero()),
+      if (!gym.hasMembers) const _WelcomeCard() else const _TodayHero(),
       const SizedBox(height: 14),
       const _KpiGrid(),
       if (gym.hasMembers) const ScrollReveal(child: _ReminderCta()),
@@ -118,14 +117,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ...right,
           ],
         ),
-        // A compact glass bar slides in once the big header has scrolled away.
+        // A compact bar fades in once the big header has scrolled away.
         ValueListenableBuilder<bool>(
           valueListenable: _barShown,
           builder: (context, shown, _) => AnimatedSlide(
             offset: shown ? Offset.zero : const Offset(0, -1.2),
             duration: Motion.medium,
             curve: Motion.settle,
-            child: AnimatedOpacity(opacity: shown ? 1 : 0, duration: Motion.fast, child: const _GlassBar()),
+            child: AnimatedOpacity(opacity: shown ? 1 : 0, duration: Motion.fast, child: const _CompactBar()),
           ),
         ),
       ],
@@ -133,27 +132,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-class _GlassBar extends StatelessWidget {
-  const _GlassBar();
+class _CompactBar extends StatelessWidget {
+  const _CompactBar();
 
   @override
   Widget build(BuildContext context) {
     final gym = context.watch<GymProvider>();
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(18, 8, 18, 10),
-          decoration: BoxDecoration(color: AppColors.background.withValues(alpha: 0.72), border: const Border(bottom: BorderSide(color: AppColors.border))),
-          child: Row(children: [
-            const BrandLogo(height: 30),
-            const SizedBox(width: 10),
-            Text('${formatWeekday(gym.now)} · ${formatDayMonth(gym.now)}'.toUpperCase(), style: AppText.headline.copyWith(fontSize: 17)),
-            const Spacer(),
-            Text('${gym.checkInsToday.length} in today', style: AppText.small.copyWith(color: AppColors.primaryBright, fontWeight: FontWeight.w800)),
-          ]),
-        ),
-      ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+      decoration: const BoxDecoration(color: AppColors.background, border: Border(bottom: BorderSide(color: AppColors.border))),
+      child: Row(children: [
+        const BrandLogo(height: 26),
+        const SizedBox(width: 10),
+        Text('${formatWeekday(gym.now)} ${gym.now.day}', style: AppText.headline.copyWith(fontSize: 16)),
+        const Spacer(),
+        Text('${gym.checkInsToday.length} in today', style: AppText.small),
+      ]),
     );
   }
 }
@@ -174,22 +168,19 @@ class _Header extends StatelessWidget {
         Row(
           children: [
             if (showBrand) Expanded(child: Align(alignment: Alignment.centerLeft, child: BrandHeader(branch: gym.settings.branchName))) else const Spacer(),
-            if (gym.settings.demoData) const Tooltip(message: 'Fictional members. Messages and calls are switched off.', child: StatusPill('Demo', color: AppColors.warning, icon: Icons.science_rounded)),
+            if (gym.settings.demoData) const Tooltip(message: 'Fictional members. Messages and calls are switched off.', child: StatusPill('Demo data', color: AppColors.warning)),
             if (gym.settings.hasPin)
               IconButton(
                 tooltip: gym.ownerUnlocked ? 'Lock owner areas' : 'Unlock owner areas',
                 onPressed: () => gym.ownerUnlocked ? gym.lock() : ensureOwner(context),
-                icon: AnimatedSwitcher(
-                  duration: Motion.medium,
-                  child: Icon(gym.ownerUnlocked ? Icons.lock_open_rounded : Icons.lock_rounded, key: ValueKey(gym.ownerUnlocked), color: gym.ownerUnlocked ? AppColors.success : AppColors.muted),
-                ),
+                icon: Icon(gym.ownerUnlocked ? AppIcons.lockOpen : AppIcons.lock, color: AppColors.textSecondary),
               ),
           ],
         ),
-        const SizedBox(height: 18),
-        Text('${greeting.toUpperCase()}, ${gym.settings.ownerName.toUpperCase()}', style: AppText.label.copyWith(color: AppColors.primaryBright, letterSpacing: 2.2)),
-        const SizedBox(height: 4),
-        RevealText('${formatWeekday(gym.now)} · ${formatDayMonth(gym.now)}'.toUpperCase(), style: AppText.display.copyWith(fontSize: 34)),
+        const SizedBox(height: 22),
+        Text('$greeting, ${gym.settings.ownerName}', style: AppText.bodyMuted),
+        const SizedBox(height: 2),
+        Text('${formatWeekday(gym.now)} ${gym.now.day} ${formatMonthYear(gym.now).split(' ').first}', style: AppText.display),
         const SizedBox(height: 10),
         const _DoorStatus(),
       ],
@@ -197,7 +188,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-/// "Face ID door · synced 2 min ago" under the date; tap to open the device screen.
+/// The Face ID door's state as a plate ring and a line of text; tap to open the device screen.
 class _DoorStatus extends StatelessWidget {
   const _DoorStatus();
 
@@ -207,22 +198,22 @@ class _DoorStatus extends StatelessWidget {
     final device = context.watch<DeviceService>();
     final ok = device.configured && device.error == null;
     final color = !device.configured ? AppColors.muted : (ok ? AppColors.success : AppColors.warning);
-    final text = !device.configured ? 'Face ID door not connected' : (device.error != null ? 'Face ID door unreachable' : 'Face ID door · ${syncAgo(gym.settings.lastDeviceSync, gym.now).toLowerCase()}');
-    return Pressable(
+    final text = !device.configured ? 'Face ID door not connected' : (device.error != null ? 'Face ID door unreachable' : 'Face ID door ${syncAgo(gym.settings.lastDeviceSync, gym.now).toLowerCase()}');
+    return InkWell(
+      borderRadius: BorderRadius.circular(6),
       onTap: () async {
         if (await ensureOwner(context) && context.mounted) openPage(context, const DeviceScreen());
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(999), border: Border.all(color: color.withValues(alpha: 0.3))),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.face_retouching_natural_rounded, size: 15, color: color),
-          const SizedBox(width: 6),
-          Text(text, style: AppText.small.copyWith(color: color, fontWeight: FontWeight.w700, fontSize: 12)),
-          if (device.busy) ...[const SizedBox(width: 8), SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1.6, color: color))],
+          PlateRing(color: color, size: 11),
+          const SizedBox(width: 8),
+          Text(text, style: AppText.small),
+          if (device.busy) ...[const SizedBox(width: 8), const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1.4))],
         ]),
       ),
-    ).entrance(context, delay: const Duration(milliseconds: 500));
+    );
   }
 }
 
@@ -297,7 +288,7 @@ class _WelcomeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('WELCOME TO\nYOUR GYM HQ', style: AppText.display.copyWith(fontSize: 34)),
+          Text('Welcome to\nyour gym desk', style: AppText.display.copyWith(fontSize: 30, color: Colors.white)),
           const SizedBox(height: 10),
           const Text(
             'Register your first member to start tracking memberships, payments and attendance. Or load sample data to see the app in action.',
@@ -310,15 +301,15 @@ class _WelcomeCard extends StatelessWidget {
                 child: FilledButton(
                   style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: AppColors.primaryDeep),
                   onPressed: () => openPage(context, const AdmissionScreen()),
-                  child: const FittedBox(child: Text('NEW ADMISSION')),
+                  child: const FittedBox(child: Text('New admission')),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.white54), minimumSize: const Size(0, 54)),
+                  style: OutlinedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.transparent, side: const BorderSide(color: Colors.white54), minimumSize: const Size(0, 54)),
                   onPressed: gym.loadDemoData,
-                  child: const Text('LOAD DEMO'),
+                  child: const Text('Load demo'),
                 ),
               ),
             ],
@@ -331,8 +322,8 @@ class _WelcomeCard extends StatelessWidget {
               onPressed: () async {
                 if (await ensureOwner(context) && context.mounted) openPage(context, const DeviceScreen());
               },
-              icon: const Icon(Icons.face_retouching_natural_rounded),
-              label: const Text('CONNECT THE FACE ID DOOR'),
+              icon: const Icon(AppIcons.faceId),
+              label: const Text('Connect the Face ID door'),
             ),
           ),
         ],
@@ -342,89 +333,55 @@ class _WelcomeCard extends StatelessWidget {
 }
 
 /// The red hero card: who is in today, today's collection and the last two weeks of visits.
+/// The door log: today's check-in count, and one tick for every entry across the gym's hours. The
+/// ticks draw in left to right when the screen opens, the app's one orchestrated moment.
 class _TodayHero extends StatelessWidget {
   const _TodayHero();
 
   @override
   Widget build(BuildContext context) {
     final gym = context.watch<GymProvider>();
-    final perDay = gym.checkInsPerDay(14);
+    final entries = [for (final c in gym.checkInsToday) c.time.hour + c.time.minute / 60];
     final recent = gym.recentlyIn();
     return AppCard(
-      gradient: AppColors.redGradient,
-      glow: true,
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 14),
       onTap: () => context.read<ShellController>().goTo(ShellTabs.checkIn),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: [
-              Text('TODAY AT THE DESK', style: AppText.label.copyWith(color: Colors.white.withValues(alpha: 0.8), letterSpacing: 2)),
-              const Spacer(),
-              _LivePulse(label: recent == 0 ? 'Quiet right now' : '$recent in the last 90 min'),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CountUp(value: gym.checkInsToday.length, style: AppText.display.copyWith(fontSize: 72, height: 0.9)),
-                    Text('CHECK-INS', style: AppText.label.copyWith(color: Colors.white.withValues(alpha: 0.8), fontSize: 11)),
+                    Text('In today', style: AppText.label),
+                    const SizedBox(height: 4),
+                    CountUp(value: gym.checkInsToday.length, duration: const Duration(milliseconds: 900), style: AppText.stat.copyWith(fontSize: 52, letterSpacing: -2)),
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withValues(alpha: 0.12))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    LockedValue(
-                      locked: !gym.ownerUnlocked,
-                      style: AppText.headline.copyWith(fontSize: 24),
-                      child: CountUp(value: gym.incomeToday, format: formatMoney, style: AppText.headline.copyWith(fontSize: 24)),
-                    ),
-                    Text('COLLECTED TODAY', style: AppText.label.copyWith(fontSize: 9.5, color: Colors.white70)),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('Collected', style: AppText.label),
+                  const SizedBox(height: 4),
+                  LockedValue(
+                    locked: !gym.ownerUnlocked,
+                    style: AppText.stat.copyWith(fontSize: 22),
+                    child: Text(formatMoney(gym.incomeToday), style: AppText.stat.copyWith(fontSize: 22)),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(recent == 0 ? 'Quiet right now' : '$recent in the last 90 min', style: AppText.small),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Sparkline(values: [for (final d in perDay) d.$2.toDouble()], height: 54),
-          const SizedBox(height: 4),
-          Text('VISITS · LAST 14 DAYS', style: AppText.label.copyWith(fontSize: 9.5, color: Colors.white.withValues(alpha: 0.7))),
+          const SizedBox(height: 16),
+          DoorLog(entries: entries, firstHour: heatmapFirstHour, lastHour: 23, nowHour: gym.now.hour + gym.now.minute / 60),
         ],
       ),
-    ).entrance(context, index: 1);
-  }
-}
-
-/// A softly breathing dot with a caption: the desk is live.
-class _LivePulse extends StatelessWidget {
-  final String label;
-
-  const _LivePulse({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    Widget dot = Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle));
-    if (!Motion.reduced(context)) {
-      dot = dot.animate(onPlay: (c) => c.repeat(reverse: true)).fadeOut(begin: 1, duration: 900.ms, curve: Curves.easeInOut).scaleXY(end: 0.7, duration: 900.ms);
-    }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.22), borderRadius: BorderRadius.circular(999)),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        SizedBox(width: 8, height: 8, child: dot),
-        const SizedBox(width: 7),
-        Text(label, style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontSize: 11.5, fontWeight: FontWeight.w700)),
-      ]),
     );
   }
 }
@@ -438,7 +395,7 @@ class _KpiGrid extends StatelessWidget {
     final shell = context.read<ShellController>();
     final tiles = [
       StatTile(
-        icon: Icons.groups_rounded,
+        icon: AppIcons.groups,
         color: AppColors.success,
         label: 'Active members',
         caption: '+${gym.newThisMonth} joined this month',
@@ -447,7 +404,7 @@ class _KpiGrid extends StatelessWidget {
         onTap: () => shell.openMembers(const MemberFilter(status: MemberStatus.active)),
       ),
       StatTile(
-        icon: Icons.hourglass_bottom_rounded,
+        icon: AppIcons.hourglassLow,
         color: AppColors.warning,
         label: 'Expiring soon',
         caption: 'Within ${gym.settings.expiryAlertDays} days',
@@ -456,7 +413,7 @@ class _KpiGrid extends StatelessWidget {
         onTap: () => shell.openReminders(ReminderKind.expiring),
       ),
       StatTile(
-        icon: Icons.account_balance_wallet_rounded,
+        icon: AppIcons.wallet,
         color: AppColors.ember,
         label: 'Pending dues',
         caption: '${gym.membersWithDue.length} members',
@@ -464,7 +421,7 @@ class _KpiGrid extends StatelessWidget {
         onTap: () => shell.openMembers(const MemberFilter(onlyDue: true)),
       ),
       StatTile(
-        icon: Icons.support_agent_rounded,
+        icon: AppIcons.support,
         color: AppColors.categorical[3],
         label: 'Follow-ups today',
         caption: '${gym.enquiriesWith(openOnly: true).length} open enquiries',
@@ -483,7 +440,7 @@ class _KpiGrid extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: width / 160,
+        childAspectRatio: width / 118,
         children: [for (var i = 0; i < tiles.length; i++) tiles[i].entrance(context, index: i + 2)],
       );
     });
@@ -503,16 +460,10 @@ class _ReminderCta extends StatelessWidget {
       padding: const EdgeInsets.only(top: 14),
       child: AppCard(
         onTap: () => context.read<ShellController>().openReminders(),
-        borderColor: count > 0 ? AppColors.whatsapp.withValues(alpha: 0.35) : null,
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(color: AppColors.whatsapp.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(16)),
-              child: const Icon(Icons.send_rounded, color: AppColors.whatsapp),
-            ),
+            Icon(AppIcons.send, color: count > 0 ? AppColors.text : AppColors.muted, size: 24),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -529,7 +480,7 @@ class _ReminderCta extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.muted),
+            const Icon(AppIcons.chevronRight, color: AppColors.muted),
           ],
         ),
       ).entrance(context, index: 6),
@@ -544,17 +495,17 @@ class _QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final shell = context.read<ShellController>();
     final actions = [
-      (Icons.person_add_alt_1_rounded, 'New\nadmission', AppColors.primary, () => openPage(context, const AdmissionScreen())),
-      (Icons.how_to_reg_rounded, 'Check-in', AppColors.categorical[0], () => shell.goTo(ShellTabs.checkIn)),
-      (Icons.currency_rupee_rounded, 'Collect\npayment', AppColors.success, () => showCollectPayment(context)),
-      (Icons.confirmation_number_outlined, 'Day pass\n& trial', AppColors.categorical[1], () => showDayPassSheet(context)),
-      (Icons.shopping_bag_rounded, 'Shop\nsale', AppColors.ember, () => showSellSheet(context)),
-      (Icons.sports_rounded, 'PT\nsession', AppColors.categorical[0], () => openPage(context, const PtScreen())),
-      (Icons.contact_phone_rounded, 'New\nenquiry', AppColors.categorical[3], () => showEnquirySheet(context)),
-      (Icons.receipt_long_rounded, 'Add\nexpense', AppColors.ember, () async {
+      (AppIcons.personAdd, 'New\nadmission', AppColors.primary, () => openPage(context, const AdmissionScreen())),
+      (AppIcons.checkIn, 'Check-in', AppColors.categorical[0], () => shell.goTo(ShellTabs.checkIn)),
+      (AppIcons.rupee, 'Collect\npayment', AppColors.success, () => showCollectPayment(context)),
+      (AppIcons.ticketOutline, 'Day pass\n& trial', AppColors.categorical[1], () => showDayPassSheet(context)),
+      (AppIcons.bag, 'Shop\nsale', AppColors.ember, () => showSellSheet(context)),
+      (AppIcons.trainer, 'PT\nsession', AppColors.categorical[0], () => openPage(context, const PtScreen())),
+      (AppIcons.contact, 'New\nenquiry', AppColors.categorical[3], () => showEnquirySheet(context)),
+      (AppIcons.receipt, 'Add\nexpense', AppColors.ember, () async {
         if (await ensureOwner(context) && context.mounted) showExpenseSheet(context);
       }),
-      (Icons.lock_clock_rounded, 'Close\nthe day', AppColors.whatsapp, () => openPage(context, const CloseDayScreen())),
+      (AppIcons.closeDay, 'Close\nthe day', AppColors.whatsapp, () => openPage(context, const CloseDayScreen())),
     ];
     return LayoutBuilder(builder: (context, box) {
       final perRow = box.maxWidth > 720 ? 9 : 3;
@@ -618,7 +569,7 @@ class _IncomeCardState extends State<_IncomeCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${formatMonthYear(gym.today)} so far'.toUpperCase(), style: AppText.label),
+                  Text('${formatMonthYear(gym.today)} so far', style: AppText.label),
                   const SizedBox(height: 6),
                   CountUp(value: gym.incomeThisMonth, format: formatMoney, style: AppText.display.copyWith(fontSize: 40)),
                   const SizedBox(height: 8),
@@ -637,7 +588,7 @@ class _IncomeCardState extends State<_IncomeCard> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('${(gym.targetProgress * 100).round()}%', style: AppText.headline.copyWith(fontSize: 22)),
-                    Text('OF TARGET', style: AppText.label.copyWith(fontSize: 8.5)),
+                    Text('Of target', style: AppText.label.copyWith(fontSize: 8.5)),
                   ],
                 ),
               ),
@@ -676,7 +627,7 @@ class _IncomeCardState extends State<_IncomeCard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.lock_rounded, color: AppColors.muted, size: 30),
+                    const Icon(AppIcons.lock, color: AppColors.muted, size: 30),
                     const SizedBox(height: 8),
                     const Text('Income is visible to the owner only', style: AppText.bodyMuted),
                     TextButton(onPressed: () => ensureOwner(context), child: const Text('Unlock with PIN')),
@@ -701,7 +652,7 @@ class _MonthDetail extends StatelessWidget {
     Widget cell(String value, String label) => Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(value, style: AppText.headline.copyWith(fontSize: 18)),
-            Text(label.toUpperCase(), style: AppText.label.copyWith(fontSize: 9)),
+            Text(label, style: AppText.label.copyWith(fontSize: 9)),
           ]),
         );
     final change = previous == null ? null : GymAnalytics.change(stats.income, previous!.income);
@@ -709,7 +660,7 @@ class _MonthDetail extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(color: AppColors.surfaceHigh, borderRadius: BorderRadius.circular(14)),
       child: Row(children: [
-        cell(formatShortMonth(stats.month).toUpperCase(), formatMonthYear(stats.month).split(' ').last),
+        cell(formatShortMonth(stats.month), formatMonthYear(stats.month).split(' ').last),
         cell(formatMoneyCompact(stats.income), change == null ? 'Income' : 'Income ${formatChange(change)}'),
         cell('${stats.admissions}', 'Joined'),
         cell('${stats.renewals}', 'Renewed'),
@@ -727,7 +678,7 @@ class _TodayClasses extends StatelessWidget {
     final list = gym.classesOn(gym.now.weekday);
     final nowMin = gym.now.hour * 60 + gym.now.minute;
     if (list.isEmpty) {
-      return const AppCard(child: Row(children: [Icon(Icons.event_busy_rounded, color: AppColors.muted), SizedBox(width: 12), Expanded(child: Text('No classes today.', style: AppText.bodyMuted))]));
+      return const AppCard(child: Row(children: [Icon(AppIcons.eventBusy, color: AppColors.muted), SizedBox(width: 12), Expanded(child: Text('No classes today.', style: AppText.bodyMuted))]));
     }
     return SizedBox(
       height: 132,
@@ -743,7 +694,7 @@ class _TodayClasses extends StatelessWidget {
             width: 172,
             child: AppCard(
               onTap: () => openPage(context, const ClassesScreen()),
-              borderColor: live ? c.type.color.withValues(alpha: 0.6) : null,
+              borderColor: live ? AppColors.text : null,
               padding: const EdgeInsets.all(14),
               child: Opacity(
                 opacity: done ? 0.5 : 1,
@@ -754,11 +705,11 @@ class _TodayClasses extends StatelessWidget {
                       children: [
                         IconBadge(c.type.icon, color: c.type.color, size: 34, radius: 11),
                         const Spacer(),
-                        if (live) StatusPill('Live', color: c.type.color, icon: Icons.circle) else if (done) const StatusPill('Done', color: AppColors.muted),
+                        if (live) const StatusPill('Live', color: AppColors.success) else if (done) const StatusPill('Done', color: AppColors.muted),
                       ],
                     ),
                     const Spacer(),
-                    Text(minutesLabel(c.startMinutes), style: AppText.headline.copyWith(fontSize: 20, color: c.type.color)),
+                    Text(minutesLabel(c.startMinutes), style: AppText.headline.copyWith(fontSize: 20)),
                     Text(c.title, style: AppText.small.copyWith(color: AppColors.text, fontWeight: FontWeight.w700), maxLines: 1, overflow: TextOverflow.ellipsis),
                     Text(gym.trainerById(c.trainerId)?.name ?? '${c.durationMin} min', style: AppText.small.copyWith(color: AppColors.muted, fontSize: 11.5), maxLines: 1, overflow: TextOverflow.ellipsis),
                   ],
@@ -803,10 +754,10 @@ class _ActivityRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final gym = context.read<GymProvider>();
     final (icon, color) = switch (item.kind) {
-      ActivityKind.checkIn => (Icons.login_rounded, AppColors.categorical[0]),
-      ActivityKind.payment => (Icons.currency_rupee_rounded, AppColors.success),
-      ActivityKind.admission => (Icons.person_add_alt_1_rounded, AppColors.primary),
-      ActivityKind.enquiry => (Icons.contact_phone_rounded, AppColors.categorical[3]),
+      ActivityKind.checkIn => (AppIcons.login, AppColors.categorical[0]),
+      ActivityKind.payment => (AppIcons.rupee, AppColors.success),
+      ActivityKind.admission => (AppIcons.personAdd, AppColors.primary),
+      ActivityKind.enquiry => (AppIcons.contact, AppColors.categorical[3]),
     };
     final when = sameDay(item.time, gym.today) ? formatTime(item.time) : relativeDay(item.time, gym.today);
     return InkWell(

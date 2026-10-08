@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -19,7 +20,7 @@ class AboutScreen extends StatelessWidget {
   static const email = 'pranavvinod508@gmail.com';
   static const github = 'https://github.com/pranavkk7';
   static const linkedin = 'https://linkedin.com/in/pranavkk';
-  static const version = '2.0';
+  static const version = '3.0';
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class AboutScreen extends StatelessWidget {
         children: [
           Center(child: const BrandLogo(height: 120).entrance(context)),
           const SizedBox(height: 14),
-          Text('${gym.settings.gymName.toUpperCase()}\nFRONT DESK', textAlign: TextAlign.center, style: AppText.display.copyWith(fontSize: 30)).entrance(context, index: 1),
+          Text('${gym.settings.gymName}\nFRONT DESK', textAlign: TextAlign.center, style: AppText.display.copyWith(fontSize: 30)).entrance(context, index: 1),
           const SizedBox(height: 6),
           Text('Version $version · ${gym.settings.branchName} branch', textAlign: TextAlign.center, style: AppText.small.copyWith(color: AppColors.muted)),
           const SizedBox(height: 26),
@@ -43,9 +44,9 @@ class AboutScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('DESIGNED & DEVELOPED BY', style: AppText.label.copyWith(color: Colors.white70, letterSpacing: 2.4)),
+                Text('Designed & developed by', style: AppText.small.copyWith(color: Colors.white70)),
                 const SizedBox(height: 6),
-                Text(developer.toUpperCase(), style: AppText.display.copyWith(fontSize: 52, height: 0.95)),
+                Text(developer, style: AppText.display.copyWith(fontSize: 46, height: 1, color: Colors.white)),
                 // A red line draws itself under the name.
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0, end: 1),
@@ -65,9 +66,9 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Wrap(spacing: 8, runSpacing: 8, children: [
-                  _LinkChip(icon: Icons.mail_rounded, label: 'Email', onTap: () => openLink(context, 'mailto:$email')),
-                  _LinkChip(icon: Icons.code_rounded, label: 'GitHub', onTap: () => openLink(context, github)),
-                  _LinkChip(icon: Icons.work_rounded, label: 'LinkedIn', onTap: () => openLink(context, linkedin)),
+                  _LinkChip(icon: AppIcons.mail, label: 'Email', onTap: () => openLink(context, 'mailto:$email')),
+                  _LinkChip(icon: AppIcons.code, label: 'GitHub', onTap: () => openLink(context, github)),
+                  _LinkChip(icon: AppIcons.work, label: 'LinkedIn', onTap: () => openLink(context, linkedin)),
                 ]),
               ],
             ),

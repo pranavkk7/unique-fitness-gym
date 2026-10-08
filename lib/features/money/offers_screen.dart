@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -37,8 +38,8 @@ class OffersScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => _showOfferSheet(context),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('NEW CODE', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('New code', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -49,7 +50,7 @@ class OffersScreen extends StatelessWidget {
           AppCard(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                IconBadge(Icons.card_giftcard_rounded, color: AppColors.categorical[2]),
+                IconBadge(AppIcons.gift, color: AppColors.categorical[2]),
                 const SizedBox(width: 12),
                 Expanded(child: Text('When a member brings a friend, their membership gets free days added.', style: AppText.body.copyWith(fontWeight: FontWeight.w600))),
               ]),
@@ -116,7 +117,7 @@ class _OfferTicket extends StatelessWidget {
               decoration: BoxDecoration(gradient: live ? AppColors.redGradient : null, color: live ? null : AppColors.surfaceHigher, borderRadius: const BorderRadius.horizontal(left: Radius.circular(21))),
               alignment: Alignment.center,
               padding: const EdgeInsets.all(10),
-              child: FittedBox(child: Text(o.label.toUpperCase(), style: AppText.headline.copyWith(color: Colors.white, fontSize: 22), textAlign: TextAlign.center)),
+              child: FittedBox(child: Text(o.label, style: AppText.headline.copyWith(color: Colors.white, fontSize: 22), textAlign: TextAlign.center)),
             ),
             CustomPaint(size: const Size(2, double.infinity), painter: _DashPainter()),
             Expanded(
@@ -138,7 +139,7 @@ class _OfferTicket extends StatelessWidget {
             ),
             IconButton(
               tooltip: 'Copy code',
-              icon: const Icon(Icons.copy_rounded, size: 18, color: AppColors.muted),
+              icon: const Icon(AppIcons.copy, size: 18, color: AppColors.muted),
               onPressed: () => Clipboard.setData(ClipboardData(text: o.code)),
             ),
           ]),
@@ -228,7 +229,7 @@ class _OfferSheetState extends State<_OfferSheet> {
               controller: _code,
               textCapitalization: TextCapitalization.characters,
               inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[A-Za-z0-9]')), LengthLimitingTextInputFormatter(14)],
-              decoration: InputDecoration(labelText: 'Code', hintText: 'ONAM10', prefixIcon: const Icon(Icons.confirmation_number_rounded), errorText: _error),
+              decoration: InputDecoration(labelText: 'Code', hintText: 'ONAM10', prefixIcon: const Icon(AppIcons.ticket), errorText: _error),
               validator: (v) => requiredText(v, 'Enter a code'),
             ),
             const FieldLabel('Discount'),
@@ -255,7 +256,7 @@ class _OfferSheetState extends State<_OfferSheet> {
                 child: PickerField(
                   label: 'Valid until',
                   value: _until == null ? null : formatDate(_until!),
-                  icon: Icons.event_rounded,
+                  icon: AppIcons.event,
                   onTap: () async {
                     final d = await pickDate(context, initial: _until ?? gym.today.add(const Duration(days: 30)), first: gym.today.subtract(const Duration(days: 365)), last: gym.today.add(const Duration(days: 730)));
                     if (d != null) setState(() => _until = d);
@@ -268,7 +269,7 @@ class _OfferSheetState extends State<_OfferSheet> {
             ]),
             if (widget.offer != null) SwitchListTile(contentPadding: EdgeInsets.zero, value: _active, onChanged: (v) => setState(() => _active = v), title: const Text('Code is active')),
             const SizedBox(height: 18),
-            FilledButton(onPressed: _save, child: const Text('SAVE CODE')),
+            FilledButton(onPressed: _save, child: const Text('Save code')),
             if (widget.offer != null)
               TextButton(
                 onPressed: () async {
@@ -330,11 +331,11 @@ class _OfferCodeFieldState extends State<OfferCodeField> {
       onChanged: (_) => _check(),
       decoration: InputDecoration(
         labelText: 'Offer code',
-        prefixIcon: const Icon(Icons.confirmation_number_rounded),
+        prefixIcon: const Icon(AppIcons.ticket),
         errorText: _result.error,
         helperText: ok ? '${_result.offer!.label} · saves ${formatMoney(_result.discount)}' : null,
         helperStyle: AppText.small.copyWith(color: AppColors.success, fontWeight: FontWeight.w700),
-        suffixIcon: AnimatedSwitcher(duration: Motion.fast, child: ok ? const Icon(Icons.check_circle_rounded, color: AppColors.success, key: ValueKey('ok')) : const SizedBox.shrink()),
+        suffixIcon: AnimatedSwitcher(duration: Motion.fast, child: ok ? const Icon(AppIcons.checkCircle, color: AppColors.success, key: ValueKey('ok')) : const SizedBox.shrink()),
       ),
     );
   }

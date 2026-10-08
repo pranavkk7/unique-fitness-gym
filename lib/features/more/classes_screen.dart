@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -40,8 +41,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => _showClassSheet(context, day: _day),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('CLASS', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('Class', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: Column(
         children: [
@@ -69,7 +70,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                           border: Border.all(color: d == gym.today.weekday && _day != d ? AppColors.primary.withValues(alpha: 0.5) : AppColors.border),
                         ),
                         child: Column(children: [
-                          Text(_days[d - 1].toUpperCase(), style: AppText.label.copyWith(fontSize: 10, color: _day == d ? Colors.white : AppColors.muted)),
+                          Text(_days[d - 1], style: AppText.label.copyWith(fontSize: 10, color: _day == d ? Colors.white : AppColors.muted)),
                           const SizedBox(height: 2),
                           Text('${gym.classesOn(d).length}', style: AppText.headline.copyWith(fontSize: 18)),
                         ]),
@@ -83,7 +84,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
             child: AnimatedSwitcher(
               duration: Motion.medium,
               child: list.isEmpty
-                  ? EmptyState(key: ValueKey('empty$_day'), icon: Icons.event_busy_rounded, title: 'No classes', subtitle: 'Nothing on the timetable for this day.')
+                  ? EmptyState(key: ValueKey('empty$_day'), icon: AppIcons.eventBusy, title: 'No classes', subtitle: 'Nothing on the timetable for this day.')
                   : ListView(
                       key: ValueKey(_day),
                       padding: const EdgeInsets.fromLTRB(18, 8, 18, 100),
@@ -136,7 +137,7 @@ class _ClassRow extends StatelessWidget {
                 opacity: done ? 0.55 : 1,
                 child: AppCard(
                   onTap: () => openPage(context, ClassRosterScreen(classId: c.id, onEdit: () => _showClassSheet(context, gymClass: c))),
-                  borderColor: live ? c.type.color : null,
+                  borderColor: live ? AppColors.text : null,
                   padding: const EdgeInsets.all(14),
                   child: Row(children: [
                     Container(width: 4, height: 46, decoration: BoxDecoration(color: c.type.color, borderRadius: BorderRadius.circular(2))),
@@ -145,7 +146,7 @@ class _ClassRow extends StatelessWidget {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Row(children: [
                           Flexible(child: Text(c.title, style: AppText.title.copyWith(fontSize: 16))),
-                          if (live) ...[const SizedBox(width: 8), StatusPill('Live now', color: c.type.color, icon: Icons.circle)],
+                          if (live) ...[const SizedBox(width: 8), const StatusPill('Live now', color: AppColors.success)],
                         ]),
                         const SizedBox(height: 3),
                         Text('${minutesLabel(c.startMinutes)} – ${minutesLabel(c.endMinutes)} · ${gym.trainerById(c.trainerId)?.name ?? 'No trainer'} ', style: AppText.small.copyWith(color: AppColors.muted)),
@@ -163,7 +164,7 @@ class _ClassRow extends StatelessWidget {
                         if (c.notes.isNotEmpty) Text(c.notes, style: AppText.small, maxLines: 1, overflow: TextOverflow.ellipsis),
                       ]),
                     ),
-                    Icon(c.type.icon, color: c.type.color),
+                    Icon(c.type.icon, color: AppColors.muted),
                   ]),
                 ),
               ),
@@ -217,7 +218,7 @@ class _ClassSheetState extends State<_ClassSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SheetHeader(widget.gymClass == null ? 'New class' : 'Edit class'),
-            TextFormField(controller: _title, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Class name', prefixIcon: Icon(Icons.event_rounded)), validator: (v) => requiredText(v, 'Enter a name')),
+            TextFormField(controller: _title, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Class name', prefixIcon: Icon(AppIcons.event)), validator: (v) => requiredText(v, 'Enter a name')),
             const FieldLabel('Type'),
             ChoiceChips<ClassType>(options: ClassType.values, selected: _type, labelOf: (t) => t.label, iconOf: (t) => t.icon, onSelected: (t) => setState(() => _type = t)),
             const FieldLabel('Days'),
@@ -233,7 +234,7 @@ class _ClassSheetState extends State<_ClassSheet> {
             PickerField(
               label: 'Start time',
               value: minutesLabel(_start),
-              icon: Icons.schedule_rounded,
+              icon: AppIcons.schedule,
               onTap: () async {
                 final t = await showTimePicker(context: context, initialTime: TimeOfDay(hour: _start ~/ 60, minute: _start % 60));
                 if (t != null) setState(() => _start = t.hour * 60 + t.minute);
@@ -243,20 +244,20 @@ class _ClassSheetState extends State<_ClassSheet> {
             ChoiceChips<int>(options: const [30, 45, 60, 90, 120], selected: _duration, labelOf: (m) => m == 120 ? '2 hours' : '$m min', onSelected: (m) => setState(() => _duration = m)),
             const FieldLabel('Capacity'),
             Row(children: [
-              IconButton.outlined(tooltip: 'Fewer spots', onPressed: _capacity > 1 ? () => setState(() => _capacity--) : null, icon: const Icon(Icons.remove_rounded)),
+              IconButton.outlined(tooltip: 'Fewer spots', onPressed: _capacity > 1 ? () => setState(() => _capacity--) : null, icon: const Icon(AppIcons.remove)),
               Expanded(child: Text('$_capacity spots', textAlign: TextAlign.center, style: AppText.title)),
-              IconButton.outlined(tooltip: 'More spots', onPressed: () => setState(() => _capacity++), icon: const Icon(Icons.add_rounded)),
+              IconButton.outlined(tooltip: 'More spots', onPressed: () => setState(() => _capacity++), icon: const Icon(AppIcons.add)),
             ]),
             const SizedBox(height: 14),
             DropdownButtonFormField<String?>(
               isExpanded: true,
               initialValue: _trainerId,
-              decoration: const InputDecoration(labelText: 'Trainer', prefixIcon: Icon(Icons.sports_rounded)),
+              decoration: const InputDecoration(labelText: 'Trainer', prefixIcon: Icon(AppIcons.trainer)),
               items: [const DropdownMenuItem(value: null, child: Text('No trainer')), for (final t in gym.trainers) DropdownMenuItem(value: t.id, child: Text(t.name))],
               onChanged: (v) => setState(() => _trainerId = v),
             ),
             const SizedBox(height: 12),
-            TextField(controller: _notes, decoration: const InputDecoration(labelText: 'Description', prefixIcon: Icon(Icons.notes_rounded))),
+            TextField(controller: _notes, decoration: const InputDecoration(labelText: 'Description', prefixIcon: Icon(AppIcons.notes))),
             const SizedBox(height: 20),
             FilledButton(
               onPressed: () async {
@@ -276,7 +277,7 @@ class _ClassSheetState extends State<_ClassSheet> {
                 ));
                 if (context.mounted) Navigator.pop(context);
               },
-              child: Text(_days.isEmpty ? 'PICK AT LEAST ONE DAY' : 'SAVE CLASS'),
+              child: Text(_days.isEmpty ? 'Pick at least one day' : 'Save class'),
             ),
             if (widget.gymClass != null)
               TextButton(

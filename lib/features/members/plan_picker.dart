@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -90,9 +91,10 @@ class TierStyle {
   const TierStyle(this.metal, this.accent);
 
   static TierStyle of(PlanTier tier) => switch (tier) {
-        PlanTier.silver => const TierStyle([Color(0xFFF4F5F8), Color(0xFF9EA3AE), Color(0xFFE3E5EA), Color(0xFF8A8F99)], Color(0xFFC9CDD5)),
-        PlanTier.platinum => const TierStyle([Color(0xFFFFEDB0), Color(0xFFD29B32), Color(0xFFFFD873), Color(0xFFB07A1E)], Color(0xFFE9B44C)),
-        PlanTier.other => const TierStyle([AppColors.primaryBright, AppColors.primary], AppColors.primary),
+        // Tiers are told apart by name and perks, in plain ink: metallic gradients wash out on white.
+        PlanTier.silver => const TierStyle([AppColors.textSecondary, AppColors.textSecondary], AppColors.text),
+        PlanTier.platinum => const TierStyle([AppColors.text, AppColors.text], AppColors.text),
+        PlanTier.other => const TierStyle([AppColors.text, AppColors.text], AppColors.text),
       };
 
   LinearGradient get gradient => LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: metal);
@@ -108,10 +110,10 @@ class TierText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShaderMask(
-      blendMode: BlendMode.srcIn,
-      shaderCallback: (rect) => TierStyle.of(tier).gradient.createShader(rect),
-      child: Text(text, style: style.copyWith(color: Colors.white)),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Text(text, maxLines: 1, style: style.copyWith(color: TierStyle.of(tier).metal.first)),
     );
   }
 }
@@ -142,35 +144,34 @@ class _TierCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(14, 14, 12, 14),
           decoration: BoxDecoration(
             gradient: AppColors.surfaceGradient,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: selected ? style.accent : AppColors.border, width: selected ? 1.8 : 1),
-            boxShadow: selected ? [BoxShadow(color: style.accent.withValues(alpha: 0.28), blurRadius: 26, spreadRadius: -8, offset: const Offset(0, 10))] : null,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: selected ? AppColors.text : AppColors.border, width: selected ? 1.6 : 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                Expanded(child: TierText(tier.label.toUpperCase(), tier: tier, style: AppText.display.copyWith(fontSize: 28))),
+                Expanded(child: TierText(tier.label, tier: tier, style: AppText.display.copyWith(fontSize: 22))),
                 AnimatedSwitcher(
                   duration: Motion.fast,
                   transitionBuilder: (c, a) => ScaleTransition(scale: a, child: c),
-                  child: selected ? Icon(Icons.check_circle_rounded, key: const ValueKey('on'), color: style.accent, size: 22) : const SizedBox(key: ValueKey('off'), width: 22),
+                  child: selected ? Icon(AppIcons.checkCircle, key: const ValueKey('on'), color: style.accent, size: 22) : const SizedBox(key: ValueKey('off'), width: 22),
                 ),
               ]),
-              Text('MEMBERSHIP', style: AppText.label.copyWith(fontSize: 9.5, letterSpacing: 2.4, color: style.accent)),
+              Text('Membership', style: AppText.label),
               const SizedBox(height: 10),
               for (final perk in tier.perks)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 4),
                   child: Row(children: [
-                    Icon(Icons.check_rounded, size: 14, color: style.accent),
+                    Icon(AppIcons.check, size: 14, color: style.accent),
                     const SizedBox(width: 6),
                     Expanded(child: Text(perk, style: AppText.small.copyWith(fontSize: 12, color: AppColors.textSecondary))),
                   ]),
                 ),
               const Spacer(),
               const SizedBox(height: 6),
-              if (cheapest.isFinite) Text('From ${formatMoney(cheapest.round())}/mo', style: AppText.small.copyWith(color: AppColors.text, fontWeight: FontWeight.w800)),
+              if (cheapest.isFinite) Text('From ${formatMoney(cheapest.round())} a month', style: AppText.small.copyWith(color: AppColors.text, fontWeight: FontWeight.w600)),
             ],
           ),
         ),
@@ -203,16 +204,15 @@ class _DurationCard extends StatelessWidget {
           curve: Motion.settle,
           padding: const EdgeInsets.fromLTRB(10, 10, 8, 10),
           decoration: BoxDecoration(
-            gradient: selected
-                ? LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [AppColors.primary.withValues(alpha: 0.3), AppColors.primaryDeep.withValues(alpha: 0.25)])
-                : AppColors.surfaceGradient,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: selected ? AppColors.primary : AppColors.border, width: selected ? 1.6 : 1),
+            // Same language as the tier cards: white sheet, an iron edge when chosen.
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: selected ? AppColors.text : AppColors.border, width: selected ? 1.6 : 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(plan.durationLabel.toUpperCase(), style: AppText.label.copyWith(fontSize: 10, color: selected ? AppColors.text : AppColors.muted), maxLines: 1),
+              Text(plan.durationLabel, style: AppText.small.copyWith(color: selected ? AppColors.text : AppColors.muted), maxLines: 1),
               const SizedBox(height: 4),
               FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(formatMoney(plan.price), style: AppText.headline.copyWith(fontSize: 20))),
               Text(plan.months > 1 ? '${formatMoney(plan.perMonth.round())}/mo' : 'per month', style: AppText.small.copyWith(fontSize: 11, color: AppColors.muted), maxLines: 1),
@@ -220,13 +220,9 @@ class _DurationCard extends StatelessWidget {
               SizedBox(
                 height: 18,
                 child: saving > 0
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6)),
-                        child: FittedBox(child: Text('SAVE ${formatMoney(saving.round())}', style: AppText.label.copyWith(fontSize: 9, color: AppColors.success, letterSpacing: 0.6))),
-                      )
+                    ? FittedBox(child: Text('Save ${formatMoney(saving.round())}', style: AppText.small.copyWith(fontSize: 11.5, color: AppColors.success, fontWeight: FontWeight.w600)))
                     : plan.popular
-                        ? Text('POPULAR', style: AppText.label.copyWith(fontSize: 9, color: accent))
+                        ? Text('Popular', style: AppText.label.copyWith(fontSize: 9, color: accent))
                         : null,
               ),
             ],

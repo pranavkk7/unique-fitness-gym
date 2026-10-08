@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -38,8 +39,8 @@ class FeedbackScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showFeedbackSheet(context),
-        icon: const Icon(Icons.rate_review_rounded),
-        label: const Text('ADD FEEDBACK', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.review),
+        label: const Text('Add feedback', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -51,7 +52,7 @@ class FeedbackScreen extends StatelessWidget {
                 CountUp(value: avg ?? 0, format: (v) => avg == null ? '—' : v.toStringAsFixed(1), style: AppText.stat.copyWith(fontSize: 48)),
                 Stars(rating: (avg ?? 0).round(), size: 16),
                 const SizedBox(height: 4),
-                Text('LAST 90 DAYS', style: AppText.label.copyWith(fontSize: 9)),
+                Text('Last 90 days', style: AppText.label.copyWith(fontSize: 9)),
               ]),
               const SizedBox(width: 22),
               Expanded(
@@ -101,7 +102,7 @@ class FeedbackScreen extends StatelessWidget {
             const SectionHeader('All feedback'),
             for (var i = 0; i < rest.length; i++) Padding(padding: const EdgeInsets.only(bottom: 8), child: _FeedbackCard(entry: rest[i])).entrance(context, index: i < 10 ? i : 10),
           ],
-          if (all.isEmpty) const EmptyState(icon: Icons.rate_review_rounded, title: 'No feedback yet', subtitle: 'Ask members how the gym is doing and note it here.'),
+          if (all.isEmpty) const EmptyState(icon: AppIcons.review, title: 'No feedback yet', subtitle: 'Ask members how the gym is doing and note it here.'),
         ],
       ),
     );
@@ -120,7 +121,7 @@ class Stars extends StatelessWidget {
         label: '$rating out of 5 stars',
         excludeSemantics: true,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          for (var i = 1; i <= 5; i++) Icon(i <= rating ? Icons.star_rounded : Icons.star_outline_rounded, size: size, color: i <= rating ? AppColors.warning : AppColors.muted),
+          for (var i = 1; i <= 5; i++) Icon(i <= rating ? AppIcons.star : AppIcons.starOutline, size: size, color: i <= rating ? AppColors.warning : AppColors.muted),
         ]),
       );
 }
@@ -152,7 +153,7 @@ class _FeedbackCard extends StatelessWidget {
         if (f.resolved && f.response.isNotEmpty) ...[
           const SizedBox(height: 8),
           Row(children: [
-            const Icon(Icons.subdirectory_arrow_right_rounded, size: 16, color: AppColors.success),
+            const Icon(AppIcons.reply, size: 16, color: AppColors.success),
             const SizedBox(width: 6),
             Expanded(child: Text(f.response, style: AppText.small.copyWith(color: AppColors.success))),
           ]),
@@ -164,10 +165,10 @@ class _FeedbackCard extends StatelessWidget {
               if (member != null)
                 TextButton.icon(
                   onPressed: () => openWhatsApp(context, member.phone, 'Hi ${member.firstName}, thank you for your feedback about ${f.category.label.toLowerCase()} at ${gym.settings.gymName}. '),
-                  icon: const Icon(Icons.chat_rounded, size: 18, color: AppColors.whatsapp),
-                  label: const Text('REPLY'),
+                  icon: const Icon(AppIcons.chat, size: 18, color: AppColors.whatsapp),
+                  label: const Text('Reply'),
                 ),
-              TextButton.icon(onPressed: () => _resolve(context), icon: const Icon(Icons.check_rounded, size: 18), label: const Text('RESOLVE')),
+              TextButton.icon(onPressed: () => _resolve(context), icon: const Icon(AppIcons.check, size: 18), label: const Text('Resolve')),
             ]),
           ),
       ]),
@@ -179,7 +180,7 @@ class _FeedbackCard extends StatelessWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (d) => AlertDialog(
-        title: const Text('WHAT WAS DONE?'),
+        title: const Text('What was done?'),
         content: TextField(controller: ctrl, autofocus: true, decoration: const InputDecoration(hintText: 'Added a second evening batch')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
@@ -240,7 +241,7 @@ class _FeedbackSheetState extends State<_FeedbackSheet> {
                     scale: i <= _rating ? 1.1 : 1,
                     duration: Motion.fast,
                     curve: Motion.pop,
-                    child: Icon(i <= _rating ? Icons.star_rounded : Icons.star_outline_rounded, color: i <= _rating ? AppColors.warning : AppColors.muted),
+                    child: Icon(i <= _rating ? AppIcons.star : AppIcons.starOutline, color: i <= _rating ? AppColors.warning : AppColors.muted),
                   ),
                 ),
             ]),
@@ -253,7 +254,7 @@ class _FeedbackSheetState extends State<_FeedbackSheet> {
           PickerField(
             label: 'Member (optional)',
             value: _member?.name,
-            icon: Icons.person_rounded,
+            icon: AppIcons.person,
             onTap: () async {
               final m = await pickMember(context, title: 'Whose feedback?');
               if (m != null) setState(() => _member = m);
@@ -271,7 +272,7 @@ class _FeedbackSheetState extends State<_FeedbackSheet> {
                     Navigator.pop(context);
                     showMessage(context, _rating <= 3 ? 'Saved. It is on the "Needs action" list.' : 'Thanks, feedback saved.');
                   },
-            child: Text(_rating == 0 ? 'TAP A STAR' : 'SAVE FEEDBACK'),
+            child: Text(_rating == 0 ? 'Tap a star' : 'Save feedback'),
           ),
         ],
       ),

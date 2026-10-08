@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/utils/contact.dart';
@@ -39,9 +40,9 @@ class _FreezeSheetState extends State<_FreezeSheet> {
           SheetHeader('Freeze membership', subtitle: '${widget.member.firstName} keeps every paid day. Check-ins are paused while frozen.'),
           Row(
             children: [
-              const Icon(Icons.ac_unit_rounded, color: AppColors.frozen, size: 30),
+              const Icon(AppIcons.freeze, color: AppColors.frozen, size: 30),
               const SizedBox(width: 12),
-              Text('${_days.round()} DAYS', style: AppText.display.copyWith(fontSize: 40)),
+              Text('${_days.round()} days', style: AppText.display.copyWith(fontSize: 40)),
             ],
           ),
           Slider(value: _days, min: 1, max: 90, divisions: 89, label: '${_days.round()} days', onChanged: (v) => setState(() => _days = v)),
@@ -63,8 +64,8 @@ class _FreezeSheetState extends State<_FreezeSheet> {
                 if (context.mounted) showMessage(context, e.message);
               }
             },
-            icon: const Icon(Icons.ac_unit_rounded),
-            label: const Text('FREEZE'),
+            icon: const Icon(AppIcons.freeze),
+            label: const Text('Freeze'),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -43,8 +44,8 @@ class PtScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showSellPtSheet(context),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('SELL PACKAGE', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('Sell package', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -80,7 +81,7 @@ class PtScreen extends StatelessWidget {
           ],
           const SectionHeader('Running packages'),
           if (active.isEmpty)
-            const EmptyState(icon: Icons.sports_rounded, title: 'No PT packages', subtitle: 'Sell a package of sessions to a member and mark each session here.')
+            const EmptyState(icon: AppIcons.trainer, title: 'No PT packages', subtitle: 'Sell a package of sessions to a member and mark each session here.')
           else
             for (var i = 0; i < active.length; i++) Padding(padding: const EdgeInsets.only(bottom: 10), child: PtPackageCard(package: active[i], showMember: true)).entrance(context, index: i + 1),
         ],
@@ -114,7 +115,7 @@ class PtPackageCard extends StatelessWidget {
           color: p.left <= 2 ? AppColors.warning : AppColors.primary,
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text('${p.left}', style: AppText.headline.copyWith(fontSize: 20)),
-            Text('LEFT', style: AppText.label.copyWith(fontSize: 8)),
+            Text('Left', style: AppText.label.copyWith(fontSize: 8)),
           ]),
         ),
         const SizedBox(width: 14),
@@ -132,17 +133,17 @@ class PtPackageCard extends StatelessWidget {
                     await gym.undoPtSession(p.id);
                     if (context.mounted) showMessage(context, 'Last session removed.');
                   },
-                  child: const Text('UNDO'),
+                  child: const Text('Undo'),
                 )
               : FilledButton.icon(
                   style: FilledButton.styleFrom(minimumSize: const Size(0, 42), padding: const EdgeInsets.symmetric(horizontal: 14)),
-                  icon: const Icon(Icons.check_rounded, size: 18),
+                  icon: const Icon(AppIcons.check, size: 18),
                   onPressed: () async {
                     HapticFeedback.mediumImpact();
                     await gym.usePtSession(p.id);
                     if (context.mounted) showMessage(context, 'Session ${p.used + 1} of ${p.sessionsTotal} marked.');
                   },
-                  label: const Text('SESSION'),
+                  label: const Text('Session'),
                 ),
       ]),
     );
@@ -236,7 +237,7 @@ class _SellPtSheetState extends State<_SellPtSheet> {
           UpiQrPanel(show: _method == PayMethod.upi && paid > 0, amount: paid, note: 'Personal training'),
           CashChange(show: _method == PayMethod.cash && paid > 0, amount: paid),
           const SizedBox(height: 18),
-          FilledButton.icon(onPressed: _saving || gym.trainers.isEmpty ? null : _save, icon: const Icon(Icons.check_rounded), label: Text('SELL $_sessions SESSIONS')),
+          FilledButton.icon(onPressed: _saving || gym.trainers.isEmpty ? null : _save, icon: const Icon(AppIcons.check), label: Text('Sell $_sessions sessions')),
         ],
       ),
     );
@@ -255,17 +256,17 @@ class PtProfileSection extends StatelessWidget {
     final active = gym.activePtPackage(member.id);
     final past = gym.ptPackagesFor(member.id).where((p) => p.id != active?.id).length;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      SectionHeader('Personal training', actionLabel: active == null ? null : 'SELL MORE', onAction: () => showSellPtSheet(context, member: member)),
+      SectionHeader('Personal training', actionLabel: active == null ? null : 'Sell more', onAction: () => showSellPtSheet(context, member: member)),
       if (active != null)
         PtPackageCard(package: active)
       else
         AppCard(
           onTap: () => showSellPtSheet(context, member: member),
           child: Row(children: [
-            IconBadge(Icons.sports_rounded, color: AppColors.categorical[0]),
+            IconBadge(AppIcons.trainer, color: AppColors.categorical[0]),
             const SizedBox(width: 12),
             Expanded(child: Text(past > 0 ? 'No running package · $past finished' : 'No personal training yet. Sell a package.', style: AppText.bodyMuted)),
-            const Icon(Icons.add_circle_rounded, color: AppColors.primaryBright),
+            const Icon(AppIcons.addCircle, color: AppColors.primaryBright),
           ]),
         ),
     ]);

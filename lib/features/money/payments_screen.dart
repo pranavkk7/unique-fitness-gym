@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -46,30 +47,30 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showCollectPayment(context),
-        icon: const Icon(Icons.currency_rupee_rounded),
-        label: const Text('COLLECT', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.rupee),
+        label: const Text('Collect', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 100),
         children: [
           Row(children: [
-            IconButton(tooltip: 'Previous month', icon: const Icon(Icons.chevron_left_rounded), onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1))),
-            Expanded(child: Text(formatMonthYear(_month).toUpperCase(), textAlign: TextAlign.center, style: AppText.headline.copyWith(fontSize: 20))),
-            IconButton(tooltip: 'Next month', icon: const Icon(Icons.chevron_right_rounded), onPressed: isCurrent ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1))),
+            IconButton(tooltip: 'Previous month', icon: const Icon(AppIcons.chevronLeft), onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1))),
+            Expanded(child: Text(formatMonthYear(_month), textAlign: TextAlign.center, style: AppText.headline.copyWith(fontSize: 20))),
+            IconButton(tooltip: 'Next month', icon: const Icon(AppIcons.chevronRight), onPressed: isCurrent ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1))),
           ]),
           AppCard(
             padding: const EdgeInsets.all(18),
             child: Row(children: [
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('COLLECTED', style: AppText.label),
+                  Text('Collected', style: AppText.label),
                   CountUp(value: total, format: formatMoney, style: AppText.display.copyWith(fontSize: 36)),
                 ]),
               ),
               Text('${receipts.length} receipts', style: AppText.small.copyWith(color: AppColors.muted)),
             ]),
           ).entrance(context),
-          if (receipts.isEmpty) const Padding(padding: EdgeInsets.only(top: 40), child: EmptyState(icon: Icons.receipt_long_rounded, title: 'No payments', subtitle: 'Nothing was collected this month.')),
+          if (receipts.isEmpty) const Padding(padding: EdgeInsets.only(top: 40), child: EmptyState(icon: AppIcons.receipt, title: 'No payments', subtitle: 'Nothing was collected this month.')),
           for (final day in byDay.entries) ...[
             SectionHeader('${relativeDay(day.key, gym.today)} · ${formatMoney(day.value.expand((r) => r).fold(0.0, (s, p) => s + p.amount))}'),
             AppCard(

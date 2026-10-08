@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -44,8 +45,8 @@ class _EnquiriesScreenState extends State<EnquiriesScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showEnquirySheet(context),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('ENQUIRY', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('Enquiry', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 100),
@@ -80,7 +81,7 @@ class _EnquiriesScreenState extends State<EnquiriesScreen> {
           ),
           const SizedBox(height: 12),
           if (list.isEmpty)
-            const EmptyState(icon: Icons.contact_phone_rounded, title: 'No enquiries here', subtitle: 'Save walk-ins and calls so every lead gets a follow-up.')
+            const EmptyState(icon: AppIcons.contact, title: 'No enquiries here', subtitle: 'Save walk-ins and calls so every lead gets a follow-up.')
           else
             for (var i = 0; i < list.length; i++) _EnquiryCard(enquiry: list[i]).entrance(context, index: i),
         ],
@@ -140,12 +141,12 @@ class _EnquiryCard extends StatelessWidget {
             Row(children: [
               if (e.nextFollowUp != null && e.status.isOpen)
                 StatusPill(overdue ? 'Follow up ${relativeDay(e.nextFollowUp!, gym.today).toLowerCase()}' : 'Next: ${relativeDay(e.nextFollowUp!, gym.today)}',
-                    color: overdue ? AppColors.warning : AppColors.muted, icon: Icons.event_rounded),
+                    color: overdue ? AppColors.warning : AppColors.muted, icon: AppIcons.event),
               const Spacer(),
-              IconButton(tooltip: 'Call', icon: const Icon(Icons.call_rounded, size: 20), onPressed: () => callNumber(context, e.phone)),
+              IconButton(tooltip: 'Call', icon: const Icon(AppIcons.call, size: 20), onPressed: () => callNumber(context, e.phone)),
               IconButton(
                 tooltip: 'WhatsApp follow-up',
-                icon: const Icon(Icons.chat_rounded, size: 20, color: AppColors.whatsapp),
+                icon: const Icon(AppIcons.chat, size: 20, color: AppColors.whatsapp),
                 onPressed: () async {
                   final ok = await openWhatsApp(context, e.phone, gym.enquiryMessage(e));
                   if (ok) await gym.logReminder(ReminderKind.followUp, e.id);
@@ -154,7 +155,7 @@ class _EnquiryCard extends StatelessWidget {
               if (e.status.isOpen)
                 TextButton.icon(
                   onPressed: () => openPage(context, AdmissionScreen(enquiryId: e.id)),
-                  icon: const Icon(Icons.how_to_reg_rounded, size: 18),
+                  icon: const Icon(AppIcons.checkIn, size: 18),
                   label: const Text('Admit'),
                 ),
             ]),

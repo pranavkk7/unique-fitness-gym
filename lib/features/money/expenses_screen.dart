@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -39,16 +40,16 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showExpenseSheet(context),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('ADD EXPENSE', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.add),
+        label: const Text('Add expense', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 100),
         children: [
           Row(children: [
-            IconButton(tooltip: 'Previous month', icon: const Icon(Icons.chevron_left_rounded), onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1))),
-            Expanded(child: Text(formatMonthYear(_month).toUpperCase(), textAlign: TextAlign.center, style: AppText.headline.copyWith(fontSize: 20))),
-            IconButton(tooltip: 'Next month', icon: const Icon(Icons.chevron_right_rounded), onPressed: isCurrent ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1))),
+            IconButton(tooltip: 'Previous month', icon: const Icon(AppIcons.chevronLeft), onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1))),
+            Expanded(child: Text(formatMonthYear(_month), textAlign: TextAlign.center, style: AppText.headline.copyWith(fontSize: 20))),
+            IconButton(tooltip: 'Next month', icon: const Icon(AppIcons.chevronRight), onPressed: isCurrent ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1))),
           ]),
           const SizedBox(height: 8),
           Row(children: [
@@ -74,7 +75,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 20),
                     decoration: BoxDecoration(color: AppColors.danger.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(20)),
-                    child: const Icon(Icons.delete_outline_rounded, color: AppColors.danger),
+                    child: const Icon(AppIcons.delete, color: AppColors.danger),
                   ),
                   confirmDismiss: (_) => confirmAction(context, title: 'Delete expense?', message: '${list[i].category.label}, ${formatMoney(list[i].amount)}'),
                   onDismissed: (_) => gym.deleteExpense(list[i].id),
@@ -113,7 +114,7 @@ class _Figure extends StatelessWidget {
   Widget build(BuildContext context) => AppCard(
         padding: const EdgeInsets.all(12),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label.toUpperCase(), style: AppText.label.copyWith(fontSize: 9.5)),
+          Text(label, style: AppText.label.copyWith(fontSize: 9.5)),
           const SizedBox(height: 4),
           FittedBox(fit: BoxFit.scaleDown, child: CountUp(value: value, format: (v) => '${v < 0 ? '−' : ''}${formatMoneyCompact(v.abs())}', style: AppText.headline.copyWith(fontSize: 20, color: color))),
         ]),
@@ -141,7 +142,7 @@ class _Salaries extends StatelessWidget {
             title: Text(t.name),
             subtitle: Text('${formatMoney(t.monthlySalary)} for ${formatMonthYear(worked)}'),
             trailing: gym.salaryPaid(t.id, worked)
-                ? const StatusPill('Paid', color: AppColors.success, icon: Icons.check_rounded)
+                ? const StatusPill('Paid', color: AppColors.success, icon: AppIcons.check)
                 : TextButton(
                     onPressed: () async {
                       final ok = await gym.paySalary(t.id, worked);
@@ -200,14 +201,14 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
             PickerField(
               label: 'Date',
               value: formatDate(_date),
-              icon: Icons.event_rounded,
+              icon: AppIcons.event,
               onTap: () async {
                 final d = await pickDate(context, initial: _date, first: DateTime(gym.today.year - 2), last: gym.today);
                 if (d != null) setState(() => _date = DateTime(d.year, d.month, d.day, 12));
               },
             ),
             const SizedBox(height: 12),
-            TextField(controller: _note, decoration: const InputDecoration(labelText: 'Note (optional)', prefixIcon: Icon(Icons.notes_rounded))),
+            TextField(controller: _note, decoration: const InputDecoration(labelText: 'Note (optional)', prefixIcon: Icon(AppIcons.notes))),
             const SizedBox(height: 20),
             FilledButton(
               onPressed: () async {
@@ -218,7 +219,7 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
                   showMessage(context, '${_category.label} expense saved.');
                 }
               },
-              child: const Text('SAVE EXPENSE'),
+              child: const Text('Save expense'),
             ),
           ],
         ),

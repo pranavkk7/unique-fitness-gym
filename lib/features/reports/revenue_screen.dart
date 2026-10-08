@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -33,7 +34,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
     if (!gym.ownerUnlocked) {
       return SubPage(
         title: 'Revenue',
-        child: EmptyState(icon: Icons.lock_rounded, title: 'Owner only', subtitle: 'Income and expenses need the owner PIN.', actionLabel: 'UNLOCK', onAction: () => ensureOwner(context)),
+        child: EmptyState(icon: AppIcons.lock, title: 'Owner only', subtitle: 'Income and expenses need the owner PIN.', actionLabel: 'Unlock', onAction: () => ensureOwner(context)),
       );
     }
     final months = gym.monthlyStats(12);
@@ -57,7 +58,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: [
-                  Expanded(child: Text('MONTHLY INCOME', style: AppText.label.copyWith(color: AppColors.text))),
+                  Expanded(child: Text('Monthly income', style: AppText.label.copyWith(color: AppColors.text))),
                   SegmentedButton<bool>(
                     showSelectedIcon: false,
                     style: const ButtonStyle(visualDensity: VisualDensity.compact),
@@ -135,17 +136,15 @@ class _MonthHero extends StatelessWidget {
     final gym = context.read<GymProvider>();
     final change = isCurrent ? gym.incomeChangeToDate : GymAnalytics.change(stats.income, previous.income);
     final profitUp = stats.profit >= 0;
-    Widget mini(String label, Widget value, {IconData? icon, Color? color}) => Expanded(
+    // Four figures in a two-by-two grid, so long amounts never run into each other on a phone.
+    Widget mini(String label, Widget value) => Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(label.toUpperCase(), style: AppText.label.copyWith(fontSize: 9.5, color: Colors.white70)),
-            const SizedBox(height: 3),
-            Row(children: [
-              if (icon != null) ...[Icon(icon, size: 15, color: color ?? Colors.white), const SizedBox(width: 3)],
-              Flexible(child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: value)),
-            ]),
+            Text(label, style: AppText.small.copyWith(color: Colors.white70)),
+            const SizedBox(height: 2),
+            FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: value),
           ]),
         );
-    final small = AppText.headline.copyWith(fontSize: 19);
+    final small = AppText.headline.copyWith(fontSize: 19, color: Colors.white);
     return AppCard(
       gradient: AppColors.redGradient,
       glow: true,
@@ -157,20 +156,22 @@ class _MonthHero extends StatelessWidget {
             Expanded(
               child: AnimatedSwitcher(
                 duration: Motion.fast,
-                child: Text('${formatMonthYear(stats.month)}${isCurrent ? ' so far' : ''}'.toUpperCase(), key: ValueKey(stats.month), style: AppText.label.copyWith(color: Colors.white70, letterSpacing: 2)),
+                child: Text('${formatMonthYear(stats.month)}${isCurrent ? ' so far' : ''}', key: ValueKey(stats.month), style: AppText.body.copyWith(color: Colors.white70)),
               ),
             ),
             ChangeChip(change, onRed: true, suffix: isCurrent ? 'vs same days' : 'vs month before'),
           ]),
           const SizedBox(height: 6),
-          CountUp(value: stats.income, format: formatMoney, duration: Motion.slow, style: AppText.display.copyWith(fontSize: 52)),
+          CountUp(value: stats.income, format: formatMoney, duration: Motion.slow, style: AppText.display.copyWith(fontSize: 46, color: Colors.white)),
           const SizedBox(height: 16),
           Row(children: [
-            mini('Expenses', CountUp(value: stats.expenses, format: formatMoneyCompact, duration: Motion.slow, style: small)),
-            mini('Profit', CountUp(value: stats.profit.abs(), format: (v) => '${profitUp ? '' : '−'}${formatMoneyCompact(v)}', duration: Motion.slow, style: small),
-                icon: profitUp ? Icons.trending_up_rounded : Icons.trending_down_rounded),
-            mini('Admissions', CountUp(value: stats.admissions, duration: Motion.slow, style: small)),
-            mini('Renewals', CountUp(value: stats.renewals, duration: Motion.slow, style: small)),
+            mini('Expenses', CountUp(value: stats.expenses, format: formatMoneyCompact, style: small)),
+            mini(profitUp ? 'Profit' : 'Loss', CountUp(value: stats.profit.abs(), format: formatMoneyCompact, style: small)),
+          ]),
+          const SizedBox(height: 12),
+          Row(children: [
+            mini('Admissions', CountUp(value: stats.admissions, style: small)),
+            mini('Renewals', CountUp(value: stats.renewals, style: small)),
           ]),
           if (isCurrent && gym.settings.monthlyTarget > 0) ...[
             const SizedBox(height: 16),
@@ -241,13 +242,13 @@ class _MethodSplit extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          SplitBar(key: ValueKey(month), parts: [for (var i = 0; i < methods.length; i++) (byMethod[methods[i]]!, AppColors.categorical[i])]),
+          SplitBar(key: ValueKey(month), parts: [for (var i = 0; i < methods.length; i++) (byMethod[methods[i]]!, AppColors.payMethods[i])]),
           const SizedBox(height: 14),
           for (var i = 0; i < methods.length; i++)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(children: [
-                Container(width: 10, height: 10, decoration: BoxDecoration(color: AppColors.categorical[i], borderRadius: BorderRadius.circular(3))),
+                Container(width: 10, height: 10, decoration: BoxDecoration(color: AppColors.payMethods[i], borderRadius: BorderRadius.circular(3))),
                 const SizedBox(width: 10),
                 Icon(methods[i].icon, size: 18, color: AppColors.muted),
                 const SizedBox(width: 8),
@@ -324,7 +325,7 @@ class _IncomeVsExpenses extends StatelessWidget {
                       reservedSize: 24,
                       getTitlesWidget: (v, meta) => v.toInt() % 2 == 1 || v != v.roundToDouble()
                           ? const SizedBox.shrink()
-                          : SideTitleWidget(meta: meta, child: Text(formatShortMonth(months[v.toInt()].month).toUpperCase(), style: AppText.label.copyWith(fontSize: 9))),
+                          : SideTitleWidget(meta: meta, child: Text(formatShortMonth(months[v.toInt()].month), style: AppText.label.copyWith(fontSize: 9))),
                     ),
                   ),
                 ),
@@ -398,7 +399,7 @@ class _Retention extends StatelessWidget {
             color: AppColors.success,
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Text(rate == null ? '-' : '${(rate * 100).round()}%', style: AppText.headline.copyWith(fontSize: 24)),
-              Text('RENEWED', style: AppText.label.copyWith(fontSize: 8.5)),
+              Text('Renewed', style: AppText.label.copyWith(fontSize: 8.5)),
             ]),
           ),
           const SizedBox(width: 18),
@@ -410,7 +411,7 @@ class _Retention extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text('Members whose plan ended and who renewed within 15 days.', style: AppText.small.copyWith(color: AppColors.muted)),
                 const SizedBox(height: 12),
-                Text('NEW ADMISSIONS, 12 MONTHS', style: AppText.label.copyWith(fontSize: 9.5)),
+                Text('New admissions, 12 months', style: AppText.label.copyWith(fontSize: 9.5)),
                 const SizedBox(height: 4),
                 Sparkline(values: joins, color: AppColors.primaryBright, height: 44),
               ],

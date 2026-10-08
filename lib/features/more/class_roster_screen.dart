@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -37,7 +38,7 @@ class ClassRosterScreen extends StatelessWidget {
     return SubPage(
       title: c.title,
       subtitle: '${c.weekdays.map((d) => days[d - 1]).join(', ')} · ${minutesLabel(c.startMinutes)} · ${gym.trainerById(c.trainerId)?.name ?? 'No trainer'}',
-      actions: [if (onEdit != null) IconButton(tooltip: 'Edit class', icon: const Icon(Icons.edit_rounded), onPressed: onEdit)],
+      actions: [if (onEdit != null) IconButton(tooltip: 'Edit class', icon: const Icon(AppIcons.edit), onPressed: onEdit)],
       floatingAction: FloatingActionButton.extended(
         heroTag: 'roster-fab',
         backgroundColor: full ? AppColors.surfaceHigher : AppColors.primary,
@@ -50,8 +51,8 @@ class ClassRosterScreen extends StatelessWidget {
                 final ok = await gym.enrollInClass(c.id, m.id);
                 if (context.mounted) showMessage(context, ok ? '${m.firstName} added to the batch.' : 'The batch is full.');
               },
-        icon: const Icon(Icons.person_add_alt_1_rounded),
-        label: Text(full ? 'BATCH FULL' : 'ADD MEMBER', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: const Icon(AppIcons.personAdd),
+        label: Text(full ? 'Batch full' : 'Add member', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -65,7 +66,7 @@ class ClassRosterScreen extends StatelessWidget {
                 color: full ? AppColors.warning : c.type.color,
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   Text('${roster.length}', style: AppText.headline.copyWith(fontSize: 26)),
-                  Text('OF ${c.capacity}', style: AppText.label.copyWith(fontSize: 8.5)),
+                  Text('of ${c.capacity}', style: AppText.small.copyWith(color: AppColors.muted)),
                 ]),
               ),
               const SizedBox(width: 18),
@@ -78,27 +79,27 @@ class ClassRosterScreen extends StatelessWidget {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(minimumSize: const Size(0, 40)),
                     onPressed: roster.isEmpty ? null : () => _message(context, c, roster),
-                    icon: const Icon(Icons.campaign_rounded, size: 18),
-                    label: const Text('MESSAGE BATCH'),
+                    icon: const Icon(AppIcons.campaign, size: 18),
+                    label: const Text('Message batch'),
                   ),
                 ]),
               ),
             ]),
           ).entrance(context),
           const SectionHeader('Members'),
-          if (roster.isEmpty) const EmptyState(icon: Icons.groups_rounded, title: 'No one in this batch', subtitle: 'Add members who have joined this class.'),
+          if (roster.isEmpty) const EmptyState(icon: AppIcons.groups, title: 'No one in this batch', subtitle: 'Add members who have joined this class.'),
           for (var i = 0; i < roster.length; i++)
             Dismissible(
               key: ValueKey(roster[i].id),
               direction: DismissDirection.endToStart,
-              background: Container(alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20), child: const Icon(Icons.person_remove_rounded, color: AppColors.danger)),
+              background: Container(alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20), child: const Icon(AppIcons.personRemove, color: AppColors.danger)),
               onDismissed: (_) => gym.removeFromClass(c.id, roster[i].id),
               child: MemberTile(
                 member: roster[i],
                 subtitle: inToday.contains(roster[i].id) ? 'In today' : null,
                 trailing: AnimatedSwitcher(
                   duration: Motion.fast,
-                  child: inToday.contains(roster[i].id) ? const Icon(Icons.check_circle_rounded, color: AppColors.success) : const Icon(Icons.chevron_right_rounded, color: AppColors.muted),
+                  child: inToday.contains(roster[i].id) ? const Icon(AppIcons.checkCircle, color: AppColors.success) : const Icon(AppIcons.chevronRight, color: AppColors.muted),
                 ),
                 onTap: () => openPage(context, MemberProfileScreen(memberId: roster[i].id)),
               ),
@@ -115,7 +116,7 @@ class ClassRosterScreen extends StatelessWidget {
     final send = await showDialog<bool>(
       context: context,
       builder: (d) => AlertDialog(
-        title: Text('MESSAGE ${roster.length} MEMBERS'),
+        title: Text('Message ${roster.length} members'),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           TextField(controller: ctrl, autofocus: true, maxLines: 4),
           const SizedBox(height: 8),

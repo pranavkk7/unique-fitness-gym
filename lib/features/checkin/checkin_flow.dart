@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
@@ -29,7 +30,7 @@ Future<void> runCheckIn(BuildContext context, Member member, {CheckInSource sour
       context: context,
       builder: (dialogContext) => AlertDialog(
         icon: const SuccessBurst(kind: BurstKind.warning, size: 96),
-        title: Text(frozen ? 'MEMBERSHIP FROZEN' : 'MEMBERSHIP EXPIRED', textAlign: TextAlign.center),
+        title: Text(frozen ? 'Membership frozen' : 'Membership expired', textAlign: TextAlign.center),
         content: Text(
           frozen
               ? '${member.firstName}\'s membership is paused till ${formatDate(member.freezeOn(gym.today)!.end)}.'
@@ -39,7 +40,7 @@ Future<void> runCheckIn(BuildContext context, Member member, {CheckInSource sour
         actionsAlignment: MainAxisAlignment.center,
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialogContext, 'once'), child: Text(frozen ? 'End freeze & check in' : 'Allow once')),
-          if (!frozen) FilledButton(style: FilledButton.styleFrom(minimumSize: const Size(0, 44)), onPressed: () => Navigator.pop(dialogContext, 'renew'), child: const Text('RENEW NOW')),
+          if (!frozen) FilledButton(style: FilledButton.styleFrom(minimumSize: const Size(0, 44)), onPressed: () => Navigator.pop(dialogContext, 'renew'), child: const Text('Renew now')),
         ],
       ),
     );
@@ -149,9 +150,9 @@ class _CheckInResultCardState extends State<CheckInResultCard> {
                 ),
               ),
               const SizedBox(height: 6),
-              Text(widget.duplicate ? 'ALREADY IN TODAY' : 'CHECKED IN', style: AppText.label.copyWith(color: widget.duplicate ? AppColors.warning : AppColors.success, letterSpacing: 2.4)),
+              Text(widget.duplicate ? 'Already in today' : 'Checked in', style: AppText.label.copyWith(color: widget.duplicate ? AppColors.warning : AppColors.success, fontSize: 14, fontWeight: FontWeight.w600)),
               const SizedBox(height: 4),
-              Text(m.name.toUpperCase(), style: AppText.display.copyWith(fontSize: 28), textAlign: TextAlign.center),
+              Text(m.name, style: AppText.display.copyWith(fontSize: 28), textAlign: TextAlign.center),
               const SizedBox(height: 6),
               Text('${memberCode(m.number)} · ${formatTime(gym.now)} · $visits visits this month', style: AppText.small.copyWith(color: AppColors.muted), textAlign: TextAlign.center),
               const SizedBox(height: 12),
@@ -161,8 +162,8 @@ class _CheckInResultCardState extends State<CheckInResultCard> {
                 alignment: WrapAlignment.center,
                 children: [
                   StatusPill(left >= 0 ? '$left days left' : 'Expired', color: style.color, icon: style.icon),
-                  if (m.balanceDue > 0) StatusPill('${formatMoney(m.balanceDue)} due', color: AppColors.danger, icon: Icons.account_balance_wallet_rounded),
-                  if (gym.birthdaysToday.any((b) => b.id == m.id)) StatusPill('Birthday today', color: AppColors.categorical[1], icon: Icons.cake_rounded),
+                  if (m.balanceDue > 0) StatusPill('${formatMoney(m.balanceDue)} due', color: AppColors.danger, icon: AppIcons.wallet),
+                  if (gym.birthdaysToday.any((b) => b.id == m.id)) StatusPill('Birthday today', color: AppColors.categorical[1], icon: AppIcons.cake),
                 ],
               ),
               const SizedBox(height: 6),
