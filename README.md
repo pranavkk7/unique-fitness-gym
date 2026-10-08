@@ -107,20 +107,25 @@ follow-ups. It is rescheduled whenever the data changes.
 - Profit, the payment-method split, the renewal rate, a busy-hours heatmap and lead sources.
 
 ## Design and motion
-- **Brand.** The palette is the logo's crimson on near-black. Headlines use slanted Barlow
-  Condensed, like the gym's posters.
-- **Motion:**
-  - Staggered entrances and count-up numbers.
-  - Bars that grow, rings that fill and a rush-hours curve that draws in.
-  - Avatars fly from the list into the profile.
+The look is called **Plate & Chalk**: a gym floor, not a tech dashboard.
+- **Colour.** White sheets on a chalk-grey background, with iron-black text and buttons. Colour
+  means state, taken from weight-plate colours: green is active, yellow is expiring, blue is
+  frozen, and the logo's red is only used for dues and problems.
+- **Type.** Archivo for reading and Archivo Expanded for headings and figures, in sentence case.
+  Figures use tabular digits so amounts line up.
+- **Icons.** Phosphor's thin regular set, drawn in ink rather than in coloured badges.
+- **Signature.** The dashboard's door log draws one tick per check-in across the day, and
+  status is shown as a small plate ring next to the words.
+- **Motion.** Kept for moments that answer an action:
+  - The door log draws in once when the dashboard opens, and today's count rises with it.
+  - Avatars move from the list into the profile.
   - The admission steps slide in the direction of travel.
-  - A sheen sweeps across the dashboard hero.
-  - A drawn tick and sparks mark a check-in.
+  - A drawn tick marks a check-in.
   - Shared curves and durations live in `core/theme/motion.dart`.
 - **Platform transitions.** Android uses its predictive-back fade; iPhone uses the native swipe-back.
 - **Reduced motion respected.** With the system setting on, everything appears in its final state.
 - **Adaptive layout:**
-  - Phones get a floating glass bar with a raised check-in button.
+  - Phones get a flat bottom bar with a check-in key in the middle.
   - Tablets get a side rail in landscape, and nine quick actions in a row in portrait.
   - Pages are capped in width, so they read well on a front-desk tablet.
 
@@ -188,5 +193,6 @@ flutter test tool/screenshots_test.dart --update-goldens
 - **Design and development:** Pranav KK.
 - Logo, name, plans and timetable belong to Unique Fitness Gym and are used with the owner's
   permission.
-- **Fonts:** Barlow and Barlow Condensed (SIL Open Font License) and a rupee-sign subset of Roboto
-  (Apache 2.0). Licences are in `assets/fonts`.
+- **Fonts and icons:** Archivo (SIL Open Font License), Phosphor icons (MIT) and a rupee-sign
+  subset of Roboto (Apache 2.0). Licences are in `assets/fonts`.
+- The previous dark design is kept on the `classic-design` branch.
