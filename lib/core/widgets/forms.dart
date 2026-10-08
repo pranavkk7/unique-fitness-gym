@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../theme/app_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../theme/motion.dart';
@@ -15,7 +16,7 @@ class FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 20, bottom: 9, left: 2),
-        child: Text(text.toUpperCase(), style: AppText.label),
+        child: Text(text, style: AppText.label),
       );
 }
 
@@ -72,7 +73,7 @@ class PickerField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon, size: 20),
-          suffixIcon: value != null && onClear != null ? IconButton(tooltip: 'Clear', icon: const Icon(Icons.close_rounded, size: 18), onPressed: onClear) : null,
+          suffixIcon: value != null && onClear != null ? IconButton(tooltip: 'Clear', icon: const Icon(AppIcons.close, size: 18), onPressed: onClear) : null,
         ),
         child: Text(value ?? '', style: AppText.body),
       ),

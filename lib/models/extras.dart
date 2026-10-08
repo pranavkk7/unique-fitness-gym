@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme/app_icons.dart';
+
 import 'finance.dart';
 import 'json.dart';
 
@@ -68,11 +70,11 @@ class PtPackage {
 // ---------------------------------------------------------------------------------------------
 
 enum ProductCategory {
-  supplement('Supplements', Icons.science_rounded),
-  drink('Drinks', Icons.local_drink_rounded),
-  merch('Merchandise', Icons.checkroom_rounded),
-  gear('Gear', Icons.sports_mma_rounded),
-  other('Other', Icons.category_rounded);
+  supplement('Supplements', AppIcons.science),
+  drink('Drinks', AppIcons.drink),
+  merch('Merchandise', AppIcons.shirt),
+  gear('Gear', AppIcons.boxing),
+  other('Other', AppIcons.category);
 
   const ProductCategory(this.label, this.icon);
   final String label;
@@ -293,8 +295,8 @@ class PlanSection {
 }
 
 enum TrainingPlanKind {
-  workout('Workout plan', Icons.fitness_center_rounded),
-  diet('Diet plan', Icons.restaurant_rounded);
+  workout('Workout plan', AppIcons.barbell),
+  diet('Diet plan', AppIcons.food);
 
   const TrainingPlanKind(this.label, this.icon);
   final String label;
@@ -332,12 +334,12 @@ class TrainingPlan {
 // ---------------------------------------------------------------------------------------------
 
 enum FeedbackCategory {
-  equipment('Equipment', Icons.fitness_center_rounded),
-  cleanliness('Cleanliness', Icons.cleaning_services_rounded),
-  trainers('Trainers', Icons.sports_rounded),
-  timing('Timing & crowd', Icons.schedule_rounded),
-  facilities('Facilities', Icons.shower_rounded),
-  other('Other', Icons.chat_bubble_rounded);
+  equipment('Equipment', AppIcons.barbell),
+  cleanliness('Cleanliness', AppIcons.cleaning),
+  trainers('Trainers', AppIcons.trainer),
+  timing('Timing & crowd', AppIcons.schedule),
+  facilities('Facilities', AppIcons.shower),
+  other('Other', AppIcons.bubble);
 
   const FeedbackCategory(this.label, this.icon);
   final String label;

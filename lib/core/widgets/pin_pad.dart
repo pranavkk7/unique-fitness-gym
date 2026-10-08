@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../theme/app_icons.dart';
 import '../../providers/gym_provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
@@ -62,9 +63,9 @@ class _PinPadState extends State<PinPad> with SingleTickerProviderStateMixin {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.lock_rounded, color: AppColors.primaryBright, size: 30),
+        const Icon(AppIcons.lock, color: AppColors.primaryBright, size: 30),
         const SizedBox(height: 10),
-        Text(widget.title.toUpperCase(), style: AppText.headline, textAlign: TextAlign.center),
+        Text(widget.title, style: AppText.headline, textAlign: TextAlign.center),
         const SizedBox(height: 4),
         Text(widget.subtitle, style: AppText.bodyMuted, textAlign: TextAlign.center),
         const SizedBox(height: 22),
@@ -116,7 +117,7 @@ class _PinPadState extends State<PinPad> with SingleTickerProviderStateMixin {
                               height: 60,
                               child: Center(
                                 child: key == '⌫'
-                                    ? const Icon(Icons.backspace_outlined, color: AppColors.textSecondary, semanticLabel: 'Delete')
+                                    ? const Icon(AppIcons.backspace, color: AppColors.textSecondary, semanticLabel: 'Delete')
                                     : Text(key, style: AppText.headline.copyWith(fontStyle: FontStyle.normal, fontSize: 26)),
                               ),
                             ),

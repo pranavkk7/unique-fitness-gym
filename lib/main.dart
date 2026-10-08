@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'core/theme/app_colors.dart';
 import 'core/theme/app_text.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/motion.dart';
@@ -22,7 +21,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarIconBrightness: Brightness.dark,
     systemNavigationBarColor: Colors.transparent,
   ));
   await Hive.initFlutter('unique_fitness_gym');
@@ -66,7 +66,7 @@ class UniqueFitnessApp extends StatelessWidget {
 /// fictional demo data, so a visitor sees a working gym instead of an empty app.
 const liveDemo = bool.fromEnvironment('LIVE_DEMO');
 
-/// The logo glows in while saved data loads, then the app fades in.
+/// The logo shows while saved data loads, then the app fades in.
 class _Splash extends StatefulWidget {
   final Duration splashTime;
 
@@ -110,36 +110,22 @@ class _SplashLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reduced = Motion.reduced(context);
+    // The logo settles in on the chalk background; nothing else moves.
     return Center(
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0, end: 1),
-        duration: reduced ? Duration.zero : const Duration(milliseconds: 1200),
+        duration: reduced ? Duration.zero : const Duration(milliseconds: 700),
         curve: Motion.settle,
-        builder: (context, t, _) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Opacity(
-              opacity: t,
-              child: Transform.scale(
-                scale: 0.85 + 0.15 * t,
-                child: Container(
-                  decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.35 * t), blurRadius: 80, spreadRadius: 10)]),
-                  child: const BrandLogo(height: 150),
-                ),
-              ),
-            ),
-            const SizedBox(height: 26),
-            // A red line sweeps out under the logo, like a progress bar.
-            SizedBox(
-              width: 160,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(width: 160 * t, height: 3, decoration: BoxDecoration(gradient: AppColors.redGradient, borderRadius: BorderRadius.circular(2))),
-              ),
-            ),
-            const SizedBox(height: 14),
-            Opacity(opacity: t, child: Text('PREMIUM LUXURY FITNESS CENTRE', style: AppText.label.copyWith(letterSpacing: 3.5, color: AppColors.textSecondary))),
-          ],
+        builder: (context, t, _) => Opacity(
+          opacity: t,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Transform.scale(scale: 0.96 + 0.04 * t, child: const BrandLogo(height: 132)),
+              const SizedBox(height: 18),
+              Text('Unique Fitness, Pinarayi', style: AppText.bodyMuted),
+            ],
+          ),
         ),
       ),
     );

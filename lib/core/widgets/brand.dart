@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 
@@ -17,7 +18,7 @@ class BrandLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      darkAsset,
+      originalAsset,
       height: height,
       width: height * aspect,
       fit: BoxFit.contain,
@@ -27,7 +28,11 @@ class BrandLogo extends StatelessWidget {
       errorBuilder: (context, error, stack) => SizedBox(
         height: height,
         width: height * aspect,
-        child: Icon(Icons.fitness_center_rounded, color: AppColors.primary, size: height * 0.7),
+        child: Icon(
+          AppIcons.barbell,
+          color: AppColors.primary,
+          size: height * 0.7,
+        ),
       ),
     );
   }
@@ -44,22 +49,26 @@ class BrandHeader extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const BrandLogo(height: 44),
+        const BrandLogo(height: 40),
         const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('UNIQUE FITNESS', style: AppText.headline.copyWith(fontSize: 19, height: 1, letterSpacing: 1)),
-            const SizedBox(height: 3),
-            Row(
-              children: [
-                const Icon(Icons.location_on_rounded, size: 12, color: AppColors.primaryBright),
-                const SizedBox(width: 3),
-                Text(branch.toUpperCase(), style: AppText.label.copyWith(fontSize: 10.5, color: AppColors.primaryBright, letterSpacing: 2)),
-              ],
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Unique Fitness',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppText.headline.copyWith(fontSize: 16, height: 1.1),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                branch,
+                style: AppText.small.copyWith(color: AppColors.muted),
+              ),
+            ],
+          ),
         ),
       ],
     );

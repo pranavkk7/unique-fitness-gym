@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme/app_icons.dart';
+
 import 'json.dart';
 
 /// The app runs one branch today (Pinarayi). Records still carry a branch id so more branches can
@@ -111,13 +113,14 @@ class Plan {
 }
 
 enum ClassType {
-  boxing('Boxing & Self-Defence', Icons.sports_mma_rounded, Color(0xFFE11D2A)),
-  kickBoxing('Kick Boxing', Icons.sports_kabaddi_rounded, Color(0xFFFF6B1A)),
-  zumba('Zumba', Icons.music_note_rounded, Color(0xFFFF4DA6)),
-  kidsBoxing('Kids Boxing', Icons.child_care_rounded, Color(0xFFFFB020)),
-  strength('Strength', Icons.fitness_center_rounded, Color(0xFF3B82F6)),
-  cardio('Cardio & HIIT', Icons.local_fire_department_rounded, Color(0xFFFFB020)),
-  yoga('Yoga & Mobility', Icons.self_improvement_rounded, Color(0xFF2FD07F));
+  // Muted plate colours: they tell classes apart on the timetable without competing with alerts.
+  boxing('Boxing & Self-Defence', AppIcons.boxing, Color(0xFF1F5FBF)),
+  kickBoxing('Kick Boxing', AppIcons.martialArts, Color(0xFF3D4A5C)),
+  zumba('Zumba', AppIcons.music, Color(0xFF8A3B6E)),
+  kidsBoxing('Kids Boxing', AppIcons.child, Color(0xFF9A6700)),
+  strength('Strength', AppIcons.barbell, Color(0xFF1B1D21)),
+  cardio('Cardio & HIIT', AppIcons.fire, Color(0xFFB4530A)),
+  yoga('Yoga & Mobility', AppIcons.yoga, Color(0xFF2E7D4F));
 
   const ClassType(this.label, this.icon, this.color);
   final String label;
@@ -236,14 +239,14 @@ class CheckIn {
 /// The kinds of WhatsApp message the front desk sends. Each has its own template and its own
 /// "don't send again for N days" window so nobody gets spammed.
 enum ReminderKind {
-  expiring('Expiring soon', Icons.hourglass_bottom_rounded, Color(0xFFFFB020), 3),
-  expired('Expired', Icons.history_rounded, Color(0xFFFF4D4F), 7),
-  due('Pending dues', Icons.account_balance_wallet_rounded, Color(0xFFFF6B1A), 3),
-  birthday('Birthdays', Icons.cake_rounded, Color(0xFFFF4DA6), 1),
-  inactive('Missing workouts', Icons.directions_run_rounded, Color(0xFF3B82F6), 7),
-  followUp('Enquiry follow-ups', Icons.support_agent_rounded, Color(0xFFB57BFF), 1),
-  welcome('Welcome', Icons.celebration_rounded, Color(0xFF2FD07F), 36500),
-  progress('Progress reports', Icons.insights_rounded, Color(0xFF199E70), 25);
+  expiring('Expiring soon', AppIcons.hourglassLow, Color(0xFFFFB020), 3),
+  expired('Expired', AppIcons.history, Color(0xFFFF4D4F), 7),
+  due('Pending dues', AppIcons.wallet, Color(0xFFFF6B1A), 3),
+  birthday('Birthdays', AppIcons.cake, Color(0xFFFF4DA6), 1),
+  inactive('Missing workouts', AppIcons.run, Color(0xFF3B82F6), 7),
+  followUp('Enquiry follow-ups', AppIcons.support, Color(0xFFB57BFF), 1),
+  welcome('Welcome', AppIcons.celebrate, Color(0xFF2FD07F), 36500),
+  progress('Progress reports', AppIcons.insights, Color(0xFF199E70), 25);
 
   const ReminderKind(this.label, this.icon, this.color, this.cooldownDays);
   final String label;

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme/app_icons.dart';
+
 import 'json.dart';
 
 enum PayMethod {
-  cash('Cash', Icons.payments_rounded),
-  upi('UPI', Icons.qr_code_2_rounded),
-  card('Card', Icons.credit_card_rounded),
-  bank('Bank transfer', Icons.account_balance_rounded);
+  cash('Cash', AppIcons.cash),
+  upi('UPI', AppIcons.qrCode),
+  card('Card', AppIcons.card),
+  bank('Bank transfer', AppIcons.bank);
 
   const PayMethod(this.label, this.icon);
   final String label;
@@ -76,14 +78,14 @@ class Payment {
 }
 
 enum ExpenseCategory {
-  rent('Rent', Icons.home_work_rounded, Color(0xFF8B5CF6)),
-  salary('Salaries', Icons.badge_rounded, Color(0xFF3B82F6)),
-  electricity('Electricity & water', Icons.bolt_rounded, Color(0xFFFFB020)),
-  equipment('Equipment', Icons.fitness_center_rounded, Color(0xFFE11D2A)),
-  maintenance('Maintenance', Icons.build_rounded, Color(0xFFFF6B1A)),
-  marketing('Marketing', Icons.campaign_rounded, Color(0xFFFF4DA6)),
-  supplies('Supplies & cleaning', Icons.cleaning_services_rounded, Color(0xFF2FD07F)),
-  other('Other', Icons.more_horiz_rounded, Color(0xFF9A9AA3));
+  rent('Rent', AppIcons.rent, Color(0xFF8B5CF6)),
+  salary('Salaries', AppIcons.badge, Color(0xFF3B82F6)),
+  electricity('Electricity & water', AppIcons.bolt, Color(0xFFFFB020)),
+  equipment('Equipment', AppIcons.barbell, Color(0xFFE11D2A)),
+  maintenance('Maintenance', AppIcons.build, Color(0xFFFF6B1A)),
+  marketing('Marketing', AppIcons.campaign, Color(0xFFFF4DA6)),
+  supplies('Supplies & cleaning', AppIcons.cleaning, Color(0xFF2FD07F)),
+  other('Other', AppIcons.more, Color(0xFF9A9AA3));
 
   const ExpenseCategory(this.label, this.icon, this.color);
   final String label;

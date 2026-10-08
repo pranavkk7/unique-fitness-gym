@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme/app_icons.dart';
+
 import 'json.dart';
 import 'member.dart';
 
 /// How a person heard about the gym. Kept on enquiries and members for the "where do members come
 /// from" report.
 enum LeadSource {
-  walkIn('Walk-in', Icons.directions_walk),
-  phone('Phone call', Icons.call),
-  whatsapp('WhatsApp', Icons.chat),
-  instagram('Instagram', Icons.camera_alt),
-  referral('Friend referral', Icons.people),
-  google('Google', Icons.search),
-  other('Other', Icons.more_horiz);
+  walkIn('Walk-in', AppIcons.walk),
+  phone('Phone call', AppIcons.callPlain),
+  whatsapp('WhatsApp', AppIcons.chatPlain),
+  instagram('Instagram', AppIcons.cameraPlain),
+  referral('Friend referral', AppIcons.people),
+  google('Google', AppIcons.searchPlain),
+  other('Other', AppIcons.morePlain);
 
   const LeadSource(this.label, this.icon);
   final String label;

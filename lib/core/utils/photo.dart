@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../theme/app_icons.dart';
 import '../widgets/sub_page.dart';
 import 'contact.dart';
 
@@ -20,9 +21,9 @@ Future<Uint8List?> pickMemberPhoto(BuildContext context, {bool allowRemove = fal
           mainAxisSize: MainAxisSize.min,
           children: [
             const SheetHeader('Member photo'),
-            ListTile(leading: const Icon(Icons.photo_camera_rounded), title: const Text('Take a photo'), onTap: () => Navigator.pop(sheetContext, 'camera')),
-            ListTile(leading: const Icon(Icons.photo_library_rounded), title: const Text('Choose from gallery'), onTap: () => Navigator.pop(sheetContext, 'gallery')),
-            if (allowRemove) ListTile(leading: const Icon(Icons.delete_outline_rounded), title: const Text('Remove photo'), onTap: () => Navigator.pop(sheetContext, 'remove')),
+            ListTile(leading: const Icon(AppIcons.camera), title: const Text('Take a photo'), onTap: () => Navigator.pop(sheetContext, 'camera')),
+            ListTile(leading: const Icon(AppIcons.gallery), title: const Text('Choose from gallery'), onTap: () => Navigator.pop(sheetContext, 'gallery')),
+            if (allowRemove) ListTile(leading: const Icon(AppIcons.delete), title: const Text('Remove photo'), onTap: () => Navigator.pop(sheetContext, 'remove')),
           ],
         ),
       ),

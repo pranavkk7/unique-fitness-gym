@@ -68,7 +68,7 @@ Future<bool> _demoPreview(BuildContext context, String title, String text) async
   await showDialog<void>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: Text(title.toUpperCase()),
+      title: Text(title),
       content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           padding: const EdgeInsets.all(12),

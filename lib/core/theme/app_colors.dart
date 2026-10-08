@@ -1,49 +1,65 @@
 import 'package:flutter/material.dart';
 
-/// Colour tokens. The reds come from the Unique Fitness Gym logo (bright #F81818 fading to #A80000);
-/// surfaces are near-black like the gym floor at night.
+/// Colour tokens: "plate and chalk".
+///
+/// The page is chalk, the type is iron, and colour is used only for state. The four state colours are
+/// the competition bumper plates every gym member knows: green 10 kg, yellow 15 kg, blue 20 kg, red
+/// 25 kg. Red is also the gym's logo colour, so it is kept for the logo, for alerts and for money that
+/// is owed, never for decoration.
 class AppColors {
   AppColors._();
 
-  static const background = Color(0xFF09090B);
-  static const surface = Color(0xFF141418);
-  static const surfaceHigh = Color(0xFF1C1C22);
-  static const surfaceHigher = Color(0xFF26262E);
-  static const border = Color(0x14FFFFFF);
-  static const borderStrong = Color(0x26FFFFFF);
+  // Surfaces
+  static const background = Color(0xFFEDEFEB); // chalk
+  static const surface = Color(0xFFFFFFFF); // a sheet of the register
+  static const surfaceHigh = Color(0xFFF5F6F3); // fields and quiet fills on a sheet
+  static const surfaceHigher = Color(0xFFE4E7E2); // tracks, disabled
+  static const border = Color(0xFFDDE0DA); // hairline rule
+  static const borderStrong = Color(0xFFC6CAC3);
 
-  static const primary = Color(0xFFF0262E);
-  static const primaryBright = Color(0xFFFF4047);
-  static const primaryDeep = Color(0xFF8E0008);
-  static const ember = Color(0xFFFF6B1A);
+  // Ink
+  static const text = Color(0xFF1B1D21); // iron
+  static const textSecondary = Color(0xFF474C55);
+  static const muted = Color(0xFF6B7079); // steel (4.8:1 on white)
 
-  static const text = Color(0xFFF5F5F7);
-  static const textSecondary = Color(0xFFB9B9C2);
-  static const muted = Color(0xFF8A8A94);
+  /// Actions are iron: buttons, selected tabs and chips, the check-in key.
+  static const primary = text;
 
-  // Status colours are reserved for state and always shown with an icon and a label.
-  static const success = Color(0xFF2FD07F);
-  static const warning = Color(0xFFFFB020);
-  static const danger = Color(0xFFFF4D4F);
-  static const frozen = Color(0xFF7DD3FC);
+  /// Emphasis text and links: also iron, so nothing on a page shouts unless it is a state.
+  static const primaryBright = text;
+  static const primaryDeep = text;
 
-  static const whatsapp = Color(0xFF25D366);
+  // Plate colours, darkened just enough to read as text on white (all at least 4.5:1).
+  static const plateGreen = Color(0xFF2E7D4F);
+  static const plateYellow = Color(0xFF9A6700);
+  static const plateBlue = Color(0xFF1F5FBF);
+  static const plateRed = Color(0xFFC8102E);
 
-  // Chart series, checked for colour-blind separation on [surface] (dataviz validator, dark mode).
-  static const seriesPrimary = primary; // this period / income
-  static const seriesCompare = Color(0xFF3987E5); // last year / expenses
-  static const categorical = [Color(0xFF3987E5), Color(0xFFD95926), Color(0xFF199E70), Color(0xFF9085E9)];
-  static const chartContext = Color(0xFF3A3A44); // bars that are background, not the point
+  /// The logo red: the logo, alerts and dues.
+  static const brand = plateRed;
 
-  static const redGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xFFFF3B3B), Color(0xFFD9141C), Color(0xFF8E0008)],
-  );
+  static const success = plateGreen;
+  static const warning = plateYellow;
+  static const danger = plateRed;
+  static const frozen = plateBlue;
+  static const ember = Color(0xFFB4530A);
 
-  static const surfaceGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xFF1A1A20), Color(0xFF121216)],
-  );
+  // WhatsApp actions use the green plate rather than the app's neon brand green.
+  static const whatsapp = plateGreen;
+
+  // Charts: this period in iron, the comparison in plate blue; categories follow the plates.
+  static const seriesPrimary = text;
+  static const seriesCompare = plateBlue;
+  // Red stays out of categories: on this app it only ever means money owed or a problem.
+  static const categorical = [plateBlue, Color(0xFF3D4A5C), plateGreen, Color(0xFFD99A0B)];
+
+  /// One colour per payment method (cash, UPI, card, bank), the same on every screen.
+  static const payMethods = [plateGreen, plateBlue, Color(0xFFD99A0B), Color(0xFF3D4A5C)];
+  static const chartContext = Color(0xFFD3D6D0);
+
+  /// The one inverted panel per screen (the day's summary, a total to pay): flat iron, no glow.
+  static const redGradient = LinearGradient(colors: [Color(0xFF1B1D21), Color(0xFF1B1D21)]);
+
+  /// Plain white sheets. Kept as a gradient so existing callers need no change.
+  static const surfaceGradient = LinearGradient(colors: [surface, surface]);
 }

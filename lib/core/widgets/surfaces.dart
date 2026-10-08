@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import '../theme/app_colors.dart';
 import '../theme/motion.dart';
 
-/// Page background: near-black with a soft crimson glow in the top corner and a faint blue one
-/// low down, like the gym's lighting. Static on purpose: a front-desk screen is on all day.
+/// Page background: plain chalk. Kept as a widget so pages keep one place for it.
 class GlowBackground extends StatelessWidget {
   final Widget child;
 
@@ -13,42 +12,10 @@ class GlowBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(color: AppColors.background),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -180,
-            right: -140,
-            child: IgnorePointer(
-              child: Container(
-                width: 460,
-                height: 460,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(colors: [AppColors.primary.withValues(alpha: 0.22), AppColors.primary.withValues(alpha: 0.0)]),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -220,
-            left: -180,
-            child: IgnorePointer(
-              child: Container(
-                width: 440,
-                height: 440,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(colors: [AppColors.seriesCompare.withValues(alpha: 0.08), AppColors.seriesCompare.withValues(alpha: 0.0)]),
-                ),
-              ),
-            ),
-          ),
-          // Transparent Material so ink ripples paint above the background.
-          Positioned.fill(child: Material(type: MaterialType.transparency, child: child)),
-        ],
-      ),
+    return ColoredBox(
+      color: AppColors.background,
+      // Transparent Material so ink ripples paint above the background.
+      child: Material(type: MaterialType.transparency, child: child),
     );
   }
 }
@@ -99,8 +66,8 @@ class _PressableState extends State<Pressable> {
   }
 }
 
-/// The app's card: a dark surface with a hairline border that is a touch brighter on top, like light
-/// catching an edge. [gradient] makes a hero card; [glow] adds a crimson halo.
+/// A sheet of the register: white, a hairline edge, no shadow. [gradient] (the iron panel) makes the
+/// one inverted summary on a screen. [glow] is ignored: nothing in the app glows.
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -121,40 +88,30 @@ class AppCard extends StatelessWidget {
     this.gradient,
     this.color,
     this.glow = false,
-    this.radius = 22,
+    this.radius = 14,
     this.borderColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final shape = BorderRadius.circular(radius);
+    final inverted = gradient != null && color == null;
     final card = Container(
       decoration: BoxDecoration(
-        color: color,
-        gradient: color == null ? (gradient ?? AppColors.surfaceGradient) : null,
-        borderRadius: shape,
-        border: Border.all(color: borderColor ?? AppColors.border),
-        boxShadow: glow ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.35), blurRadius: 40, spreadRadius: -12, offset: const Offset(0, 18))] : null,
+        color: inverted ? null : (color ?? AppColors.surface),
+        gradient: inverted ? gradient : null,
+        borderRadius: BorderRadius.circular(radius),
+        border: inverted ? null : Border.all(color: borderColor ?? AppColors.border),
       ),
-      foregroundDecoration: gradient == null
-          ? BoxDecoration(
-              borderRadius: shape,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.center,
-                colors: [Colors.white.withValues(alpha: 0.035), Colors.white.withValues(alpha: 0)],
-              ),
-            )
-          : null,
       // A transparent Material so list tiles inside the card show their tap ripple.
       child: Material(type: MaterialType.transparency, child: Padding(padding: padding, child: child)),
     );
     if (onTap == null && onLongPress == null) return card;
-    return Pressable(onTap: onTap, onLongPress: onLongPress, child: card);
+    return Pressable(onTap: onTap, onLongPress: onLongPress, pressedScale: 0.985, child: card);
   }
 }
 
-/// A rounded square with an icon on a tinted background.
+/// An icon on its own, in ink, so a page is not a box of coloured squares. Only an alert (red) keeps
+/// its colour; state is shown with plate rings and words instead.
 class IconBadge extends StatelessWidget {
   final IconData icon;
   final Color color;
@@ -163,17 +120,15 @@ class IconBadge extends StatelessWidget {
 
   const IconBadge(this.icon, {super.key, this.color = AppColors.primary, this.size = 40, this.radius = 13});
 
+  // Only an alert keeps its colour; every other icon is ink.
+  static const _states = [AppColors.danger];
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: color.withValues(alpha: 0.22)),
-      ),
-      child: Icon(icon, color: color, size: size * 0.5),
+      child: Center(child: Icon(icon, color: _states.contains(color) ? color : AppColors.text, size: size * 0.56)),
     );
   }
 }

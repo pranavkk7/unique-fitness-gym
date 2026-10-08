@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import 'motion_widgets.dart';
@@ -33,14 +34,14 @@ class SubPage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(6, 6, 12, 2),
                     child: Row(
                       children: [
-                        IconButton(tooltip: 'Back', icon: const Icon(Icons.arrow_back_rounded), onPressed: () => Navigator.maybePop(context)),
+                        IconButton(tooltip: 'Back', icon: const Icon(AppIcons.back), onPressed: () => Navigator.maybePop(context)),
                         const SizedBox(width: 2),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: RevealText(title.toUpperCase(), style: AppText.display.copyWith(fontSize: 28))),
+                              FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: RevealText(title, style: AppText.display.copyWith(fontSize: 28))),
                               if (subtitle != null) Text(subtitle!, style: AppText.small.copyWith(color: AppColors.muted), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
@@ -83,7 +84,7 @@ Future<bool> confirmAction(BuildContext context, {required String title, require
   final ok = await showDialog<bool>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: Text(title.toUpperCase()),
+      title: Text(title),
       content: Text(message),
       actions: [
         TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
@@ -112,7 +113,7 @@ class SheetHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title.toUpperCase(), style: AppText.headline),
+          Text(title, style: AppText.headline),
           if (subtitle != null) ...[const SizedBox(height: 4), Text(subtitle!, style: AppText.bodyMuted)],
         ],
       ),

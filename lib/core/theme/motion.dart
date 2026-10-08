@@ -24,10 +24,13 @@ class Motion {
 }
 
 extension EntranceX on Widget {
-  /// Fades the widget in and lifts it slightly. Give list items their [index] for a stagger.
-  Widget entrance(BuildContext context, {int index = 0, double offset = 0.06, Duration? delay}) {
+  /// Content appears in place. Staggered fade-ins on every list read as decoration, so the app keeps
+  /// motion for the dashboard's one opening moment and for responses to what people do.
+  Widget entrance(BuildContext context, {int index = 0, double offset = 0.06, Duration? delay}) => this;
+
+  /// The opt-in version of the old entrance, for the one place a reveal helps.
+  Widget reveal(BuildContext context, {Duration delay = Duration.zero}) {
     if (Motion.reduced(context)) return this;
-    final wait = (delay ?? Duration.zero) + Motion.stagger * index.clamp(0, 10);
-    return animate(delay: wait).fadeIn(duration: Motion.medium, curve: Motion.enter).slideY(begin: offset, end: 0, duration: Motion.slow, curve: Motion.settle);
+    return animate(delay: delay).fadeIn(duration: Motion.medium, curve: Motion.enter).slideY(begin: 0.04, end: 0, duration: Motion.slow, curve: Motion.settle);
   }
 }
