@@ -252,10 +252,10 @@ void main() {
     expect(Skin.current, AppSkin.chalk);
     expect(Theme.of(tester.element(find.text('Classic'))).brightness, Brightness.light);
 
-    // Back on the More tab, which kept its place.
+    // Back on the More tab, which is still the selected tab.
     await tester.pageBack();
     await tester.pumpAndSettle();
-    expect(find.text('Design'), findsOneWidget);
+    expect(find.text('Revenue & reports'), findsOneWidget);
   });
 
   testWidgets('every tab opens in the Classic design too', (tester) async {

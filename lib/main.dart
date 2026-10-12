@@ -1,15 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'core/theme/app_colors.dart';
-import 'core/theme/app_text.dart';
 import 'core/theme/app_theme.dart';
-import 'core/theme/motion.dart';
 import 'core/theme/skin.dart';
 import 'core/utils/notifications.dart';
-import 'core/widgets/brand.dart';
+import 'core/widgets/splash_logo.dart';
 import 'core/widgets/surfaces.dart';
 import 'data/gym_store.dart';
 import 'data/hive_gym_store.dart';
@@ -82,7 +81,7 @@ class UniqueFitnessApp extends StatelessWidget {
 /// fictional demo data, so a visitor sees a working gym instead of an empty app.
 const liveDemo = bool.fromEnvironment('LIVE_DEMO');
 
-/// The logo shows while saved data loads, then the app fades in.
+/// The opening sequence plays while saved data loads; the app appears once both are done.
 class _Splash extends StatefulWidget {
   final Duration splashTime;
 
@@ -93,7 +92,15 @@ class _Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<_Splash> {
-  late final Future<void> _ready = Future.wait([_load(), Future<void>.delayed(widget.splashTime)]);
+  final _logoDone = Completer<void>();
+
+  // Tests pass a zero splash time and skip the sequence; the app waits for it otherwise, so the
+  // opening is never cut off halfway.
+  late final Future<void> _ready = Future.wait([
+    _load(),
+    Future<void>.delayed(widget.splashTime),
+    if (widget.splashTime > Duration.zero) _logoDone.future,
+  ]);
 
   @override
   void initState() {
@@ -126,76 +133,28 @@ class _SplashState extends State<_Splash> {
           return Scaffold(body: Center(child: Padding(padding: const EdgeInsets.all(32), child: Text('Could not open the gym data.\n${snapshot.error}', textAlign: TextAlign.center))));
         }
         return AnimatedSwitcher(
-          duration: Motion.slow,
-          switchInCurve: Motion.enter,
-          child: done ? AppShell(key: ValueKey('home-${Skin.current.name}')) : const Scaffold(key: ValueKey('splash'), body: GlowBackground(child: _SplashLogo())),
+          duration: const Duration(milliseconds: 700),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          // The splash eases forward as it fades, and the home screen settles in from just behind
+          // it, so the logo seems to open into the app.
+          transitionBuilder: (child, animation) {
+            final leaving = child.key == const ValueKey('splash');
+            return FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(scale: Tween(begin: leaving ? 1.06 : 0.97, end: 1.0).animate(animation), child: child),
+            );
+          },
+          child: done
+              ? AppShell(key: ValueKey('home-${Skin.current.name}'))
+              : Scaffold(
+                  key: const ValueKey('splash'),
+                  body: GlowBackground(child: SplashLogo(onDone: () {
+                    if (!_logoDone.isCompleted) _logoDone.complete();
+                  })),
+                ),
         );
       },
-    );
-  }
-}
-
-class _SplashLogo extends StatelessWidget {
-  const _SplashLogo();
-
-  @override
-  Widget build(BuildContext context) {
-    final reduced = Motion.reduced(context);
-    if (Skin.classic) return _classic(reduced);
-    // The logo settles in on the chalk background; nothing else moves.
-    return Center(
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0, end: 1),
-        duration: reduced ? Duration.zero : const Duration(milliseconds: 700),
-        curve: Motion.settle,
-        builder: (context, t, _) => Opacity(
-          opacity: t,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Transform.scale(scale: 0.96 + 0.04 * t, child: const BrandLogo(height: 132)),
-              const SizedBox(height: 18),
-              Text('Unique Fitness, Pinarayi', style: AppText.bodyMuted),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Classic: the logo glows in while a red line sweeps out under it.
-  Widget _classic(bool reduced) {
-    return Center(
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0, end: 1),
-        duration: reduced ? Duration.zero : const Duration(milliseconds: 1200),
-        curve: Motion.settle,
-        builder: (context, t, _) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Opacity(
-              opacity: t,
-              child: Transform.scale(
-                scale: 0.85 + 0.15 * t,
-                child: Container(
-                  decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.35 * t), blurRadius: 80, spreadRadius: 10)]),
-                  child: const BrandLogo(height: 150),
-                ),
-              ),
-            ),
-            const SizedBox(height: 26),
-            SizedBox(
-              width: 160,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(width: 160 * t, height: 3, decoration: BoxDecoration(gradient: AppColors.redGradient, borderRadius: BorderRadius.circular(2))),
-              ),
-            ),
-            const SizedBox(height: 14),
-            Opacity(opacity: t, child: Text('PREMIUM LUXURY FITNESS CENTRE', style: AppText.label.copyWith(letterSpacing: 3.5, color: AppColors.textSecondary))),
-          ],
-        ),
-      ),
     );
   }
 }
