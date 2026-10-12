@@ -37,8 +37,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       title: 'Expenses',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'expense-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => showExpenseSheet(context),
         icon: Icon(AppIcons.add),
         label: Text('Add expense', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

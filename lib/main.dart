@@ -23,17 +23,17 @@ Future<void> main() async {
   await Hive.initFlutter('unique_fitness_gym');
   // Open in the design chosen last time, and keep the system bars readable when it changes.
   await Skin.load();
-  _systemBars(Skin.current);
-  Skin.notifier.addListener(() => _systemBars(Skin.current));
+  _systemBars();
+  Skin.changes.addListener(_systemBars);
   final store = HiveGymStore();
   final gym = GymProvider(store: store);
   DeskNotifications.watch(gym);
   runApp(UniqueFitnessApp(store: store, gym: gym));
 }
 
-/// Dark status-bar icons on Plate & Chalk's light pages, light ones on Classic's dark pages.
-void _systemBars(AppSkin skin) {
-  final icons = skin == AppSkin.classic ? Brightness.light : Brightness.dark;
+/// Dark status-bar icons on light pages, light ones on dark pages (Classic or dark mode).
+void _systemBars() {
+  final icons = Skin.isDark ? Brightness.light : Brightness.dark;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: icons,
@@ -62,11 +62,11 @@ class UniqueFitnessApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ShellController()),
         ChangeNotifierProvider(create: (c) => DeviceService(gym: c.read<GymProvider>(), demoDevice: demoDevice)),
       ],
-      // The theme follows the chosen design. The app itself stays mounted, so open pages and the
-      // selected tab survive a change of design.
-      child: ValueListenableBuilder<AppSkin>(
-        valueListenable: Skin.notifier,
-        builder: (context, skin, _) => MaterialApp(
+      // The theme follows the chosen design and dark mode. The app itself stays mounted, so open
+      // pages and the selected tab survive a change of look.
+      child: ListenableBuilder(
+        listenable: Skin.changes,
+        builder: (context, _) => MaterialApp(
           title: 'Unique Fitness Gym',
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
@@ -94,6 +94,9 @@ class _Splash extends StatefulWidget {
 class _SplashState extends State<_Splash> {
   final _logoDone = Completer<void>();
 
+  // Set once the app has opened, so later changes of look cross-fade instead of zooming.
+  bool _introDone = false;
+
   // Tests pass a zero splash time and skip the sequence; the app waits for it otherwise, so the
   // opening is never cut off halfway.
   late final Future<void> _ready = Future.wait([
@@ -105,12 +108,12 @@ class _SplashState extends State<_Splash> {
   @override
   void initState() {
     super.initState();
-    Skin.notifier.addListener(_redraw);
+    Skin.changes.addListener(_redraw);
   }
 
   @override
   void dispose() {
-    Skin.notifier.removeListener(_redraw);
+    Skin.changes.removeListener(_redraw);
     super.dispose();
   }
 
@@ -129,6 +132,7 @@ class _SplashState extends State<_Splash> {
       future: _ready,
       builder: (context, snapshot) {
         final done = snapshot.connectionState == ConnectionState.done;
+        if (done && !_introDone) WidgetsBinding.instance.addPostFrameCallback((_) => _introDone = true);
         if (snapshot.hasError) {
           return Scaffold(body: Center(child: Padding(padding: const EdgeInsets.all(32), child: Text('Could not open the gym data.\n${snapshot.error}', textAlign: TextAlign.center))));
         }
@@ -140,13 +144,14 @@ class _SplashState extends State<_Splash> {
           // it, so the logo seems to open into the app.
           transitionBuilder: (child, animation) {
             final leaving = child.key == const ValueKey('splash');
+            if (!leaving && _introDone) return FadeTransition(opacity: animation, child: child);
             return FadeTransition(
               opacity: animation,
               child: ScaleTransition(scale: Tween(begin: leaving ? 1.06 : 0.97, end: 1.0).animate(animation), child: child),
             );
           },
           child: done
-              ? AppShell(key: ValueKey('home-${Skin.current.name}'))
+              ? AppShell(key: ValueKey('home-${Skin.lookKey}'))
               : Scaffold(
                   key: const ValueKey('splash'),
                   body: GlowBackground(child: SplashLogo(onDone: () {

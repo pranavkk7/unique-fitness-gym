@@ -4,7 +4,8 @@
 //   flutter test tool/screenshots_test.dart --update-goldens
 //   flutter test tool/screenshots_test.dart --update-goldens --dart-define=SKIN=classic
 //
-// The second form renders the Classic design into docs/screenshots/classic.
+// The second form renders the Classic design into docs/screenshots/classic; SKIN=night renders
+// Plate & Chalk in dark mode into docs/screenshots/dark.
 //
 // This is a tool, not a test: it lives outside test/ so `flutter test` and CI do not run it.
 import 'dart:io';
@@ -22,8 +23,10 @@ import 'package:unique_fitness_gym/providers/gym_provider.dart';
 
 final _now = DateTime(2026, 10, 15, 18, 20); // Thursday evening: the boxing class is live
 
-const _classic = String.fromEnvironment('SKIN') == 'classic';
-const _dir = _classic ? '../docs/screenshots/classic' : '../docs/screenshots';
+const _skin = String.fromEnvironment('SKIN');
+const _classic = _skin == 'classic';
+const _night = _skin == 'night';
+const _dir = _classic ? '../docs/screenshots/classic' : (_night ? '../docs/screenshots/dark' : '../docs/screenshots');
 
 Future<void> _loadFonts() async {
   Future<ByteData> asset(String path) => rootBundle.load(path);
@@ -75,6 +78,7 @@ Future<GymProvider> _open(WidgetTester tester, {Size size = const Size(390, 844)
   tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
   addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
   Skin.notifier.value = _classic ? AppSkin.classic : AppSkin.chalk;
+  Skin.darkNotifier.value = _night;
   final store = MemoryGymStore();
   final gym = GymProvider(store: store, clock: () => _now);
   await tester.pumpWidget(RepaintBoundary(key: const Key('shot'), child: UniqueFitnessApp(store: store, gym: gym, splashTime: Duration.zero)));

@@ -555,7 +555,7 @@ class _BottomBar extends StatelessWidget {
           Expanded(
             child: FilledButton(
               onPressed: saving ? null : onNext,
-              child: saving ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white)) : Text(nextLabel),
+              child: saving ? SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.onInk)) : Text(nextLabel),
             ),
           ),
         ],

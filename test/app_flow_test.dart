@@ -258,6 +258,32 @@ void main() {
     expect(find.text('Revenue & reports'), findsOneWidget);
   });
 
+  testWidgets('the dashboard button turns dark mode on and off, and Classic hides it', (tester) async {
+    addTearDown(() {
+      Skin.darkNotifier.value = false;
+      Skin.notifier.value = AppSkin.chalk;
+    });
+    await _launch(tester, demo: true);
+    BuildContext page() => tester.element(find.text('In today'));
+    expect(Theme.of(page()).brightness, Brightness.light);
+
+    await tester.tap(find.byTooltip('Dark mode'));
+    await tester.pumpAndSettle();
+    expect(Skin.night, isTrue);
+    expect(Theme.of(page()).brightness, Brightness.dark);
+
+    await tester.tap(find.byTooltip('Light mode'));
+    await tester.pumpAndSettle();
+    expect(Skin.night, isFalse);
+    expect(Theme.of(page()).brightness, Brightness.light);
+
+    // Classic is dark already, so there is nothing to switch.
+    Skin.notifier.value = AppSkin.classic;
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Dark mode'), findsNothing);
+    expect(find.byTooltip('Light mode'), findsNothing);
+  });
+
   testWidgets('every tab opens in the Classic design too', (tester) async {
     Skin.notifier.value = AppSkin.classic;
     addTearDown(() => Skin.notifier.value = AppSkin.chalk);

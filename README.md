@@ -107,18 +107,21 @@ follow-ups. It is rescheduled whenever the data changes.
 - Profit, the payment-method split, the renewal rate, a busy-hours heatmap and lead sources.
 
 ## Design and motion
-The desk picks one of two designs under **More → Design**. Every feature works the same in both,
-and the choice is saved on the device.
+The desk picks one of two designs under **More → Design**, and Plate & Chalk also has a dark
+mode, switched from the sun/moon button at the top of the dashboard. Every feature works the same
+in each look, and the choice is saved on the device.
 
-| Plate & Chalk | Classic |
-|---|---|
-| ![Plate & Chalk dashboard](docs/screenshots/01_dashboard.png) | ![Classic dashboard](docs/screenshots/classic/01_dashboard.png) |
+| Plate & Chalk | Plate & Chalk, dark | Classic |
+|---|---|---|
+| ![Plate & Chalk dashboard](docs/screenshots/01_dashboard.png) | ![Dark mode dashboard](docs/screenshots/dark/01_dashboard.png) | ![Classic dashboard](docs/screenshots/classic/01_dashboard.png) |
 
 **Classic** is the original look: the logo's crimson on near-black, slanted Barlow Condensed
 headlines like the gym's posters, Material Rounded icons, a glass bottom bar with a raised red
 check-in button, and staggered entrances.
 
-**Plate & Chalk** is the newer, quieter look: a gym floor, not a tech dashboard.
+**Plate & Chalk** is the newer, quieter look: a gym floor, not a tech dashboard. Its dark mode
+keeps the same rules on graphite pages with chalk-white type, with the plate colours lifted so they
+still read on dark.
 - **Colour.** White sheets on a chalk-grey background, with iron-black text and buttons. Colour
   means state, taken from weight-plate colours: green is active, yellow is expiring, blue is
   frozen, and the logo's red is only used for dues and problems.
@@ -181,7 +184,7 @@ flutter run -d chrome       # or try it in the browser
 ## Test
 ```bash
 flutter analyze
-flutter test        # 98 tests: business rules, Face ID protocol, storage, demo data, screens
+flutter test        # 99 tests: business rules, Face ID protocol, storage, demo data, screens
 ```
 - **CI** analyzes, tests and builds the web app on every push.
 - **On `main`** it also builds an Android APK (downloadable from the run's artifacts) and an
@@ -193,6 +196,9 @@ flutter test tool/screenshots_test.dart --update-goldens
 ```
 ```bash
 flutter test tool/screenshots_test.dart --update-goldens --dart-define=SKIN=classic
+```
+```bash
+flutter test tool/screenshots_test.dart --update-goldens --dart-define=SKIN=night
 ```
 
 ## Privacy

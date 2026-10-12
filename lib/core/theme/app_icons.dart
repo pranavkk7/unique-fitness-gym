@@ -110,6 +110,7 @@ class AppIcons {
   static IconData get martialArts => _c ? Icons.sports_kabaddi_rounded : const IconData(0xed5c, fontFamily: _regular); // personSimpleTaiChi
   static IconData get medical => _c ? Icons.medical_information_rounded : const IconData(0xe570, fontFamily: _regular); // firstAidKit
   static IconData get membership => _c ? Icons.card_membership_rounded : const IconData(0xe2c8, fontFamily: _regular); // identificationCard
+  static IconData get moon => _c ? Icons.dark_mode_rounded : const IconData(0xe330, fontFamily: _regular); // moon
   static IconData get more => _c ? Icons.more_horiz_rounded : const IconData(0xe1fe, fontFamily: _regular); // dotsThree
   static IconData get morePlain => _c ? Icons.more_horiz : const IconData(0xe1fe, fontFamily: _regular); // dotsThree
   static IconData get music => _c ? Icons.music_note_rounded : const IconData(0xe340, fontFamily: _regular); // musicNotes
@@ -161,6 +162,7 @@ class AppIcons {
   static IconData get starOutline => _c ? Icons.star_outline_rounded : const IconData(0xe46a, fontFamily: _regular); // star
   static IconData get stock => _c ? Icons.inventory_2_rounded : const IconData(0xe390, fontFamily: _regular); // package
   static IconData get store => _c ? Icons.storefront_rounded : const IconData(0xe470, fontFamily: _regular); // storefront
+  static IconData get sun => _c ? Icons.light_mode_rounded : const IconData(0xe472, fontFamily: _regular); // sun
   static IconData get support => _c ? Icons.support_agent_rounded : const IconData(0xe584, fontFamily: _regular); // headset
   static IconData get sync => _c ? Icons.sync_rounded : const IconData(0xe094, fontFamily: _regular); // arrowsClockwise
   static IconData get table => _c ? Icons.table_view_rounded : const IconData(0xe476, fontFamily: _regular); // table
@@ -278,6 +280,7 @@ class AppIcons {
         'martialArts' => martialArts,
         'medical' => medical,
         'membership' => membership,
+        'moon' => moon,
         'more' => more,
         'morePlain' => morePlain,
         'music' => music,
@@ -329,6 +332,7 @@ class AppIcons {
         'starOutline' => starOutline,
         'stock' => stock,
         'store' => store,
+        'sun' => sun,
         'support' => support,
         'sync' => sync,
         'table' => table,

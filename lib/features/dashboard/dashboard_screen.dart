@@ -14,6 +14,7 @@ import '../../core/theme/skin.dart';
 import '../../core/utils/format.dart';
 import '../../core/widgets/basics.dart';
 import '../../core/widgets/brand.dart';
+import '../../core/widgets/dark_mode_button.dart';
 import '../../core/widgets/charts.dart';
 import '../../core/widgets/motion_widgets.dart';
 import '../../core/widgets/pin_pad.dart';
@@ -170,6 +171,7 @@ class _Header extends StatelessWidget {
           children: [
             if (showBrand) Expanded(child: Align(alignment: Alignment.centerLeft, child: BrandHeader(branch: gym.settings.branchName))) else const Spacer(),
             if (gym.settings.demoData) Tooltip(message: 'Fictional members. Messages and calls are switched off.', child: StatusPill('Demo data', color: AppColors.warning)),
+            const DarkModeButton(),
             if (gym.settings.hasPin)
               IconButton(
                 tooltip: gym.ownerUnlocked ? 'Lock owner areas' : 'Unlock owner areas',

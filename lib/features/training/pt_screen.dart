@@ -41,8 +41,8 @@ class PtScreen extends StatelessWidget {
       subtitle: '${active.length} running packages · $sessionsToday sessions today',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'pt-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => showSellPtSheet(context),
         icon: Icon(AppIcons.add),
         label: Text('Sell package', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

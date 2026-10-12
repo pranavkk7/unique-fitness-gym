@@ -35,8 +35,8 @@ class _TrainingPlansScreenState extends State<TrainingPlansScreen> {
       subtitle: '${gym.trainingPlans.length} plan templates',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'plan-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => openPage(context, TrainingPlanEditor(kind: _kind)),
         icon: Icon(AppIcons.add),
         label: Text('New plan', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

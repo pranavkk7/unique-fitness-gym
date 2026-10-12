@@ -76,8 +76,8 @@ ThemeData buildClassicTheme() {
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         disabledBackgroundColor: AppColors.surfaceHigher,
         minimumSize: const Size(0, 54),
         padding: const EdgeInsets.symmetric(horizontal: 18),

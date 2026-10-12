@@ -46,8 +46,8 @@ class ShopScreen extends StatelessWidget {
           ? null
           : FloatingActionButton.extended(
               heroTag: 'shop-fab',
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.ink,
+              foregroundColor: AppColors.onInk,
               onPressed: () => showSellSheet(context),
               icon: Icon(AppIcons.bag),
               label: Text('New sale', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
@@ -274,8 +274,8 @@ class _ProductChip extends StatelessWidget {
                     customBorder: const CircleBorder(),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(10)),
-                      child: Text('$qty  −', style: AppText.small.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                      decoration: BoxDecoration(color: AppColors.ink, borderRadius: BorderRadius.circular(10)),
+                      child: Text('$qty  −', style: AppText.small.copyWith(color: AppColors.onInk, fontWeight: FontWeight.w800)),
                     ),
                   ),
               ]),

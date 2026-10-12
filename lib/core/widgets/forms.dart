@@ -43,9 +43,9 @@ class ChoiceChips<T> extends StatelessWidget {
               HapticFeedback.selectionClick();
               onSelected(o);
             },
-            avatar: iconOf == null ? null : Icon(iconOf!(o), size: 16, color: o == selected ? Colors.white : AppColors.muted),
+            avatar: iconOf == null ? null : Icon(iconOf!(o), size: 16, color: o == selected ? AppColors.onInk : AppColors.muted),
             label: Text(labelOf(o)),
-            labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: o == selected ? Colors.white : AppColors.text, fontWeight: FontWeight.w700, fontSize: 13.5),
+            labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: o == selected ? AppColors.onInk : AppColors.text, fontWeight: FontWeight.w700, fontSize: 13.5),
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
           ),
       ],

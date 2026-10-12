@@ -233,7 +233,7 @@ class _CheckInButton extends StatelessWidget {
           width: selected ? 60 : 52,
           height: 40,
           decoration: BoxDecoration(color: AppColors.ink, borderRadius: BorderRadius.circular(12)),
-          child: Icon(AppIcons.checkIn, color: Colors.white, size: 22),
+          child: Icon(AppIcons.checkIn, color: AppColors.onInk, size: 22),
         ),
       ),
     );

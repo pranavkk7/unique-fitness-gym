@@ -179,15 +179,15 @@ class _KindCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                Icon(kind.icon, color: selected ? Colors.white : AppColors.text, size: 20),
+                Icon(kind.icon, color: selected ? AppColors.onInk : AppColors.text, size: 20),
                 const Spacer(),
                 AnimatedSwitcher(
                   duration: Motion.fast,
-                  child: Text('$count', key: ValueKey(count), style: AppText.headline.copyWith(fontSize: 22, color: selected ? Colors.white : (count == 0 ? AppColors.muted : AppColors.text))),
+                  child: Text('$count', key: ValueKey(count), style: AppText.headline.copyWith(fontSize: 22, color: selected ? AppColors.onInk : (count == 0 ? AppColors.muted : AppColors.text))),
                 ),
               ]),
               const Spacer(),
-              Text(kind.label, style: AppText.small.copyWith(color: selected ? Colors.white.withValues(alpha: 0.8) : AppColors.textSecondary, fontWeight: FontWeight.w600), maxLines: 2),
+              Text(kind.label, style: AppText.small.copyWith(color: selected ? AppColors.onInk.withValues(alpha: 0.8) : AppColors.textSecondary, fontWeight: FontWeight.w600), maxLines: 2),
             ],
           ),
         ),
@@ -216,7 +216,7 @@ class _SendAllButton extends StatelessWidget {
           width: 52,
           height: 52,
           decoration: BoxDecoration(color: classic ? Colors.black.withValues(alpha: 0.2) : AppColors.whatsapp, borderRadius: BorderRadius.circular(classic ? 16 : 12)),
-          child: Icon(AppIcons.send, color: Colors.white),
+          child: Icon(AppIcons.send, color: classic ? Colors.white : AppColors.onWhatsapp),
         ),
         const SizedBox(width: 14),
         Expanded(

@@ -50,7 +50,7 @@ class _SplashLogoState extends State<SplashLogo> with SingleTickerProviderStateM
       WidgetsBinding.instance.addPostFrameCallback((_) => widget.onDone?.call());
       return;
     }
-    final asset = Skin.classic ? BrandLogo.darkAsset : BrandLogo.originalAsset;
+    final asset = Skin.isDark ? BrandLogo.darkAsset : BrandLogo.originalAsset;
     precacheImage(AssetImage(asset), context).whenComplete(() {
       if (mounted) _c.forward();
     });

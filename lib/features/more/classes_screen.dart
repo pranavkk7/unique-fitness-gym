@@ -38,8 +38,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
       subtitle: 'Weekly timetable · ${gym.classes.length} classes',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'class-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => _showClassSheet(context, day: _day),
         icon: Icon(AppIcons.add),
         label: Text('Class', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

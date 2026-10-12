@@ -36,8 +36,8 @@ class FeedbackScreen extends StatelessWidget {
       subtitle: '${all.length} responses · ${open.length} need action',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'feedback-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => showFeedbackSheet(context),
         icon: Icon(AppIcons.review),
         label: Text('Add feedback', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

@@ -44,8 +44,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       title: 'Payments',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'payment-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => showCollectPayment(context),
         icon: Icon(AppIcons.rupee),
         label: Text('Collect', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

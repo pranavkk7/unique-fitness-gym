@@ -35,8 +35,8 @@ class OffersScreen extends StatelessWidget {
       subtitle: '${offers.where((o) => _live(gym, o)).length} live codes · ${referred.length} referred members',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'offer-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => _showOfferSheet(context),
         icon: Icon(AppIcons.add),
         label: Text('New code', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

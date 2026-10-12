@@ -35,8 +35,8 @@ class PlansScreen extends StatelessWidget {
       title: 'Plans & pricing',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'plan-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => _showPlanSheet(context),
         icon: Icon(AppIcons.add),
         label: Text('Plan', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

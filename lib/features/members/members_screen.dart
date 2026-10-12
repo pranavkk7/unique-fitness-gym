@@ -164,7 +164,7 @@ class _MembersScreenState extends State<MembersScreen> {
                           setState(() => _filter = f);
                         },
                         label: Text('${labels[f]}  ${counts[f]}'),
-                        labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w700, color: _filter == f ? Colors.white : AppColors.text),
+                        labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w700, color: _filter == f ? AppColors.onInk : AppColors.text),
                       ),
                     ),
                 ],
@@ -202,8 +202,8 @@ class _MembersScreenState extends State<MembersScreen> {
           child: FloatingActionButton.extended(
             heroTag: 'admit-fab',
             tooltip: 'New admission',
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            backgroundColor: AppColors.ink,
+            foregroundColor: AppColors.onInk,
             onPressed: () => openPage(context, const AdmissionScreen()),
             icon: Icon(AppIcons.personAdd),
             label: Text('Admission', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800, letterSpacing: 0.6)),

@@ -203,13 +203,13 @@ class _Header extends StatelessWidget {
               right: -2,
               bottom: 2,
               child: Material(
-                color: AppColors.primary,
+                color: AppColors.ink,
                 shape: CircleBorder(side: BorderSide(color: AppColors.background, width: 3)),
                 child: IconButton(
                   tooltip: member.hasPhoto ? 'Change photo' : 'Add photo',
                   iconSize: 18,
                   visualDensity: VisualDensity.compact,
-                  icon: Icon(AppIcons.camera, color: Colors.white),
+                  icon: Icon(AppIcons.camera, color: AppColors.onInk),
                   onPressed: () async {
                     final bytes = await pickMemberPhoto(context, allowRemove: member.hasPhoto);
                     if (bytes == null) return;

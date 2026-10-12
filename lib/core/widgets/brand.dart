@@ -19,7 +19,7 @@ class BrandLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      Skin.classic ? darkAsset : originalAsset,
+      Skin.isDark ? darkAsset : originalAsset,
       height: height,
       width: height * aspect,
       fit: BoxFit.contain,

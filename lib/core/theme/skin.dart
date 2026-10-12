@@ -19,8 +19,23 @@ class Skin {
 
   static final notifier = ValueNotifier<AppSkin>(AppSkin.chalk);
 
+  /// Dark mode for Plate & Chalk. Classic is dark already, so it ignores this.
+  static final darkNotifier = ValueNotifier<bool>(false);
+
+  /// Fires when either the design or dark mode changes.
+  static final changes = Listenable.merge([notifier, darkNotifier]);
+
   static AppSkin get current => notifier.value;
   static bool get classic => notifier.value == AppSkin.classic;
+
+  /// Plate & Chalk in dark mode ("night"): graphite pages with chalk-white type.
+  static bool get night => !classic && darkNotifier.value;
+
+  /// True whenever the screen is dark, in either design.
+  static bool get isDark => classic || night;
+
+  /// Changes whenever the look does; used to rebuild the app in the new look.
+  static String get lookKey => '${current.name}-${night ? 'night' : 'day'}';
 
   // Kept apart from the gym data: it is a choice for this device, not a record of the gym.
   static const _boxName = 'ui_prefs';
@@ -30,6 +45,7 @@ class Skin {
     try {
       final box = await Hive.openBox<String>(_boxName);
       notifier.value = AppSkin.values.asNameMap()[box.get('skin')] ?? AppSkin.chalk;
+      darkNotifier.value = box.get('dark') == 'true';
     } catch (_) {
       // Storage unavailable (tests, a private browser window): stay on the default.
     }
@@ -38,5 +54,10 @@ class Skin {
   static Future<void> set(AppSkin skin) async {
     notifier.value = skin;
     if (Hive.isBoxOpen(_boxName)) await Hive.box<String>(_boxName).put('skin', skin.name);
+  }
+
+  static Future<void> setDark(bool dark) async {
+    darkNotifier.value = dark;
+    if (Hive.isBoxOpen(_boxName)) await Hive.box<String>(_boxName).put('dark', '$dark');
   }
 }

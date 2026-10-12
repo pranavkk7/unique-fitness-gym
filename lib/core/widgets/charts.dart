@@ -280,7 +280,7 @@ class _RevenuePainter extends CustomPainter {
       final bx = left + slot * (selectedPos + 0.5);
       final value = values[selected];
       final cmp = showCompare ? compare[selected] : null;
-      final text = _text(formatMoney(value), TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 13, fontWeight: FontWeight.w800, color: Colors.white, fontFeatures: [FontFeature.tabularFigures()]));
+      final text = _text(formatMoney(value), TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.onInk, fontFeatures: [FontFeature.tabularFigures()]));
       final w = text.width + 18;
       final barTop = math.min(y(value), cmp == null ? double.infinity : y(cmp));
       final bubbleY = math.max(2.0, barTop - text.height - 16);
@@ -373,7 +373,7 @@ class _RingPainter extends CustomPainter {
     canvas.drawArc(arc, -math.pi / 2, sweep, false, paint);
     // A small white notch marks the head of the arc.
     final head = Offset(arc.center.dx + arc.width / 2 * math.cos(-math.pi / 2 + sweep), arc.center.dy + arc.height / 2 * math.sin(-math.pi / 2 + sweep));
-    canvas.drawCircle(head, stroke * 0.32, Paint()..color = Colors.white);
+    canvas.drawCircle(head, stroke * 0.32, Paint()..color = Skin.classic ? Colors.white : AppColors.surface);
   }
 
   @override

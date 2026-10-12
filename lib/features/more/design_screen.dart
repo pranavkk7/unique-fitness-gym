@@ -16,10 +16,10 @@ class DesignScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Rebuild the page from scratch when the design changes, so it shows the new look at once.
-    return ValueListenableBuilder<AppSkin>(
-      valueListenable: Skin.notifier,
-      builder: (context, current, _) => KeyedSubtree(
-        key: ValueKey(current),
+    return ListenableBuilder(
+      listenable: Skin.changes,
+      builder: (context, _) => KeyedSubtree(
+        key: ValueKey(Skin.lookKey),
         child: SubPage(
           title: 'Design',
           subtitle: 'Saved on this device',
@@ -29,7 +29,21 @@ class DesignScreen extends StatelessWidget {
               Text('Pick the look you like working with. Everything works the same in both.', style: AppText.bodyMuted),
               const SizedBox(height: 18),
               for (final skin in AppSkin.values) ...[
-                _DesignOption(skin: skin, selected: skin == current),
+                _DesignOption(skin: skin, selected: skin == Skin.current),
+                if (skin == AppSkin.chalk && Skin.current == AppSkin.chalk) ...[
+                  const SizedBox(height: 8),
+                  AppCard(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+                    child: SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      secondary: Icon(Skin.night ? AppIcons.moon : AppIcons.sun, color: AppColors.textSecondary),
+                      title: Text('Dark mode', style: AppText.title),
+                      subtitle: Text('Graphite pages, easier on the eyes in the evening', style: AppText.small.copyWith(color: AppColors.muted)),
+                      value: Skin.night,
+                      onChanged: Skin.setDark,
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 14),
               ],
             ],

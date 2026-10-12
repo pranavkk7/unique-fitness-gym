@@ -12,9 +12,10 @@ ThemeData buildAppTheme() => Skin.classic ? buildClassicTheme() : _buildChalkThe
 /// Plate & Chalk: light chalk pages, white sheets, iron controls, no shadows or glows.
 ThemeData _buildChalkTheme() {
   final family = AppText.bodyFont;
-  final scheme = ColorScheme.light(
-    primary: AppColors.text,
-    onPrimary: Colors.white,
+  // Dark mode uses the same tokens; only their values change (see AppColors).
+  final scheme = (Skin.night ? ColorScheme.dark : ColorScheme.light)(
+    primary: AppColors.ink,
+    onPrimary: AppColors.onInk,
     secondary: AppColors.textSecondary,
     surface: AppColors.surface,
     onSurface: AppColors.text,
@@ -39,7 +40,7 @@ ThemeData _buildChalkTheme() {
 
   return ThemeData(
     useMaterial3: true,
-    brightness: Brightness.light,
+    brightness: Skin.night ? Brightness.dark : Brightness.light,
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.background,
     fontFamily: family,
@@ -82,8 +83,8 @@ ThemeData _buildChalkTheme() {
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        backgroundColor: AppColors.text,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         disabledBackgroundColor: AppColors.surfaceHigher,
         disabledForegroundColor: AppColors.muted,
         minimumSize: const Size(0, 52),
@@ -108,8 +109,8 @@ ThemeData _buildChalkTheme() {
     ),
     iconButtonTheme: IconButtonThemeData(style: IconButton.styleFrom(foregroundColor: AppColors.text)),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: AppColors.text,
-      foregroundColor: Colors.white,
+      backgroundColor: AppColors.ink,
+      foregroundColor: AppColors.onInk,
       elevation: 0,
       focusElevation: 0,
       hoverElevation: 0,
@@ -119,18 +120,18 @@ ThemeData _buildChalkTheme() {
     ),
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.surface,
-      selectedColor: AppColors.text,
+      selectedColor: AppColors.ink,
       side: BorderSide(color: AppColors.borderStrong),
       labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500, fontSize: 13.5, color: AppColors.text),
-      secondaryLabelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500, fontSize: 13.5, color: Colors.white),
+      secondaryLabelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500, fontSize: 13.5, color: AppColors.onInk),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       showCheckmark: false,
     ),
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: SegmentedButton.styleFrom(
         backgroundColor: AppColors.surface,
-        selectedBackgroundColor: AppColors.text,
-        selectedForegroundColor: Colors.white,
+        selectedBackgroundColor: AppColors.ink,
+        selectedForegroundColor: AppColors.onInk,
         foregroundColor: AppColors.textSecondary,
         side: BorderSide(color: AppColors.borderStrong),
         shape: buttonShape,
@@ -138,8 +139,8 @@ ThemeData _buildChalkTheme() {
       ),
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: const WidgetStatePropertyAll(Colors.white),
-      trackColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? AppColors.text : AppColors.borderStrong),
+      thumbColor: WidgetStatePropertyAll(AppColors.surface),
+      trackColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? AppColors.ink : AppColors.borderStrong),
       trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
     ),
     checkboxTheme: CheckboxThemeData(fillColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? AppColors.text : Colors.transparent)),
@@ -148,10 +149,10 @@ ThemeData _buildChalkTheme() {
     dividerTheme: DividerThemeData(color: AppColors.border, space: 1, thickness: 1),
     listTileTheme: ListTileThemeData(iconColor: AppColors.textSecondary, titleTextStyle: AppText.title, subtitleTextStyle: AppText.bodyMuted),
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: AppColors.text,
-      contentTextStyle: AppText.body.copyWith(color: Colors.white),
+      backgroundColor: AppColors.ink,
+      contentTextStyle: AppText.body.copyWith(color: AppColors.onInk),
       behavior: SnackBarBehavior.floating,
-      actionTextColor: Colors.white,
+      actionTextColor: AppColors.onInk,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
@@ -173,8 +174,8 @@ ThemeData _buildChalkTheme() {
     ),
     datePickerTheme: DatePickerThemeData(
       backgroundColor: AppColors.surface,
-      headerBackgroundColor: AppColors.text,
-      headerForegroundColor: Colors.white,
+      headerBackgroundColor: AppColors.ink,
+      headerForegroundColor: AppColors.onInk,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
@@ -185,8 +186,8 @@ ThemeData _buildChalkTheme() {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: AppColors.border)),
     ),
     tooltipTheme: TooltipThemeData(
-      decoration: BoxDecoration(color: AppColors.text, borderRadius: BorderRadius.circular(6)),
-      textStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, color: Colors.white, fontWeight: FontWeight.w500),
+      decoration: BoxDecoration(color: AppColors.ink, borderRadius: BorderRadius.circular(6)),
+      textStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, color: AppColors.onInk, fontWeight: FontWeight.w500),
     ),
     pageTransitionsTheme: PageTransitionsTheme(builders: {
       TargetPlatform.android: FadeForwardsPageTransitionsBuilder(backgroundColor: AppColors.background),

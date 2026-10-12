@@ -42,8 +42,8 @@ class _EnquiriesScreenState extends State<EnquiriesScreen> {
       subtitle: '${gym.enquiriesWith(openOnly: true).length} open · ${due.length} to follow up today',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'enquiry-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => showEnquirySheet(context),
         icon: Icon(AppIcons.add),
         label: Text('Enquiry', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
@@ -98,7 +98,7 @@ class _EnquiriesScreenState extends State<EnquiriesScreen> {
             setState(() => _status = s);
           },
           label: Text('$label  $count'),
-          labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w700, color: _status == s ? Colors.white : AppColors.text),
+          labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w700, color: _status == s ? AppColors.onInk : AppColors.text),
         ),
       );
 }

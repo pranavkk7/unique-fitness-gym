@@ -27,8 +27,8 @@ class TrainersScreen extends StatelessWidget {
       title: 'Trainers & staff',
       floatingAction: FloatingActionButton.extended(
         heroTag: 'trainer-fab',
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: () => _showTrainerSheet(context),
         icon: Icon(AppIcons.add),
         label: Text('Trainer', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),

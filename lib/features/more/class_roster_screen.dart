@@ -41,8 +41,8 @@ class ClassRosterScreen extends StatelessWidget {
       actions: [if (onEdit != null) IconButton(tooltip: 'Edit class', icon: Icon(AppIcons.edit), onPressed: onEdit)],
       floatingAction: FloatingActionButton.extended(
         heroTag: 'roster-fab',
-        backgroundColor: full ? AppColors.surfaceHigher : AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: full ? AppColors.surfaceHigher : AppColors.ink,
+        foregroundColor: AppColors.onInk,
         onPressed: full
             ? () => showMessage(context, 'The batch is full. Raise the capacity to add more.')
             : () async {
