@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
@@ -70,11 +71,24 @@ class UniqueFitnessApp extends StatelessWidget {
           title: 'Unique Fitness Gym',
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
+          scrollBehavior: const _PhoneScrollBehavior(),
           home: _Splash(splashTime: splashTime),
         ),
       ),
     );
   }
+}
+
+/// Scrolling behaves like the phone and tablet the app is made for, also in the web demo opened with
+/// a mouse: no desktop scrollbars, and lists can be dragged with the mouse as with a finger.
+class _PhoneScrollBehavior extends MaterialScrollBehavior {
+  const _PhoneScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => PointerDeviceKind.values.toSet();
+
+  @override
+  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) => child;
 }
 
 /// The public web demo is built with `--dart-define=LIVE_DEMO=true`: it opens straight onto the
