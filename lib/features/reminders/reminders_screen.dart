@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
+import '../../core/theme/skin.dart';
 import '../../core/theme/motion.dart';
 import '../../core/utils/contact.dart';
 import '../../core/utils/format.dart';
@@ -67,7 +68,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     Text('${gym.pendingReminderCount} ready to send today', style: AppText.small.copyWith(color: AppColors.muted)),
                   ]),
                 ),
-                IconButton(tooltip: 'Message templates', icon: const Icon(AppIcons.editNote), onPressed: () => openPage(context, const TemplatesScreen())),
+                IconButton(tooltip: 'Message templates', icon: Icon(AppIcons.editNote), onPressed: () => openPage(context, const TemplatesScreen())),
               ],
             ).entrance(context),
           ),
@@ -106,7 +107,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                       key: ValueKey('done-${_kind.name}'),
                       padding: const EdgeInsets.all(18),
                       child: Row(children: [
-                        const Icon(AppIcons.taskDone, color: AppColors.success, size: 30),
+                        Icon(AppIcons.taskDone, color: AppColors.success, size: 30),
                         const SizedBox(width: 14),
                         Expanded(child: Text(all.isEmpty ? 'Nobody on this list today.' : 'All ${all.length} sent. Nice work!', style: AppText.title)),
                       ]),
@@ -170,9 +171,9 @@ class _KindCard extends StatelessWidget {
           width: 118,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: selected ? AppColors.text : AppColors.surface,
+            color: selected ? AppColors.ink : AppColors.surface,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: selected ? AppColors.text : AppColors.border),
+            border: Border.all(color: selected ? AppColors.ink : AppColors.border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,24 +205,27 @@ class _SendAllButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Classic: a WhatsApp-green panel. Plate & Chalk: a plain sheet with one green action.
+    final classic = Skin.classic;
     return AppCard(
       onTap: onTap,
+      gradient: classic ? const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF1FBF5B), Color(0xFF0E7A3A)]) : null,
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
       child: Row(children: [
         Container(
           width: 52,
           height: 52,
-          decoration: BoxDecoration(color: AppColors.whatsapp, borderRadius: BorderRadius.circular(12)),
-          child: const Icon(AppIcons.send, color: Colors.white),
+          decoration: BoxDecoration(color: classic ? Colors.black.withValues(alpha: 0.2) : AppColors.whatsapp, borderRadius: BorderRadius.circular(classic ? 16 : 12)),
+          child: Icon(AppIcons.send, color: Colors.white),
         ),
         const SizedBox(width: 14),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Send all $count', style: AppText.headline.copyWith(fontSize: 22)),
-            Text('WhatsApp opens with each message written. You tap send.', style: AppText.small.copyWith(color: AppColors.muted)),
+            Text(classic ? 'SEND ALL $count' : 'Send all $count', style: AppText.headline.copyWith(fontSize: classic ? 24 : 22, color: classic ? Colors.white : null)),
+            Text('WhatsApp opens with each message written. You tap send.', style: AppText.small.copyWith(color: classic ? Colors.white.withValues(alpha: 0.85) : AppColors.muted)),
           ]),
         ),
-        const Icon(AppIcons.chevronRight, color: AppColors.muted),
+        Icon(AppIcons.chevronRight, color: classic ? Colors.white : AppColors.muted),
       ]),
     );
   }
@@ -271,13 +275,13 @@ class _TargetRow extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 6, right: 6),
                     child: Tooltip(
                       message: 'Sent ${relativeDay(gym.lastReminder(target.id, target.kind)!, gym.today).toLowerCase()}',
-                      child: const StatusPill('Sent', color: AppColors.success, icon: AppIcons.doneAll),
+                      child: StatusPill('Sent', color: AppColors.success, icon: AppIcons.doneAll),
                     ),
                   )
                 : IconButton.filled(
                     tooltip: 'Send on WhatsApp',
-                    style: IconButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.white),
-                    icon: const Icon(AppIcons.send, size: 20),
+                    style: IconButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: AppColors.onWhatsapp),
+                    icon: Icon(AppIcons.send, size: 20),
                     onPressed: () async {
                       final ok = await openWhatsApp(context, target.phone, target.message);
                       if (ok) await gym.logReminder(target.kind, target.id);

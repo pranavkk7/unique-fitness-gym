@@ -10,6 +10,7 @@ import '../training/pt_screen.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
+import '../../core/theme/skin.dart';
 import '../../core/utils/format.dart';
 import '../../core/widgets/basics.dart';
 import '../../core/widgets/brand.dart';
@@ -140,7 +141,7 @@ class _CompactBar extends StatelessWidget {
     final gym = context.watch<GymProvider>();
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
-      decoration: const BoxDecoration(color: AppColors.background, border: Border(bottom: BorderSide(color: AppColors.border))),
+      decoration: BoxDecoration(color: AppColors.background, border: Border(bottom: BorderSide(color: AppColors.border))),
       child: Row(children: [
         const BrandLogo(height: 26),
         const SizedBox(width: 10),
@@ -168,7 +169,7 @@ class _Header extends StatelessWidget {
         Row(
           children: [
             if (showBrand) Expanded(child: Align(alignment: Alignment.centerLeft, child: BrandHeader(branch: gym.settings.branchName))) else const Spacer(),
-            if (gym.settings.demoData) const Tooltip(message: 'Fictional members. Messages and calls are switched off.', child: StatusPill('Demo data', color: AppColors.warning)),
+            if (gym.settings.demoData) Tooltip(message: 'Fictional members. Messages and calls are switched off.', child: StatusPill('Demo data', color: AppColors.warning)),
             if (gym.settings.hasPin)
               IconButton(
                 tooltip: gym.ownerUnlocked ? 'Lock owner areas' : 'Unlock owner areas',
@@ -290,7 +291,7 @@ class _WelcomeCard extends StatelessWidget {
         children: [
           Text('Welcome to\nyour gym desk', style: AppText.display.copyWith(fontSize: 30, color: Colors.white)),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'Register your first member to start tracking memberships, payments and attendance. Or load sample data to see the app in action.',
             style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white70, height: 1.4, fontSize: 15, fontWeight: FontWeight.w500),
           ),
@@ -322,7 +323,7 @@ class _WelcomeCard extends StatelessWidget {
               onPressed: () async {
                 if (await ensureOwner(context) && context.mounted) openPage(context, const DeviceScreen());
               },
-              icon: const Icon(AppIcons.faceId),
+              icon: Icon(AppIcons.faceId),
               label: const Text('Connect the Face ID door'),
             ),
           ),
@@ -440,7 +441,7 @@ class _KpiGrid extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: width / 118,
+        childAspectRatio: width / (Skin.classic ? 160 : 118), // Classic tiles carry an icon badge
         children: [for (var i = 0; i < tiles.length; i++) tiles[i].entrance(context, index: i + 2)],
       );
     });
@@ -480,7 +481,7 @@ class _ReminderCta extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(AppIcons.chevronRight, color: AppColors.muted),
+            Icon(AppIcons.chevronRight, color: AppColors.muted),
           ],
         ),
       ).entrance(context, index: 6),
@@ -627,9 +628,9 @@ class _IncomeCardState extends State<_IncomeCard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(AppIcons.lock, color: AppColors.muted, size: 30),
+                    Icon(AppIcons.lock, color: AppColors.muted, size: 30),
                     const SizedBox(height: 8),
-                    const Text('Income is visible to the owner only', style: AppText.bodyMuted),
+                    Text('Income is visible to the owner only', style: AppText.bodyMuted),
                     TextButton(onPressed: () => ensureOwner(context), child: const Text('Unlock with PIN')),
                   ],
                 ),
@@ -678,7 +679,7 @@ class _TodayClasses extends StatelessWidget {
     final list = gym.classesOn(gym.now.weekday);
     final nowMin = gym.now.hour * 60 + gym.now.minute;
     if (list.isEmpty) {
-      return const AppCard(child: Row(children: [Icon(AppIcons.eventBusy, color: AppColors.muted), SizedBox(width: 12), Expanded(child: Text('No classes today.', style: AppText.bodyMuted))]));
+      return AppCard(child: Row(children: [Icon(AppIcons.eventBusy, color: AppColors.muted), SizedBox(width: 12), Expanded(child: Text('No classes today.', style: AppText.bodyMuted))]));
     }
     return SizedBox(
       height: 132,
@@ -694,7 +695,7 @@ class _TodayClasses extends StatelessWidget {
             width: 172,
             child: AppCard(
               onTap: () => openPage(context, const ClassesScreen()),
-              borderColor: live ? AppColors.text : null,
+              borderColor: live ? AppColors.ink : null,
               padding: const EdgeInsets.all(14),
               child: Opacity(
                 opacity: done ? 0.5 : 1,
@@ -705,7 +706,7 @@ class _TodayClasses extends StatelessWidget {
                       children: [
                         IconBadge(c.type.icon, color: c.type.color, size: 34, radius: 11),
                         const Spacer(),
-                        if (live) const StatusPill('Live', color: AppColors.success) else if (done) const StatusPill('Done', color: AppColors.muted),
+                        if (live) StatusPill('Live', color: AppColors.success) else if (done) StatusPill('Done', color: AppColors.muted),
                       ],
                     ),
                     const Spacer(),
@@ -730,7 +731,7 @@ class _ActivityFeed extends StatelessWidget {
   Widget build(BuildContext context) {
     final gym = context.watch<GymProvider>();
     final items = gym.recentActivity(7);
-    if (items.isEmpty) return const AppCard(child: Text('Nothing yet today.', style: AppText.bodyMuted));
+    if (items.isEmpty) return AppCard(child: Text('Nothing yet today.', style: AppText.bodyMuted));
     return AppCard(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
       child: Column(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
+import '../theme/skin.dart';
 
 /// The Unique Fitness Gym badge. `logo_on_dark.png` is the official logo with its grey lettering
 /// lifted for dark screens; `logo.png` is the untouched original (used on white receipts).
@@ -18,7 +19,7 @@ class BrandLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      originalAsset,
+      Skin.classic ? darkAsset : originalAsset,
       height: height,
       width: height * aspect,
       fit: BoxFit.contain,
@@ -46,6 +47,24 @@ class BrandHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Skin.classic) {
+      // Classic: the name in poster capitals and the branch in red.
+      return Row(mainAxisSize: MainAxisSize.min, children: [
+        const BrandLogo(height: 44),
+        const SizedBox(width: 10),
+        Flexible(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+            Text('UNIQUE FITNESS', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.headline.copyWith(fontSize: 19, height: 1, letterSpacing: 1)),
+            const SizedBox(height: 3),
+            Row(children: [
+              Icon(AppIcons.location, size: 12, color: AppColors.primaryBright),
+              const SizedBox(width: 3),
+              Flexible(child: Text(branch.toUpperCase(), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(fontSize: 10.5, color: AppColors.primaryBright, letterSpacing: 2))),
+            ]),
+          ]),
+        ),
+      ]);
+    }
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

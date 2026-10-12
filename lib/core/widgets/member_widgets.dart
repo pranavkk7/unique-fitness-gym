@@ -8,6 +8,7 @@ import '../../models/models.dart';
 import '../../providers/gym_provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
+import '../theme/skin.dart';
 import '../utils/format.dart';
 import 'basics.dart';
 import 'surfaces.dart';
@@ -24,17 +25,17 @@ class StatusStyle {
     final left = gym.daysLeft(m);
     switch (gym.statusOf(m)) {
       case MemberStatus.active:
-        return const StatusStyle(AppColors.success, 'Active', AppIcons.checkCircle);
+        return StatusStyle(AppColors.success, 'Active', AppIcons.checkCircle);
       case MemberStatus.expiringSoon:
         return StatusStyle(AppColors.warning, left == 0 ? 'Ends today' : '$left day${left == 1 ? '' : 's'} left', AppIcons.schedule);
       case MemberStatus.expired:
-        return const StatusStyle(AppColors.danger, 'Expired', AppIcons.cancel);
+        return StatusStyle(AppColors.danger, 'Expired', AppIcons.cancel);
       case MemberStatus.frozen:
-        return const StatusStyle(AppColors.frozen, 'Frozen', AppIcons.freeze);
+        return StatusStyle(AppColors.frozen, 'Frozen', AppIcons.freeze);
     }
   }
 
-  static const forStatus = {
+  static Map<MemberStatus, StatusStyle> get forStatus => {
     MemberStatus.active: StatusStyle(AppColors.success, 'Active', AppIcons.checkCircle),
     MemberStatus.expiringSoon: StatusStyle(AppColors.warning, 'Expiring', AppIcons.schedule),
     MemberStatus.expired: StatusStyle(AppColors.danger, 'Expired', AppIcons.cancel),
@@ -61,7 +62,7 @@ class MemberAvatar extends StatelessWidget {
       width: size,
       height: size,
       padding: EdgeInsets.all(size * 0.055),
-      decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: ring, width: size * 0.035)),
+      decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: ring, width: size * (Skin.classic ? 0.045 : 0.035))),
       child: ClipOval(child: _Face(member: member, size: size)),
     );
     if (!hero) return avatar;
@@ -76,9 +77,17 @@ class _Face extends StatelessWidget {
   const _Face({required this.member, required this.size});
 
   Widget _initials() => Container(
-        color: AppColors.surfaceHigh,
+        decoration: BoxDecoration(
+          color: Skin.classic ? null : AppColors.surfaceHigh,
+          gradient: Skin.classic ? LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [AppColors.surfaceHigher, AppColors.surfaceHigh]) : null,
+        ),
         alignment: Alignment.center,
-        child: Text(initials(member.name), style: TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontWeight: FontWeight.w600, fontSize: size * 0.34, color: AppColors.text)),
+        child: Text(
+          initials(member.name),
+          style: Skin.classic
+              ? TextStyle(fontFamily: AppText.displayFont, fontStyle: FontStyle.italic, fontWeight: FontWeight.w800, fontSize: size * 0.36, color: AppColors.text)
+              : TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontWeight: FontWeight.w600, fontSize: size * 0.34, color: AppColors.text),
+        ),
       );
 
   Widget _image(Uint8List bytes) => Image.memory(bytes, fit: BoxFit.cover, gaplessPlayback: true, cacheWidth: (size * 3).round());

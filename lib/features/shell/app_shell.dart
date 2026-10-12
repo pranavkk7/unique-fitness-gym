@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,7 @@ import '../../core/utils/notifications.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/motion.dart';
+import '../../core/theme/skin.dart';
 import '../../core/widgets/brand.dart';
 import '../../core/widgets/sub_page.dart';
 import '../../core/widgets/surfaces.dart';
@@ -19,10 +19,12 @@ import '../dashboard/dashboard_screen.dart';
 import '../members/members_screen.dart';
 import '../more/more_screen.dart';
 import '../reminders/reminders_screen.dart';
+import 'classic_nav_bar.dart';
 import 'shell_controller.dart';
 
-/// Phones get a floating glass bar with a raised check-in button; tablets at the front desk get a
-/// side rail. Owner areas lock again whenever the app goes to the background.
+/// Phones get a bottom bar with check-in in the middle (flat in Plate & Chalk, a floating glass bar
+/// with a raised red button in Classic); tablets at the front desk get a side rail. Owner areas lock
+/// again whenever the app goes to the background.
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
 
@@ -86,14 +88,21 @@ class _AppShellState extends State<AppShell> {
         ),
       );
     }
+    if (Skin.classic) {
+      return Scaffold(
+        extendBody: true,
+        body: GlowBackground(child: SafeArea(bottom: false, child: page)),
+        bottomNavigationBar: ClassicNavBar(index: shell.tab, onSelect: shell.goTo, items: _items),
+      );
+    }
     return Scaffold(
       body: GlowBackground(child: SafeArea(bottom: false, child: page)),
-      bottomNavigationBar: _GlassNavBar(index: shell.tab, onSelect: shell.goTo),
+      bottomNavigationBar: _FlatNavBar(index: shell.tab, onSelect: shell.goTo),
     );
   }
 }
 
-const _items = [
+List<(IconData, IconData, String)> get _items => [
   (AppIcons.dashboard, AppIcons.dashboardOutline, 'Home'),
   (AppIcons.groups, AppIcons.groupsOutline, 'Members'),
   (AppIcons.checkIn, AppIcons.checkInOutline, 'Check-in'),
@@ -103,17 +112,17 @@ const _items = [
 
 /// The phone tab bar: flat white, a hairline on top, and a short iron marker that slides to the
 /// selected tab. Check-in, the desk's most used action, is an iron key in the middle of the bar.
-class _GlassNavBar extends StatelessWidget {
+class _FlatNavBar extends StatelessWidget {
   final int index;
   final ValueChanged<int> onSelect;
 
-  const _GlassNavBar({required this.index, required this.onSelect});
+  const _FlatNavBar({required this.index, required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
     final pending = context.select<GymProvider, int>((g) => g.pendingReminderCount);
     return DecoratedBox(
-      decoration: const BoxDecoration(color: AppColors.surface, border: Border(top: BorderSide(color: AppColors.border))),
+      decoration: BoxDecoration(color: AppColors.surface, border: Border(top: BorderSide(color: AppColors.border))),
       child: SafeArea(
         top: false,
         child: SizedBox(
@@ -130,7 +139,7 @@ class _GlassNavBar extends StatelessWidget {
                   child: AnimatedOpacity(
                     duration: Motion.fast,
                     opacity: index == ShellTabs.checkIn ? 0 : 1,
-                    child: Container(width: 24, height: 2.5, color: AppColors.text),
+                    child: Container(width: 24, height: 2.5, color: AppColors.ink),
                   ),
                 ),
                 Row(
@@ -189,7 +198,7 @@ class _NavItem extends StatelessWidget {
             Badge(
               isLabelVisible: badge > 0,
               backgroundColor: AppColors.brand,
-              label: Text(badge > 99 ? '99+' : '$badge', style: const TextStyle(fontFamily: AppText.bodyFont, fontWeight: FontWeight.w600, fontSize: 10, color: Colors.white)),
+              label: Text(badge > 99 ? '99+' : '$badge', style: TextStyle(fontFamily: AppText.bodyFont, fontWeight: FontWeight.w600, fontSize: 10, color: Colors.white)),
               child: Icon(icon, color: color, size: 23),
             ),
             const SizedBox(height: 3),
@@ -223,8 +232,8 @@ class _CheckInButton extends StatelessWidget {
           curve: Motion.settle,
           width: selected ? 60 : 52,
           height: 40,
-          decoration: BoxDecoration(color: AppColors.text, borderRadius: BorderRadius.circular(12)),
-          child: const Icon(AppIcons.checkIn, color: Colors.white, size: 22),
+          decoration: BoxDecoration(color: AppColors.ink, borderRadius: BorderRadius.circular(12)),
+          child: Icon(AppIcons.checkIn, color: Colors.white, size: 22),
         ),
       ),
     );
@@ -242,10 +251,11 @@ class _SideRail extends StatelessWidget {
   Widget build(BuildContext context) {
     final gym = context.watch<GymProvider>();
     final pending = gym.pendingReminderCount;
+    final classic = Skin.classic;
     return Container(
       width: 232,
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
+      decoration: BoxDecoration(
+        color: classic ? const Color(0xCC0E0E11) : AppColors.surface,
         border: Border(right: BorderSide(color: AppColors.border)),
       ),
       child: SafeArea(
@@ -261,10 +271,10 @@ class _SideRail extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Material(
-                    color: index == i ? AppColors.surfaceHigh : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
+                    color: index == i ? (classic ? AppColors.primary.withValues(alpha: 0.14) : AppColors.surfaceHigh) : Colors.transparent,
+                    borderRadius: BorderRadius.circular(classic ? 14 : 10),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(classic ? 14 : 10),
                       onTap: () {
                         HapticFeedback.selectionClick();
                         onSelect(i);
@@ -273,14 +283,14 @@ class _SideRail extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
                         child: Row(
                           children: [
-                            Icon(index == i ? _items[i].$1 : _items[i].$2, color: index == i ? AppColors.text : AppColors.muted, size: 22),
+                            Icon(index == i ? _items[i].$1 : _items[i].$2, color: index == i ? AppColors.primaryBright : AppColors.muted, size: 22),
                             const SizedBox(width: 14),
-                            Expanded(child: Text(_items[i].$3, style: AppText.body.copyWith(fontWeight: index == i ? FontWeight.w600 : FontWeight.w400, color: index == i ? AppColors.text : AppColors.textSecondary))),
+                            Expanded(child: Text(_items[i].$3, style: AppText.body.copyWith(fontWeight: index == i ? (classic ? FontWeight.w800 : FontWeight.w600) : (classic ? FontWeight.w600 : FontWeight.w400), color: index == i ? AppColors.text : AppColors.textSecondary))),
                             if (i == ShellTabs.reminders && pending > 0)
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(color: AppColors.brand, borderRadius: BorderRadius.circular(999)),
-                                child: Text('$pending', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w600, fontSize: 12, color: Colors.white)),
+                                child: Text('$pending', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w600, fontSize: 12, color: Colors.white)),
                               ),
                           ],
                         ),
@@ -291,7 +301,7 @@ class _SideRail extends StatelessWidget {
               const Spacer(),
               FilledButton.icon(
                 onPressed: () => openPage(context, const AdmissionScreen()),
-                icon: const Icon(AppIcons.personAdd),
+                icon: Icon(AppIcons.personAdd),
                 label: const Text('New admission'),
               ),
             ],

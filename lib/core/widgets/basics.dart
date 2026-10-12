@@ -4,10 +4,12 @@ import '../theme/app_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../theme/motion.dart';
+import '../theme/skin.dart';
 import '../utils/format.dart';
 import 'surfaces.dart';
 
-/// A section heading in sentence case, with an optional link on the right.
+/// A section heading with an optional link on the right. Plate & Chalk: sentence case. Classic: an
+/// upper-case caption after a short crimson bar.
 class SectionHeader extends StatelessWidget {
   final String title;
   final String? actionLabel;
@@ -18,6 +20,22 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Skin.classic) {
+      return Padding(
+        padding: padding,
+        child: Row(children: [
+          Container(width: 4, height: 16, decoration: BoxDecoration(gradient: AppColors.redGradient, borderRadius: BorderRadius.circular(2))),
+          const SizedBox(width: 10),
+          Expanded(child: Text(title.toUpperCase(), style: AppText.label.copyWith(color: AppColors.text, fontSize: 12.5))),
+          if (actionLabel != null)
+            TextButton(
+              onPressed: onAction,
+              style: TextButton.styleFrom(visualDensity: VisualDensity.compact, padding: const EdgeInsets.symmetric(horizontal: 8)),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [Text(actionLabel!), Icon(AppIcons.chevronRight, size: 18)]),
+            ),
+        ]),
+      );
+    }
     return Padding(
       padding: padding,
       child: Row(
@@ -64,8 +82,8 @@ class _PlatePainter extends CustomPainter {
   bool shouldRepaint(_PlatePainter old) => old.color != color;
 }
 
-/// State as a plate ring and a word, never colour alone. [icon] is accepted for older callers but the
-/// ring carries the meaning.
+/// State, never shown by colour alone. Plate & Chalk: a plate ring and a word. Classic: a tinted
+/// capsule with the icon and an upper-case word.
 class StatusPill extends StatelessWidget {
   final String label;
   final Color color;
@@ -75,6 +93,20 @@ class StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Skin.classic) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.13),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: color.withValues(alpha: 0.32)),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          if (icon != null) ...[Icon(icon, size: 12, color: color), const SizedBox(width: 4)],
+          Text(label.toUpperCase(), style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: color, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
+        ]),
+      );
+    }
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -91,20 +123,22 @@ class CountUp extends StatelessWidget {
   final num value;
   final String Function(num) format;
   final TextStyle? style;
-  final Duration duration;
+  final Duration? duration;
 
-  /// Static by default; pass a [duration] where counting up is the point (the dashboard's one moment).
-  const CountUp({super.key, required this.value, this.format = _plain, this.style, this.duration = Duration.zero});
+  /// Plate & Chalk keeps numbers still unless a [duration] is passed (the dashboard's one moment);
+  /// Classic counts every number up.
+  const CountUp({super.key, required this.value, this.format = _plain, this.style, this.duration});
 
   static String _plain(num v) => v.round().toString();
 
   @override
   Widget build(BuildContext context) {
     final text = style ?? AppText.stat;
-    if (Motion.reduced(context) || duration == Duration.zero) return Text(format(value), style: text);
+    final time = duration ?? (Skin.classic ? const Duration(milliseconds: 1100) : Duration.zero);
+    if (Motion.reduced(context) || time == Duration.zero) return Text(format(value), style: text);
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: value.toDouble()),
-      duration: duration,
+      duration: time,
       curve: Curves.easeOutExpo,
       builder: (context, v, _) => Text(format(v), style: text),
     );
@@ -125,13 +159,19 @@ class ChangeChip extends StatelessWidget {
     if (c == null) return const SizedBox.shrink();
     final up = c >= 0;
     final color = onRed ? Colors.white : (up ? AppColors.success : AppColors.danger);
-    return Row(
+    final row = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(up ? AppIcons.trendUp : AppIcons.trendDown, size: 15, color: color),
         const SizedBox(width: 4),
-        Text('${formatChange(c)}${suffix == null ? '' : ' $suffix'}', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: color, fontWeight: FontWeight.w600, fontSize: 13)),
+        Text('${formatChange(c)}${suffix == null ? '' : ' $suffix'}', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: color, fontWeight: Skin.classic ? FontWeight.w800 : FontWeight.w600, fontSize: Skin.classic ? 12.5 : 13)),
       ],
+    );
+    if (!Skin.classic) return row;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(color: onRed ? Colors.black.withValues(alpha: 0.22) : color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(999)),
+      child: row,
     );
   }
 }
@@ -153,9 +193,24 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 40, color: AppColors.muted),
-            const SizedBox(height: 14),
-            Text(title, style: AppText.headline, textAlign: TextAlign.center),
+            if (Skin.classic) ...[
+              Container(
+                width: 88,
+                height: 88,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(colors: [AppColors.primary.withValues(alpha: 0.25), AppColors.primary.withValues(alpha: 0.04)]),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                ),
+                child: Icon(icon, size: 38, color: AppColors.primaryBright),
+              ),
+              const SizedBox(height: 18),
+              Text(title, style: AppText.title, textAlign: TextAlign.center),
+            ] else ...[
+              Icon(icon, size: 40, color: AppColors.muted),
+              const SizedBox(height: 14),
+              Text(title, style: AppText.headline, textAlign: TextAlign.center),
+            ],
             const SizedBox(height: 6),
             Text(subtitle, style: AppText.bodyMuted, textAlign: TextAlign.center),
             if (actionLabel != null) ...[
@@ -212,6 +267,7 @@ class StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Skin.classic) return _classic();
     return Semantics(
       button: onTap != null,
       label: label,
@@ -223,7 +279,7 @@ class StatTile extends StatelessWidget {
           children: [
             Row(children: [
               Expanded(child: Text(label, style: AppText.label, maxLines: 1, overflow: TextOverflow.ellipsis)),
-              if (onTap != null) const Icon(AppIcons.chevronRight, size: 15, color: AppColors.muted),
+              if (onTap != null) Icon(AppIcons.chevronRight, size: 15, color: AppColors.muted),
             ]),
             const Spacer(),
             Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
@@ -233,6 +289,39 @@ class StatTile extends StatelessWidget {
             if (caption != null) ...[
               const SizedBox(height: 4),
               Text(caption!, style: AppText.small.copyWith(color: AppColors.muted), maxLines: 1, overflow: TextOverflow.ellipsis),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Classic: a tinted icon badge on top and an upper-case label under the number.
+  Widget _classic() {
+    return Semantics(
+      button: onTap != null,
+      label: label,
+      child: AppCard(
+        onTap: onTap,
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              IconBadge(icon, color: color, size: 34, radius: 11),
+              const Spacer(),
+              if (onTap != null) Icon(AppIcons.arrowOutward, size: 16, color: AppColors.muted),
+            ]),
+            const Spacer(),
+            Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              Expanded(child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: value)),
+              if (chart != null) ...[const SizedBox(width: 8), SizedBox(width: 56, height: 30, child: chart)],
+            ]),
+            const SizedBox(height: 4),
+            Text(label.toUpperCase(), style: AppText.label.copyWith(fontSize: 10.5), maxLines: 1, overflow: TextOverflow.ellipsis),
+            if (caption != null) ...[
+              const SizedBox(height: 2),
+              Text(caption!, style: AppText.small.copyWith(fontSize: 11.5, color: AppColors.muted), maxLines: 1, overflow: TextOverflow.ellipsis),
             ],
           ],
         ),
@@ -260,7 +349,7 @@ class LockedValue extends StatelessWidget {
               children: [
                 Text('₹ ••••', style: style ?? AppText.stat),
                 const SizedBox(width: 6),
-                const Icon(AppIcons.lock, size: 16, color: AppColors.muted),
+                Icon(AppIcons.lock, size: 16, color: AppColors.muted),
               ],
             )
           : KeyedSubtree(key: const ValueKey('open'), child: child),
@@ -268,8 +357,8 @@ class LockedValue extends StatelessWidget {
   }
 }
 
-/// A small card with a caption and one big figure, used in rows of three. Figures are ink;
-/// only a red [color] (money owed, a problem) is kept.
+/// A small card with a caption and one big figure, used in rows of three. In Plate & Chalk figures
+/// are ink and only a red [color] (money owed, a problem) is kept; Classic shows every colour.
 class FigureCard extends StatelessWidget {
   final String label;
   final String value;
@@ -281,9 +370,9 @@ class FigureCard extends StatelessWidget {
   Widget build(BuildContext context) => AppCard(
         padding: const EdgeInsets.all(12),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label, style: AppText.label.copyWith(fontSize: 9.5), maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(Skin.classic ? label.toUpperCase() : label, style: AppText.label.copyWith(fontSize: 9.5), maxLines: 1, overflow: TextOverflow.ellipsis),
           const SizedBox(height: 4),
-          FittedBox(fit: BoxFit.scaleDown, child: Text(value, style: AppText.headline.copyWith(fontSize: 20, color: color == AppColors.danger ? color : AppColors.text))),
+          FittedBox(fit: BoxFit.scaleDown, child: Text(value, style: AppText.headline.copyWith(fontSize: 20, color: Skin.classic || color == AppColors.danger ? color : AppColors.text))),
         ]),
       );
 }

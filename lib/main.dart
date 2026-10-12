@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'core/theme/app_colors.dart';
 import 'core/theme/app_text.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/motion.dart';
+import 'core/theme/skin.dart';
 import 'core/utils/notifications.dart';
 import 'core/widgets/brand.dart';
 import 'core/widgets/surfaces.dart';
@@ -19,17 +21,26 @@ import 'providers/gym_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.transparent,
-  ));
   await Hive.initFlutter('unique_fitness_gym');
+  // Open in the design chosen last time, and keep the system bars readable when it changes.
+  await Skin.load();
+  _systemBars(Skin.current);
+  Skin.notifier.addListener(() => _systemBars(Skin.current));
   final store = HiveGymStore();
   final gym = GymProvider(store: store);
   DeskNotifications.watch(gym);
   runApp(UniqueFitnessApp(store: store, gym: gym));
+}
+
+/// Dark status-bar icons on Plate & Chalk's light pages, light ones on Classic's dark pages.
+void _systemBars(AppSkin skin) {
+  final icons = skin == AppSkin.classic ? Brightness.light : Brightness.dark;
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: icons,
+    systemNavigationBarIconBrightness: icons,
+    systemNavigationBarColor: Colors.transparent,
+  ));
 }
 
 class UniqueFitnessApp extends StatelessWidget {
@@ -52,11 +63,16 @@ class UniqueFitnessApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ShellController()),
         ChangeNotifierProvider(create: (c) => DeviceService(gym: c.read<GymProvider>(), demoDevice: demoDevice)),
       ],
-      child: MaterialApp(
-        title: 'Unique Fitness Gym',
-        debugShowCheckedModeBanner: false,
-        theme: buildAppTheme(),
-        home: _Splash(splashTime: splashTime),
+      // The theme follows the chosen design. The app itself stays mounted, so open pages and the
+      // selected tab survive a change of design.
+      child: ValueListenableBuilder<AppSkin>(
+        valueListenable: Skin.notifier,
+        builder: (context, skin, _) => MaterialApp(
+          title: 'Unique Fitness Gym',
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: _Splash(splashTime: splashTime),
+        ),
       ),
     );
   }
@@ -79,6 +95,21 @@ class _Splash extends StatefulWidget {
 class _SplashState extends State<_Splash> {
   late final Future<void> _ready = Future.wait([_load(), Future<void>.delayed(widget.splashTime)]);
 
+  @override
+  void initState() {
+    super.initState();
+    Skin.notifier.addListener(_redraw);
+  }
+
+  @override
+  void dispose() {
+    Skin.notifier.removeListener(_redraw);
+    super.dispose();
+  }
+
+  // A new design rebuilds the whole app from here down, so every screen picks up the new look.
+  void _redraw() => setState(() {});
+
   Future<void> _load() async {
     final gym = context.read<GymProvider>();
     await gym.init();
@@ -97,7 +128,7 @@ class _SplashState extends State<_Splash> {
         return AnimatedSwitcher(
           duration: Motion.slow,
           switchInCurve: Motion.enter,
-          child: done ? const AppShell(key: ValueKey('home')) : const Scaffold(key: ValueKey('splash'), body: GlowBackground(child: _SplashLogo())),
+          child: done ? AppShell(key: ValueKey('home-${Skin.current.name}')) : const Scaffold(key: ValueKey('splash'), body: GlowBackground(child: _SplashLogo())),
         );
       },
     );
@@ -110,6 +141,7 @@ class _SplashLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reduced = Motion.reduced(context);
+    if (Skin.classic) return _classic(reduced);
     // The logo settles in on the chalk background; nothing else moves.
     return Center(
       child: TweenAnimationBuilder<double>(
@@ -126,6 +158,42 @@ class _SplashLogo extends StatelessWidget {
               Text('Unique Fitness, Pinarayi', style: AppText.bodyMuted),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  /// Classic: the logo glows in while a red line sweeps out under it.
+  Widget _classic(bool reduced) {
+    return Center(
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: 1),
+        duration: reduced ? Duration.zero : const Duration(milliseconds: 1200),
+        curve: Motion.settle,
+        builder: (context, t, _) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Opacity(
+              opacity: t,
+              child: Transform.scale(
+                scale: 0.85 + 0.15 * t,
+                child: Container(
+                  decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.35 * t), blurRadius: 80, spreadRadius: 10)]),
+                  child: const BrandLogo(height: 150),
+                ),
+              ),
+            ),
+            const SizedBox(height: 26),
+            SizedBox(
+              width: 160,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(width: 160 * t, height: 3, decoration: BoxDecoration(gradient: AppColors.redGradient, borderRadius: BorderRadius.circular(2))),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Opacity(opacity: t, child: Text('PREMIUM LUXURY FITNESS CENTRE', style: AppText.label.copyWith(letterSpacing: 3.5, color: AppColors.textSecondary))),
+          ],
         ),
       ),
     );

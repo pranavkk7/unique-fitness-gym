@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../theme/motion.dart';
+import '../theme/skin.dart';
 import '../utils/format.dart';
 
 /// One bar: short axis label, full label for the bubble, the value, and an optional comparison value.
@@ -214,7 +215,7 @@ class _RevenuePainter extends CustomPainter {
       ..color = AppColors.border
       ..strokeWidth = 1;
     final step = niceStep(maxY, 4);
-    const axisStyle = TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 10.5, color: AppColors.muted, fontWeight: FontWeight.w600, fontFeatures: [FontFeature.tabularFigures()]);
+    final axisStyle = TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 10.5, color: AppColors.muted, fontWeight: FontWeight.w600, fontFeatures: [FontFeature.tabularFigures()]);
     for (var v = 0.0; v <= maxY + 0.5; v += step) {
       final gy = y(v);
       canvas.drawLine(Offset(left, gy), Offset(size.width, gy), grid);
@@ -242,7 +243,9 @@ class _RevenuePainter extends CustomPainter {
       final rect = Rect.fromLTRB(mainX, y(values[i]), mainX + barW, y(0));
       if (rect.height > 0.5) {
         final paint = Paint();
-        if (isSel) {
+        if (isSel && Skin.classic) {
+          paint.shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primaryBright, const Color(0xFFB0101A)]).createShader(rect);
+        } else if (isSel) {
           paint.color = AppColors.text;
         } else {
           paint.color = AppColors.primary.withValues(alpha: 0.36);
@@ -266,7 +269,7 @@ class _RevenuePainter extends CustomPainter {
       for (var x = left; x < size.width; x += 8) {
         canvas.drawLine(Offset(x, ty), Offset(math.min(x + 4, size.width), ty), dash);
       }
-      final t = _text('Target', const TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 9, letterSpacing: 1.2, fontWeight: FontWeight.w800, color: AppColors.textSecondary));
+      final t = _text(Skin.classic ? 'TARGET' : 'Target', TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 9, letterSpacing: 1.2, fontWeight: FontWeight.w800, color: AppColors.textSecondary));
       final box = Rect.fromLTWH(size.width - t.width - 10, ty - t.height - 6, t.width + 8, t.height + 3);
       canvas.drawRRect(RRect.fromRectAndRadius(box, const Radius.circular(4)), Paint()..color = AppColors.surface.withValues(alpha: 0.92 * reveal));
       t.paint(canvas, Offset(box.left + 4, box.top + 1.5));
@@ -277,19 +280,27 @@ class _RevenuePainter extends CustomPainter {
       final bx = left + slot * (selectedPos + 0.5);
       final value = values[selected];
       final cmp = showCompare ? compare[selected] : null;
-      final text = _text(formatMoney(value), const TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 13, fontWeight: FontWeight.w800, color: Colors.white, fontFeatures: [FontFeature.tabularFigures()]));
+      final text = _text(formatMoney(value), TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 13, fontWeight: FontWeight.w800, color: Colors.white, fontFeatures: [FontFeature.tabularFigures()]));
       final w = text.width + 18;
       final barTop = math.min(y(value), cmp == null ? double.infinity : y(cmp));
       final bubbleY = math.max(2.0, barTop - text.height - 16);
       final r = Rect.fromCenter(center: Offset(bx.clamp(left + w / 2, size.width - w / 2), bubbleY + (text.height + 8) / 2), width: w, height: text.height + 8);
       final rr = RRect.fromRectAndRadius(r, const Radius.circular(8));
-      canvas.drawRRect(rr, Paint()..color = AppColors.text);
+      if (Skin.classic) {
+        canvas.drawRRect(rr.shift(const Offset(0, 3)), Paint()..color = Colors.black.withValues(alpha: 0.35));
+        canvas.drawRRect(rr, Paint()..color = AppColors.surfaceHigher);
+        canvas.drawRRect(rr, Paint()
+          ..style = PaintingStyle.stroke
+          ..color = AppColors.primary.withValues(alpha: 0.6));
+      } else {
+        canvas.drawRRect(rr, Paint()..color = AppColors.text);
+      }
       final arrow = Path()
         ..moveTo(bx - 5, r.bottom)
         ..lineTo(bx, r.bottom + 5)
         ..lineTo(bx + 5, r.bottom)
         ..close();
-      canvas.drawPath(arrow, Paint()..color = AppColors.text);
+      canvas.drawPath(arrow, Paint()..color = Skin.classic ? AppColors.surfaceHigher : AppColors.text);
       text.paint(canvas, Offset(r.left + 9, r.top + 4));
     }
   }
@@ -348,6 +359,14 @@ class _RingPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     if (color != null) {
       paint.color = color!;
+    } else if (Skin.classic) {
+      paint.shader = SweepGradient(
+        startAngle: 0,
+        endAngle: math.pi * 2,
+        colors: [const Color(0xFF8E0008), AppColors.primary, AppColors.primaryBright, const Color(0xFFFF8A5B)],
+        stops: const [0, 0.4, 0.8, 1],
+        transform: const GradientRotation(-math.pi / 2),
+      ).createShader(rect);
     } else {
       paint.color = AppColors.text;
     }
@@ -405,10 +424,10 @@ class SplitBar extends StatelessWidget {
 /// A small smoothed line with a soft fill, drawn left to right when it appears.
 class Sparkline extends StatelessWidget {
   final List<double> values;
-  final Color color;
+  final Color? color;
   final double height;
 
-  const Sparkline({super.key, required this.values, this.color = AppColors.text, this.height = 56});
+  const Sparkline({super.key, required this.values, this.color, this.height = 56});
 
   @override
   Widget build(BuildContext context) {
@@ -416,7 +435,7 @@ class Sparkline extends StatelessWidget {
       tween: Tween(begin: 0, end: 1),
       duration: Motion.reduced(context) ? Duration.zero : const Duration(milliseconds: 1400),
       curve: Motion.settle,
-      builder: (context, t, _) => CustomPaint(size: Size(double.infinity, height), painter: _SparkPainter(values, color, t)),
+      builder: (context, t, _) => CustomPaint(size: Size(double.infinity, height), painter: _SparkPainter(values, color ?? (Skin.classic ? Colors.white : AppColors.text), t)),
     );
   }
 }
@@ -551,7 +570,7 @@ class _HeatPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final cols = hours.length;
     final rowH = cell * 0.9;
-    const labelStyle = TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.muted);
+    final labelStyle = TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.muted);
     for (var r = 0; r < 7; r++) {
       final tp = TextPainter(text: TextSpan(text: days[r].substring(0, 1) + days[r].substring(1, 2), style: labelStyle), textDirection: TextDirection.ltr)..layout();
       tp.paint(canvas, Offset(0, r * rowH + (rowH - tp.height) / 2));
@@ -566,7 +585,7 @@ class _HeatPainter extends CustomPainter {
           canvas.drawRRect(RRect.fromRectAndRadius(rect.inflate(1), const Radius.circular(5)), Paint()
             ..style = PaintingStyle.stroke
             ..strokeWidth = 2
-            ..color = AppColors.text);
+            ..color = Skin.classic ? Colors.white : AppColors.text);
         }
       }
     }
@@ -584,12 +603,13 @@ class _HeatPainter extends CustomPainter {
 /// Ranked horizontal bars with every value printed (plans, expense categories, lead sources).
 class RankedBars extends StatelessWidget {
   final List<(String label, double value, String display)> items;
-  final Color color;
+  final Color? color;
 
-  const RankedBars({super.key, required this.items, this.color = AppColors.primary});
+  const RankedBars({super.key, required this.items, this.color});
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? AppColors.primary;
     final peak = items.fold<double>(0, (m, e) => math.max(m, e.$2));
     return Column(
       children: [
@@ -705,7 +725,7 @@ class _RushPainter extends CustomPainter {
 
   _RushPainter(this.today, this.usual, this.firstHour, this.nowHour, this.t);
 
-  static const _label = TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.muted);
+  static TextStyle get _label => TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.muted);
 
   String _hourText(int h) => h == 12 ? '12p' : (h < 12 ? '${h}a' : '${h - 12}p');
 
@@ -776,7 +796,7 @@ class _RushPainter extends CustomPainter {
       canvas.drawLine(Offset(nx, top - 4), Offset(nx, top + plotH), Paint()
         ..color = AppColors.text.withValues(alpha: 0.45 * a)
         ..strokeWidth = 1);
-      final tp = TextPainter(text: TextSpan(text: 'Now', style: _label.copyWith(color: AppColors.text.withValues(alpha: a), fontWeight: FontWeight.w800, letterSpacing: 1)), textDirection: TextDirection.ltr)..layout();
+      final tp = TextPainter(text: TextSpan(text: Skin.classic ? 'NOW' : 'Now', style: _label.copyWith(color: AppColors.text.withValues(alpha: a), fontWeight: FontWeight.w800, letterSpacing: 1)), textDirection: TextDirection.ltr)..layout();
       tp.paint(canvas, Offset((nx - tp.width / 2).clamp(0, size.width - tp.width), 0));
     }
   }
@@ -874,7 +894,7 @@ class _DoorLogPainter extends CustomPainter {
       final px = x(hr.toDouble());
       canvas.drawLine(Offset(px, h), Offset(px, h + 3), rule);
       final label = hr == 12 ? '12p' : (hr < 12 ? '${hr}a' : '${hr - 12}p');
-      text.text = TextSpan(text: label, style: const TextStyle(fontFamily: AppText.bodyFont, fontSize: 10.5, color: AppColors.muted));
+      text.text = TextSpan(text: label, style: TextStyle(fontFamily: AppText.bodyFont, fontSize: 10.5, color: AppColors.muted));
       text.layout();
       final lx = (px - text.width / 2).clamp(0.0, size.width - text.width);
       text.paint(canvas, Offset(lx, h + 4));
