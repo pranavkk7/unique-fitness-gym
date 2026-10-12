@@ -226,7 +226,10 @@ class GymProvider extends ChangeNotifier {
   String _newId(String prefix) => '$prefix-${_clock().microsecondsSinceEpoch}-${_idCounter++}';
 
   /// Fills the app with fictional members and history. The gym's own settings are kept.
-  Future<void> loadDemoData() => _replaceAll(demoData(now: _clock()).copyWith(settings: _settings.copyWith(demoData: true)));
+  // The demo gym's door last synced a few minutes ago, so the demo looks like a working desk.
+  Future<void> loadDemoData() => _replaceAll(demoData(now: _clock()).copyWith(
+        settings: _settings.copyWith(demoData: true, lastDeviceSync: _clock().subtract(const Duration(minutes: 4))),
+      ));
 
   /// Removes members, payments, check-ins and everything else, then restores the default plans and
   /// timetable. The gym's settings (name, phone, PIN, templates) are kept.

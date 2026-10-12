@@ -658,13 +658,17 @@ class _MonthDetail extends StatelessWidget {
             Text(label, style: AppText.label.copyWith(fontSize: 9)),
           ]),
         );
-    final change = previous == null ? null : GymAnalytics.change(stats.income, previous!.income);
+    // The month in progress is compared with the same days of last month, like the headline figure
+    // above it; a finished month is compared with the whole month before.
+    final gym = context.read<GymProvider>();
+    final current = sameMonth(stats.month, gym.today);
+    final change = current ? gym.incomeChangeToDate : (previous == null ? null : GymAnalytics.change(stats.income, previous!.income));
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(color: AppColors.surfaceHigh, borderRadius: BorderRadius.circular(14)),
       child: Row(children: [
         cell(formatShortMonth(stats.month), formatMonthYear(stats.month).split(' ').last),
-        cell(formatMoneyCompact(stats.income), change == null ? 'Income' : 'Income ${formatChange(change)}'),
+        cell(formatMoneyCompact(stats.income), change == null ? 'Income' : 'Income ${formatChange(change)}${current ? ' so far' : ''}'),
         cell('${stats.admissions}', 'Joined'),
         cell('${stats.renewals}', 'Renewed'),
       ]),

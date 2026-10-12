@@ -270,7 +270,10 @@ class _RevenuePainter extends CustomPainter {
         canvas.drawLine(Offset(x, ty), Offset(math.min(x + 4, size.width), ty), dash);
       }
       final t = _text(Skin.classic ? 'TARGET' : 'Target', TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 9, letterSpacing: 1.2, fontWeight: FontWeight.w800, color: AppColors.textSecondary));
-      final box = Rect.fromLTWH(size.width - t.width - 10, ty - t.height - 6, t.width + 8, t.height + 3);
+      var box = Rect.fromLTWH(size.width - t.width - 10, ty - t.height - 6, t.width + 8, t.height + 3);
+      // The label moves to the left end of the line when the value bubble would cover it.
+      final bubble = _bubbleRect(size, left, slot, maxY, y);
+      if (bubble != null && bubble.inflate(4).overlaps(box)) box = box.translate(left + 2 - box.left, 0);
       canvas.drawRRect(RRect.fromRectAndRadius(box, const Radius.circular(4)), Paint()..color = AppColors.surface.withValues(alpha: 0.92 * reveal));
       t.paint(canvas, Offset(box.left + 4, box.top + 1.5));
     }
@@ -303,6 +306,19 @@ class _RevenuePainter extends CustomPainter {
       canvas.drawPath(arrow, Paint()..color = Skin.classic ? AppColors.surfaceHigher : AppColors.text);
       text.paint(canvas, Offset(r.left + 9, r.top + 4));
     }
+  }
+
+  /// Where the value bubble sits (the same maths as in [paint]), or null when no bar is selected.
+  Rect? _bubbleRect(Size size, double left, double slot, double maxY, double Function(double) y) {
+    if (selected < 0 || selected >= values.length) return null;
+    final bx = left + slot * (selectedPos + 0.5);
+    final value = values[selected];
+    final cmp = showCompare ? compare[selected] : null;
+    final text = _text(formatMoney(value), TextStyle(fontFamily: AppText.bodyFont, fontFamilyFallback: AppText.fallback, fontSize: 13, fontWeight: FontWeight.w800, fontFeatures: [FontFeature.tabularFigures()]));
+    final w = text.width + 18;
+    final barTop = math.min(y(value), cmp == null ? double.infinity : y(cmp));
+    final bubbleY = math.max(2.0, barTop - text.height - 16);
+    return Rect.fromCenter(center: Offset(bx.clamp(left + w / 2, size.width - w / 2), bubbleY + (text.height + 8) / 2), width: w, height: text.height + 8);
   }
 
   @override
