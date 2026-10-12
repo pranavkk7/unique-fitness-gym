@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
+import '../../core/theme/skin.dart';
 import '../../core/theme/motion.dart';
 import '../../core/utils/contact.dart';
 import '../../core/widgets/basics.dart';
@@ -29,6 +30,7 @@ import '../training/pt_screen.dart';
 import 'about_screen.dart';
 import 'classes_screen.dart';
 import 'plans_screen.dart';
+import 'design_screen.dart';
 import 'settings_screen.dart';
 import 'templates_screen.dart';
 import 'trainers_screen.dart';
@@ -70,6 +72,7 @@ class MoreScreen extends StatelessWidget {
         (AppIcons.membership, 'Plans & pricing', '${gym.activePlans.length} plans on offer', AppColors.primaryBright, () => owner(const PlansScreen()), true),
         (AppIcons.trainer, 'Trainers & staff', '${gym.trainers.length} on the team', AppColors.categorical[2], () => openPage(context, const TrainersScreen()), false),
         (AppIcons.editNote, 'Message templates', 'WhatsApp reminder wording', AppColors.whatsapp, () => openPage(context, const TemplatesScreen()), false),
+        (AppIcons.palette, 'Design', '${Skin.current.label} · change how the app looks', AppColors.primaryBright, () => openPage(context, const DesignScreen()), false),
         (AppIcons.settings, 'Settings & backup', 'Gym details, PIN, backup', AppColors.textSecondary, () => owner(const SettingsScreen()), true),
       ]),
     ];
@@ -107,7 +110,7 @@ class MoreScreen extends StatelessWidget {
                   leading: IconBadge(items[i].$1, color: items[i].$4, size: 40),
                   title: Text(items[i].$2),
                   subtitle: Text(items[i].$3),
-                  trailing: items[i].$6 && !gym.ownerUnlocked ? const Icon(AppIcons.lock, size: 18, color: AppColors.muted) : const Icon(AppIcons.chevronRight, color: AppColors.muted),
+                  trailing: items[i].$6 && !gym.ownerUnlocked ? Icon(AppIcons.lock, size: 18, color: AppColors.muted) : Icon(AppIcons.chevronRight, color: AppColors.muted),
                 ),
             ]),
           ).entrance(context, index: 2),
@@ -128,12 +131,12 @@ class _DeveloperCredit extends StatelessWidget {
     final handle = Uri.parse(AboutScreen.github).pathSegments.first;
     return Column(children: [
       Row(children: [
-        const Expanded(child: Divider(color: AppColors.border)),
+        Expanded(child: Divider(color: AppColors.border)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text('Designed & developed by', style: AppText.small.copyWith(color: AppColors.muted)),
         ),
-        const Expanded(child: Divider(color: AppColors.border)),
+        Expanded(child: Divider(color: AppColors.border)),
       ]),
       const SizedBox(height: 6),
       Text(AboutScreen.developer, style: AppText.headline.copyWith(fontSize: 24, color: AppColors.primaryBright)),

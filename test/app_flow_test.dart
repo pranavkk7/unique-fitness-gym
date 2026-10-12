@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unique_fitness_gym/core/theme/skin.dart';
 import 'package:unique_fitness_gym/core/utils/notifications.dart';
 import 'package:unique_fitness_gym/data/gym_store.dart';
 import 'package:unique_fitness_gym/main.dart';
@@ -227,6 +228,49 @@ void main() {
     expect(find.text('Revenue & reports'), findsOneWidget);
     await _tab(tester, 'Home');
     expect(find.text('In today'), findsOneWidget);
+  });
+
+  testWidgets('the design can be switched to Classic and back without losing the page', (tester) async {
+    addTearDown(() => Skin.notifier.value = AppSkin.chalk);
+    await _launch(tester, demo: true);
+    await _tab(tester, 'More');
+    await _scrollTo(tester, find.text('Design'));
+    await tester.tap(find.text('Design'));
+    await tester.pumpAndSettle();
+    expect(find.text('Plate & Chalk'), findsOneWidget);
+    expect(find.text('In use'), findsOneWidget);
+
+    await tester.tap(find.text('Classic'));
+    await tester.pumpAndSettle();
+    expect(Skin.current, AppSkin.classic);
+    // The page stays open and the whole app now uses the dark theme.
+    expect(find.text('Classic'), findsOneWidget);
+    expect(Theme.of(tester.element(find.text('Classic'))).brightness, Brightness.dark);
+
+    await tester.tap(find.text('Plate & Chalk'));
+    await tester.pumpAndSettle();
+    expect(Skin.current, AppSkin.chalk);
+    expect(Theme.of(tester.element(find.text('Classic'))).brightness, Brightness.light);
+
+    // Back on the More tab, which kept its place.
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.text('Design'), findsOneWidget);
+  });
+
+  testWidgets('every tab opens in the Classic design too', (tester) async {
+    Skin.notifier.value = AppSkin.classic;
+    addTearDown(() => Skin.notifier.value = AppSkin.chalk);
+    await _launch(tester, demo: true);
+    expect(find.text('In today'), findsOneWidget);
+    await _tab(tester, 'Members');
+    expect(find.text('Search name, phone or UFG code'), findsOneWidget);
+    await _tab(tester, 'Check-in');
+    expect(find.text('Face ID at the door'), findsOneWidget);
+    await _tab(tester, 'Reminders');
+    expect(find.textContaining('SEND ALL'), findsOneWidget);
+    await _tab(tester, 'More');
+    expect(find.text('Revenue & reports'), findsOneWidget);
   });
 
   testWidgets('a tablet gets the side rail instead of the bottom bar', (tester) async {

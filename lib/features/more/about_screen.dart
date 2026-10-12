@@ -20,7 +20,7 @@ class AboutScreen extends StatelessWidget {
   static const email = 'pranavvinod508@gmail.com';
   static const github = 'https://github.com/pranavkk7';
   static const linkedin = 'https://linkedin.com/in/pranavkk';
-  static const version = '3.0';
+  static const version = '3.1';
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   'Python & AI developer from Bengaluru, formerly a planning engineer. Built this app for Unique Fitness Gym, Pinarayi.',
                   style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontSize: 15, height: 1.4, fontWeight: FontWeight.w500),
                 ),
@@ -79,7 +79,7 @@ class AboutScreen extends StatelessWidget {
               Chip(label: Text(stack[i]), labelStyle: AppText.small.copyWith(color: AppColors.text, fontWeight: FontWeight.w700)).entrance(context, index: i),
           ]),
           const SectionHeader('Privacy'),
-          const AppCard(
+          AppCard(
             child: Text(
               'Member data stays on the gym\'s own phone or tablet. The app talks only to the gym\'s Face ID device on the local Wi-Fi; WhatsApp, calls and sharing open the phone\'s own apps.',
               style: AppText.bodyMuted,
@@ -109,7 +109,7 @@ class _LinkChip extends StatelessWidget {
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(icon, size: 16, color: Colors.white),
             const SizedBox(width: 6),
-            Text(label, style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontWeight: FontWeight.w700)),
+            Text(label, style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontWeight: FontWeight.w700)),
           ]),
         ),
       );

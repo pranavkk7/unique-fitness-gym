@@ -2,6 +2,9 @@
 // data at a fixed date, so the pictures are the same on every machine.
 //
 //   flutter test tool/screenshots_test.dart --update-goldens
+//   flutter test tool/screenshots_test.dart --update-goldens --dart-define=SKIN=classic
+//
+// The second form renders the Classic design into docs/screenshots/classic.
 //
 // This is a tool, not a test: it lives outside test/ so `flutter test` and CI do not run it.
 import 'dart:io';
@@ -9,6 +12,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unique_fitness_gym/core/theme/skin.dart';
 import 'package:unique_fitness_gym/core/utils/format.dart';
 import 'package:unique_fitness_gym/core/widgets/brand.dart';
 import 'package:unique_fitness_gym/data/gym_store.dart';
@@ -17,6 +21,9 @@ import 'package:unique_fitness_gym/models/models.dart';
 import 'package:unique_fitness_gym/providers/gym_provider.dart';
 
 final _now = DateTime(2026, 10, 15, 18, 20); // Thursday evening: the boxing class is live
+
+const _classic = String.fromEnvironment('SKIN') == 'classic';
+const _dir = _classic ? '../docs/screenshots/classic' : '../docs/screenshots';
 
 Future<void> _loadFonts() async {
   Future<ByteData> asset(String path) => rootBundle.load(path);
@@ -30,6 +37,16 @@ Future<void> _loadFonts() async {
     expanded.addFont(asset('assets/fonts/ArchivoExpanded-$w.ttf'));
   }
   await expanded.load();
+  final barlow = FontLoader('Barlow');
+  for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
+    barlow.addFont(asset('assets/fonts/Barlow-$w.ttf'));
+  }
+  await barlow.load();
+  final condensed = FontLoader('BarlowCondensed');
+  for (final w in ['SemiBold', 'Bold', 'BoldItalic', 'ExtraBoldItalic', 'BlackItalic']) {
+    condensed.addFont(asset('assets/fonts/BarlowCondensed-$w.ttf'));
+  }
+  await condensed.load();
   await (FontLoader('PhosphorRegular')..addFont(asset('assets/fonts/Phosphor-Regular.ttf'))).load();
   await (FontLoader('PhosphorFill')..addFont(asset('assets/fonts/Phosphor-Fill.ttf'))).load();
   await (FontLoader('UfgSymbols')
@@ -57,6 +74,7 @@ Future<GymProvider> _open(WidgetTester tester, {Size size = const Size(390, 844)
   // Final frames only: entrances and count-ups jump to their end state.
   tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
   addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+  Skin.notifier.value = _classic ? AppSkin.classic : AppSkin.chalk;
   final store = MemoryGymStore();
   final gym = GymProvider(store: store, clock: () => _now);
   await tester.pumpWidget(RepaintBoundary(key: const Key('shot'), child: UniqueFitnessApp(store: store, gym: gym, splashTime: Duration.zero)));
@@ -67,6 +85,7 @@ Future<GymProvider> _open(WidgetTester tester, {Size size = const Size(390, 844)
   await tester.runAsync(() async {
     final context = tester.element(find.byType(Scaffold).first);
     await precacheImage(const AssetImage(BrandLogo.darkAsset), context);
+    await precacheImage(const AssetImage(BrandLogo.originalAsset), context);
   });
   await tester.pumpAndSettle();
   return gym;
@@ -74,7 +93,7 @@ Future<GymProvider> _open(WidgetTester tester, {Size size = const Size(390, 844)
 
 Future<void> _shot(WidgetTester tester, String name) async {
   await tester.pumpAndSettle();
-  await expectLater(find.byKey(const Key('shot')), matchesGoldenFile('../docs/screenshots/$name.png'));
+  await expectLater(find.byKey(const Key('shot')), matchesGoldenFile('$_dir/$name.png'));
 }
 
 Future<void> _tap(WidgetTester tester, Finder finder) async {
@@ -241,6 +260,14 @@ void main() {
     await back();
     await _tap(tester, find.text('Day pass & trial'));
     await _shot(tester, '28_day_pass');
+  });
+
+  _capture('design picker', (tester) async {
+    await _open(tester);
+    await _tab(tester, 'More');
+    await tester.scrollUntilVisible(find.text('Design'), 250, scrollable: find.byType(Scrollable).first);
+    await _tap(tester, find.text('Design'));
+    await _shot(tester, '35_design');
   });
 
   _capture('face id first-time setup', (tester) async {

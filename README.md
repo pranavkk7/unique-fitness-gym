@@ -107,7 +107,18 @@ follow-ups. It is rescheduled whenever the data changes.
 - Profit, the payment-method split, the renewal rate, a busy-hours heatmap and lead sources.
 
 ## Design and motion
-The look is called **Plate & Chalk**: a gym floor, not a tech dashboard.
+The desk picks one of two designs under **More → Design**. Every feature works the same in both,
+and the choice is saved on the device.
+
+| Plate & Chalk | Classic |
+|---|---|
+| ![Plate & Chalk dashboard](docs/screenshots/01_dashboard.png) | ![Classic dashboard](docs/screenshots/classic/01_dashboard.png) |
+
+**Classic** is the original look: the logo's crimson on near-black, slanted Barlow Condensed
+headlines like the gym's posters, Material Rounded icons, a glass bottom bar with a raised red
+check-in button, and staggered entrances.
+
+**Plate & Chalk** is the newer, quieter look: a gym floor, not a tech dashboard.
 - **Colour.** White sheets on a chalk-grey background, with iron-black text and buttons. Colour
   means state, taken from weight-plate colours: green is active, yellow is expiring, blue is
   frozen, and the logo's red is only used for dues and problems.
@@ -122,6 +133,10 @@ The look is called **Plate & Chalk**: a gym floor, not a tech dashboard.
   - The admission steps slide in the direction of travel.
   - A drawn tick marks a check-in.
   - Shared curves and durations live in `core/theme/motion.dart`.
+- **How the switch works.** Colour, type and icon tokens (`core/theme`) are read at build time from
+  the chosen design (`skin.dart`). Shared widgets such as cards, status pills and charts draw
+  either style, and changing the design rebuilds the app below the navigator, so the open page
+  and the selected tab stay where they were.
 - **Platform transitions.** Android uses its predictive-back fade; iPhone uses the native swipe-back.
 - **Reduced motion respected.** With the system setting on, everything appears in its final state.
 - **Adaptive layout:**
@@ -166,15 +181,18 @@ flutter run -d chrome       # or try it in the browser
 ## Test
 ```bash
 flutter analyze
-flutter test        # 96 tests: business rules, Face ID protocol, storage, demo data, screens
+flutter test        # 98 tests: business rules, Face ID protocol, storage, demo data, screens
 ```
 - **CI** analyzes, tests and builds the web app on every push.
 - **On `main`** it also builds an Android APK (downloadable from the run's artifacts) and an
   unsigned iOS build.
 
-Regenerate the screenshots (real fonts, fixed demo date, phone and tablet sizes):
+Regenerate the screenshots (real fonts, fixed demo date, phone and tablet sizes), once per design:
 ```bash
 flutter test tool/screenshots_test.dart --update-goldens
+```
+```bash
+flutter test tool/screenshots_test.dart --update-goldens --dart-define=SKIN=classic
 ```
 
 ## Privacy
@@ -193,6 +211,5 @@ flutter test tool/screenshots_test.dart --update-goldens
 - **Design and development:** Pranav KK.
 - Logo, name, plans and timetable belong to Unique Fitness Gym and are used with the owner's
   permission.
-- **Fonts and icons:** Archivo (SIL Open Font License), Phosphor icons (MIT) and a rupee-sign
-  subset of Roboto (Apache 2.0). Licences are in `assets/fonts`.
-- The previous dark design is kept on the `classic-design` branch.
+- **Fonts and icons:** Archivo and Barlow (SIL Open Font License), Phosphor icons (MIT), Material
+  icons (Apache 2.0) and a rupee-sign subset of Roboto (Apache 2.0). Licences are in `assets/fonts`.

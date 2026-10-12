@@ -185,7 +185,7 @@ class _Stage extends StatelessWidget {
           // Background: near-black with the brand's red glow.
           Positioned.fill(
             child: DecoratedBox(
-              decoration: const BoxDecoration(color: AppColors.background),
+              decoration: BoxDecoration(color: AppColors.background),
               child: Stack(children: [
                 Positioned(left: -260, top: -300, child: _glow(900, AppColors.primary.withValues(alpha: 0.22))),
                 Positioned(right: -320, bottom: -420, child: _glow(1100, AppColors.primaryDeep.withValues(alpha: 0.35))),
@@ -259,10 +259,10 @@ class _StatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const style = TextStyle(fontFamily: AppText.bodyFont, color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700);
+    final style = TextStyle(fontFamily: AppText.bodyFont, color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700);
     return Stack(children: [
       Align(alignment: const Alignment(0, 0.15), child: Container(width: 122, height: 34, decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)))),
-      const Padding(
+      Padding(
         padding: EdgeInsets.fromLTRB(34, 14, 26, 0),
         child: Row(children: [
           Text('6:20', style: style),
@@ -369,7 +369,7 @@ class _Captions extends StatelessWidget {
           borderRadius: BorderRadius.circular(2),
           child: Stack(children: [
             Container(height: 4, color: AppColors.surfaceHigher),
-            FractionallySizedBox(widthFactor: p, child: Container(height: 4, decoration: const BoxDecoration(gradient: AppColors.redGradient))),
+            FractionallySizedBox(widthFactor: p, child: Container(height: 4, decoration: BoxDecoration(gradient: AppColors.redGradient))),
           ]),
         ),
       ),
