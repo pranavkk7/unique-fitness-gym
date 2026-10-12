@@ -1,7 +1,7 @@
 name: unique_fitness_gym
 description: "Front-desk app for Unique Fitness Gym: admissions, renewals, reminders, attendance and revenue."
 publish_to: 'none'
-version: 3.0.0+3
+version: 3.1.0+4
 
 environment:
   sdk: ^3.13.5
@@ -65,6 +65,34 @@ flutter:
           weight: 700
         - asset: assets/fonts/ArchivoExpanded-ExtraBold.ttf
           weight: 800
+    # Classic design: Barlow and Barlow Condensed (SIL Open Font License).
+    - family: Barlow
+      fonts:
+        - asset: assets/fonts/Barlow-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Barlow-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Barlow-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Barlow-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Barlow-ExtraBold.ttf
+          weight: 800
+    - family: BarlowCondensed
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/BarlowCondensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/BarlowCondensed-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/BarlowCondensed-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/BarlowCondensed-BlackItalic.ttf
+          weight: 900
+          style: italic
     # Phosphor icons (MIT), regular and fill.
     - family: PhosphorRegular
       fonts:

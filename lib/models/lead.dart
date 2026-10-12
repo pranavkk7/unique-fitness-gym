@@ -8,17 +8,18 @@ import 'member.dart';
 /// How a person heard about the gym. Kept on enquiries and members for the "where do members come
 /// from" report.
 enum LeadSource {
-  walkIn('Walk-in', AppIcons.walk),
-  phone('Phone call', AppIcons.callPlain),
-  whatsapp('WhatsApp', AppIcons.chatPlain),
-  instagram('Instagram', AppIcons.cameraPlain),
-  referral('Friend referral', AppIcons.people),
-  google('Google', AppIcons.searchPlain),
-  other('Other', AppIcons.morePlain);
+  walkIn('Walk-in', 'walk'),
+  phone('Phone call', 'callPlain'),
+  whatsapp('WhatsApp', 'chatPlain'),
+  instagram('Instagram', 'cameraPlain'),
+  referral('Friend referral', 'people'),
+  google('Google', 'searchPlain'),
+  other('Other', 'morePlain');
 
-  const LeadSource(this.label, this.icon);
+  const LeadSource(this.label, this._icon);
   final String label;
-  final IconData icon;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
 }
 
 enum EnquiryStatus {

@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 import 'app_text.dart';
+import 'classic_theme.dart';
+import 'skin.dart';
 
-/// The Material theme: light chalk pages, white sheets, iron controls, no shadows or glows.
-ThemeData buildAppTheme() {
-  const family = AppText.bodyFont;
-  const scheme = ColorScheme.light(
+/// The theme for the design chosen in Settings.
+ThemeData buildAppTheme() => Skin.classic ? buildClassicTheme() : _buildChalkTheme();
+
+/// Plate & Chalk: light chalk pages, white sheets, iron controls, no shadows or glows.
+ThemeData _buildChalkTheme() {
+  final family = AppText.bodyFont;
+  final scheme = ColorScheme.light(
     primary: AppColors.text,
     onPrimary: Colors.white,
     secondary: AppColors.textSecondary,
@@ -29,7 +34,7 @@ ThemeData buildAppTheme() {
         borderSide: BorderSide(color: color, width: width),
       );
 
-  const buttonText = TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w600, fontSize: 15, letterSpacing: -0.1);
+  final buttonText = TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w600, fontSize: 15, letterSpacing: -0.1);
   final buttonShape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(10));
 
   return ThemeData(
@@ -40,14 +45,14 @@ ThemeData buildAppTheme() {
     fontFamily: family,
     fontFamilyFallback: AppText.fallback,
     splashFactory: InkRipple.splashFactory,
-    textTheme: const TextTheme(
+    textTheme: TextTheme(
       bodyLarge: AppText.body,
       bodyMedium: AppText.body,
       bodySmall: AppText.small,
       titleMedium: AppText.title,
       labelLarge: buttonText,
     ),
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       foregroundColor: AppColors.text,
       elevation: 0,
@@ -93,7 +98,7 @@ ThemeData buildAppTheme() {
         foregroundColor: AppColors.text,
         backgroundColor: AppColors.surface,
         minimumSize: const Size(0, 48),
-        side: const BorderSide(color: AppColors.borderStrong),
+        side: BorderSide(color: AppColors.borderStrong),
         shape: buttonShape,
         textStyle: buttonText,
       ),
@@ -115,9 +120,9 @@ ThemeData buildAppTheme() {
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.surface,
       selectedColor: AppColors.text,
-      side: const BorderSide(color: AppColors.borderStrong),
-      labelStyle: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500, fontSize: 13.5, color: AppColors.text),
-      secondaryLabelStyle: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500, fontSize: 13.5, color: Colors.white),
+      side: BorderSide(color: AppColors.borderStrong),
+      labelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500, fontSize: 13.5, color: AppColors.text),
+      secondaryLabelStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500, fontSize: 13.5, color: Colors.white),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       showCheckmark: false,
     ),
@@ -127,9 +132,9 @@ ThemeData buildAppTheme() {
         selectedBackgroundColor: AppColors.text,
         selectedForegroundColor: Colors.white,
         foregroundColor: AppColors.textSecondary,
-        side: const BorderSide(color: AppColors.borderStrong),
+        side: BorderSide(color: AppColors.borderStrong),
         shape: buttonShape,
-        textStyle: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500),
+        textStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, fontWeight: FontWeight.w500),
       ),
     ),
     switchTheme: SwitchThemeData(
@@ -138,10 +143,10 @@ ThemeData buildAppTheme() {
       trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
     ),
     checkboxTheme: CheckboxThemeData(fillColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? AppColors.text : Colors.transparent)),
-    sliderTheme: const SliderThemeData(activeTrackColor: AppColors.text, thumbColor: AppColors.text, inactiveTrackColor: AppColors.surfaceHigher, overlayColor: Color(0x141B1D21)),
-    progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.text, linearTrackColor: AppColors.surfaceHigher),
-    dividerTheme: const DividerThemeData(color: AppColors.border, space: 1, thickness: 1),
-    listTileTheme: const ListTileThemeData(iconColor: AppColors.textSecondary, titleTextStyle: AppText.title, subtitleTextStyle: AppText.bodyMuted),
+    sliderTheme: SliderThemeData(activeTrackColor: AppColors.text, thumbColor: AppColors.text, inactiveTrackColor: AppColors.surfaceHigher, overlayColor: Color(0x141B1D21)),
+    progressIndicatorTheme: ProgressIndicatorThemeData(color: AppColors.text, linearTrackColor: AppColors.surfaceHigher),
+    dividerTheme: DividerThemeData(color: AppColors.border, space: 1, thickness: 1),
+    listTileTheme: ListTileThemeData(iconColor: AppColors.textSecondary, titleTextStyle: AppText.title, subtitleTextStyle: AppText.bodyMuted),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: AppColors.text,
       contentTextStyle: AppText.body.copyWith(color: Colors.white),
@@ -150,7 +155,7 @@ ThemeData buildAppTheme() {
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
-    bottomSheetTheme: const BottomSheetThemeData(
+    bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: AppColors.surface,
       modalBackgroundColor: AppColors.surface,
       showDragHandle: true,
@@ -177,13 +182,13 @@ ThemeData buildAppTheme() {
     popupMenuTheme: PopupMenuThemeData(
       color: AppColors.surface,
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppColors.border)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: AppColors.border)),
     ),
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(color: AppColors.text, borderRadius: BorderRadius.circular(6)),
-      textStyle: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, color: Colors.white, fontWeight: FontWeight.w500),
+      textStyle: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: family, color: Colors.white, fontWeight: FontWeight.w500),
     ),
-    pageTransitionsTheme: const PageTransitionsTheme(builders: {
+    pageTransitionsTheme: PageTransitionsTheme(builders: {
       TargetPlatform.android: FadeForwardsPageTransitionsBuilder(backgroundColor: AppColors.background),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
     }),

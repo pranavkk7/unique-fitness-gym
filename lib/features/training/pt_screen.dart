@@ -44,8 +44,8 @@ class PtScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showSellPtSheet(context),
-        icon: const Icon(AppIcons.add),
-        label: const Text('Sell package', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: Icon(AppIcons.add),
+        label: Text('Sell package', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -81,7 +81,7 @@ class PtScreen extends StatelessWidget {
           ],
           const SectionHeader('Running packages'),
           if (active.isEmpty)
-            const EmptyState(icon: AppIcons.trainer, title: 'No PT packages', subtitle: 'Sell a package of sessions to a member and mark each session here.')
+            EmptyState(icon: AppIcons.trainer, title: 'No PT packages', subtitle: 'Sell a package of sessions to a member and mark each session here.')
           else
             for (var i = 0; i < active.length; i++) Padding(padding: const EdgeInsets.only(bottom: 10), child: PtPackageCard(package: active[i], showMember: true)).entrance(context, index: i + 1),
         ],
@@ -137,7 +137,7 @@ class PtPackageCard extends StatelessWidget {
                 )
               : FilledButton.icon(
                   style: FilledButton.styleFrom(minimumSize: const Size(0, 42), padding: const EdgeInsets.symmetric(horizontal: 14)),
-                  icon: const Icon(AppIcons.check, size: 18),
+                  icon: Icon(AppIcons.check, size: 18),
                   onPressed: () async {
                     HapticFeedback.mediumImpact();
                     await gym.usePtSession(p.id);
@@ -208,7 +208,7 @@ class _SellPtSheetState extends State<_SellPtSheet> {
         children: [
           SheetHeader('Personal training', subtitle: widget.member.name),
           if (gym.trainers.isEmpty)
-            const Text('Add a trainer first under More > Trainers.', style: AppText.bodyMuted)
+            Text('Add a trainer first under More > Trainers.', style: AppText.bodyMuted)
           else ...[
             const FieldLabel('Trainer'),
             ChoiceChips<String>(options: [for (final t in gym.trainers) t.id], selected: _trainerId, labelOf: (id) => gym.trainerById(id)!.name, onSelected: (v) => setState(() => _trainerId = v)),
@@ -237,7 +237,7 @@ class _SellPtSheetState extends State<_SellPtSheet> {
           UpiQrPanel(show: _method == PayMethod.upi && paid > 0, amount: paid, note: 'Personal training'),
           CashChange(show: _method == PayMethod.cash && paid > 0, amount: paid),
           const SizedBox(height: 18),
-          FilledButton.icon(onPressed: _saving || gym.trainers.isEmpty ? null : _save, icon: const Icon(AppIcons.check), label: Text('Sell $_sessions sessions')),
+          FilledButton.icon(onPressed: _saving || gym.trainers.isEmpty ? null : _save, icon: Icon(AppIcons.check), label: Text('Sell $_sessions sessions')),
         ],
       ),
     );
@@ -266,7 +266,7 @@ class PtProfileSection extends StatelessWidget {
             IconBadge(AppIcons.trainer, color: AppColors.categorical[0]),
             const SizedBox(width: 12),
             Expanded(child: Text(past > 0 ? 'No running package · $past finished' : 'No personal training yet. Sell a package.', style: AppText.bodyMuted)),
-            const Icon(AppIcons.addCircle, color: AppColors.primaryBright),
+            Icon(AppIcons.addCircle, color: AppColors.primaryBright),
           ]),
         ),
     ]);

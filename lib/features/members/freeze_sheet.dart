@@ -40,7 +40,7 @@ class _FreezeSheetState extends State<_FreezeSheet> {
           SheetHeader('Freeze membership', subtitle: '${widget.member.firstName} keeps every paid day. Check-ins are paused while frozen.'),
           Row(
             children: [
-              const Icon(AppIcons.freeze, color: AppColors.frozen, size: 30),
+              Icon(AppIcons.freeze, color: AppColors.frozen, size: 30),
               const SizedBox(width: 12),
               Text('${_days.round()} days', style: AppText.display.copyWith(fontSize: 40)),
             ],
@@ -64,7 +64,7 @@ class _FreezeSheetState extends State<_FreezeSheet> {
                 if (context.mounted) showMessage(context, e.message);
               }
             },
-            icon: const Icon(AppIcons.freeze),
+            icon: Icon(AppIcons.freeze),
             label: const Text('Freeze'),
           ),
         ],

@@ -38,13 +38,13 @@ class OffersScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => _showOfferSheet(context),
-        icon: const Icon(AppIcons.add),
-        label: const Text('New code', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: Icon(AppIcons.add),
+        label: Text('New code', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
         children: [
-          if (offers.isEmpty) const AppCard(child: Text('No offer codes yet. Create one for a festival or an Instagram campaign.', style: AppText.bodyMuted)),
+          if (offers.isEmpty) AppCard(child: Text('No offer codes yet. Create one for a festival or an Instagram campaign.', style: AppText.bodyMuted)),
           for (var i = 0; i < offers.length; i++) Padding(padding: const EdgeInsets.only(bottom: 10), child: _OfferTicket(offer: offers[i], live: _live(gym, offers[i]))).entrance(context, index: i),
           const SectionHeader('Referral reward'),
           AppCard(
@@ -139,7 +139,7 @@ class _OfferTicket extends StatelessWidget {
             ),
             IconButton(
               tooltip: 'Copy code',
-              icon: const Icon(AppIcons.copy, size: 18, color: AppColors.muted),
+              icon: Icon(AppIcons.copy, size: 18, color: AppColors.muted),
               onPressed: () => Clipboard.setData(ClipboardData(text: o.code)),
             ),
           ]),
@@ -229,7 +229,7 @@ class _OfferSheetState extends State<_OfferSheet> {
               controller: _code,
               textCapitalization: TextCapitalization.characters,
               inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[A-Za-z0-9]')), LengthLimitingTextInputFormatter(14)],
-              decoration: InputDecoration(labelText: 'Code', hintText: 'ONAM10', prefixIcon: const Icon(AppIcons.ticket), errorText: _error),
+              decoration: InputDecoration(labelText: 'Code', hintText: 'ONAM10', prefixIcon: Icon(AppIcons.ticket), errorText: _error),
               validator: (v) => requiredText(v, 'Enter a code'),
             ),
             const FieldLabel('Discount'),
@@ -278,7 +278,7 @@ class _OfferSheetState extends State<_OfferSheet> {
                     if (context.mounted) Navigator.pop(context);
                   }
                 },
-                child: const Text('Delete code', style: TextStyle(color: AppColors.danger)),
+                child: Text('Delete code', style: TextStyle(color: AppColors.danger)),
               ),
           ],
         ),
@@ -331,11 +331,11 @@ class _OfferCodeFieldState extends State<OfferCodeField> {
       onChanged: (_) => _check(),
       decoration: InputDecoration(
         labelText: 'Offer code',
-        prefixIcon: const Icon(AppIcons.ticket),
+        prefixIcon: Icon(AppIcons.ticket),
         errorText: _result.error,
         helperText: ok ? '${_result.offer!.label} · saves ${formatMoney(_result.discount)}' : null,
         helperStyle: AppText.small.copyWith(color: AppColors.success, fontWeight: FontWeight.w700),
-        suffixIcon: AnimatedSwitcher(duration: Motion.fast, child: ok ? const Icon(AppIcons.checkCircle, color: AppColors.success, key: ValueKey('ok')) : const SizedBox.shrink()),
+        suffixIcon: AnimatedSwitcher(duration: Motion.fast, child: ok ? Icon(AppIcons.checkCircle, color: AppColors.success, key: ValueKey('ok')) : const SizedBox.shrink()),
       ),
     );
   }

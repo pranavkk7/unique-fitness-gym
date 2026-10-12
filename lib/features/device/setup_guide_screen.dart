@@ -19,7 +19,7 @@ class FaceIdSetupGuide extends StatelessWidget {
 
   const FaceIdSetupGuide({super.key, this.onOpenConnection});
 
-  static const _steps = <({IconData icon, String title, String body, List<String> points, String? tip})>[
+  static List<({IconData icon, String title, String body, List<String> points, String? tip})> get _steps => <({IconData icon, String title, String body, List<String> points, String? tip})>[
     (
       icon: AppIcons.checklist,
       title: 'Before you start',
@@ -135,7 +135,7 @@ class FaceIdSetupGuide extends StatelessWidget {
             glow: true,
             padding: const EdgeInsets.all(18),
             child: Row(children: [
-              const Icon(AppIcons.faceId, color: Colors.white, size: 40),
+              Icon(AppIcons.faceId, color: Colors.white, size: 40),
               const SizedBox(width: 14),
               Expanded(
                 child: Text(
@@ -160,7 +160,7 @@ class FaceIdSetupGuide extends StatelessWidget {
           for (var i = 0; i < _steps.length; i++) _Step(number: i + 1, step: _steps[i], last: i == _steps.length - 1).entrance(context, index: i + 1),
           if (onOpenConnection != null && !device.isDemo) ...[
             const SizedBox(height: 4),
-            FilledButton.icon(onPressed: onOpenConnection, icon: const Icon(AppIcons.router), label: const Text('Enter the device details')),
+            FilledButton.icon(onPressed: onOpenConnection, icon: Icon(AppIcons.router), label: const Text('Enter the device details')),
           ],
           const SectionHeader('If something goes wrong'),
           AppCard(
@@ -170,7 +170,7 @@ class FaceIdSetupGuide extends StatelessWidget {
                 Theme(
                   data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                   child: ExpansionTile(
-                    leading: const Icon(AppIcons.help, color: AppColors.warning),
+                    leading: Icon(AppIcons.help, color: AppColors.warning),
                     title: Text(title, style: AppText.body.copyWith(fontWeight: FontWeight.w700)),
                     childrenPadding: const EdgeInsets.fromLTRB(56, 0, 16, 14),
                     expandedAlignment: Alignment.centerLeft,
@@ -211,7 +211,7 @@ class _Step extends StatelessWidget {
               width: 34,
               height: 34,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(gradient: AppColors.redGradient, shape: BoxShape.circle),
+              decoration: BoxDecoration(gradient: AppColors.redGradient, shape: BoxShape.circle),
               child: Text('$number', style: AppText.headline.copyWith(fontSize: 17, color: Colors.white)),
             ),
             if (!last) Expanded(child: Container(width: 2, margin: const EdgeInsets.symmetric(vertical: 4), color: AppColors.borderStrong)),
@@ -236,7 +236,7 @@ class _Step extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Padding(padding: EdgeInsets.only(top: 6, right: 8), child: Icon(AppIcons.dot, size: 6, color: AppColors.primaryBright)),
+                      Padding(padding: EdgeInsets.only(top: 6, right: 8), child: Icon(AppIcons.dot, size: 6, color: AppColors.primaryBright)),
                       Expanded(child: Text(p, style: AppText.body.copyWith(fontSize: 14.5, height: 1.35))),
                     ]),
                   ),
@@ -246,7 +246,7 @@ class _Step extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(color: AppColors.warning.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.warning.withValues(alpha: 0.3))),
                     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Icon(AppIcons.tip, size: 16, color: AppColors.warning),
+                      Icon(AppIcons.tip, size: 16, color: AppColors.warning),
                       const SizedBox(width: 8),
                       Expanded(child: Text(step.tip!, style: AppText.small.copyWith(color: AppColors.warning, height: 1.35))),
                     ]),

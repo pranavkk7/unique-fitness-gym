@@ -75,16 +75,16 @@ class _EnquirySheetState extends State<_EnquirySheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SheetHeader(widget.enquiry == null ? 'New enquiry' : 'Edit enquiry', subtitle: widget.enquiry == null ? 'Someone asked about joining. Save them so nobody forgets to follow up.' : null),
-            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
+            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
             const SizedBox(height: 12),
-            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone (WhatsApp)', prefixIcon: Icon(AppIcons.call)), validator: validatePhone),
+            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Phone (WhatsApp)', prefixIcon: Icon(AppIcons.call)), validator: validatePhone),
             const FieldLabel('Gender'),
             ChoiceChips<Gender>(options: Gender.values, selected: _gender, labelOf: (g) => g.label, onSelected: (g) => setState(() => _gender = g)),
             const SizedBox(height: 14),
             DropdownButtonFormField<String?>(
               isExpanded: true,
               initialValue: _planId,
-              decoration: const InputDecoration(labelText: 'Interested in', prefixIcon: Icon(AppIcons.membership)),
+              decoration: InputDecoration(labelText: 'Interested in', prefixIcon: Icon(AppIcons.membership)),
               items: [
                 const DropdownMenuItem(value: null, child: Text('Not sure yet')),
                 for (final p in gym.activePlans) DropdownMenuItem(value: p.id, child: Text('${p.name} · ${formatMoney(p.price)}')),
@@ -107,7 +107,7 @@ class _EnquirySheetState extends State<_EnquirySheet> {
                     onSelected: (_) => setState(() => _followUp = today.add(Duration(days: days))),
                   ),
                 ActionChip(
-                  avatar: const Icon(AppIcons.event, size: 16),
+                  avatar: Icon(AppIcons.event, size: 16),
                   label: Text(_followUp == null ? 'Pick a date' : formatDayMonth(_followUp!)),
                   onPressed: () async {
                     final d = await pickDate(context, initial: _followUp ?? today, first: today, last: today.add(const Duration(days: 120)));
@@ -117,7 +117,7 @@ class _EnquirySheetState extends State<_EnquirySheet> {
               ]),
             ],
             const SizedBox(height: 14),
-            TextField(controller: _notes, maxLines: 2, decoration: const InputDecoration(labelText: 'Notes', hintText: 'Timing, budget, goals...', prefixIcon: Icon(AppIcons.notes))),
+            TextField(controller: _notes, maxLines: 2, decoration: InputDecoration(labelText: 'Notes', hintText: 'Timing, budget, goals...', prefixIcon: Icon(AppIcons.notes))),
             const SizedBox(height: 20),
             FilledButton(onPressed: _save, child: Text(widget.enquiry == null ? 'Save enquiry' : 'Save changes')),
             if (widget.enquiry != null)

@@ -34,7 +34,7 @@ class SubPage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(6, 6, 12, 2),
                     child: Row(
                       children: [
-                        IconButton(tooltip: 'Back', icon: const Icon(AppIcons.back), onPressed: () => Navigator.maybePop(context)),
+                        IconButton(tooltip: 'Back', icon: Icon(AppIcons.back), onPressed: () => Navigator.maybePop(context)),
                         const SizedBox(width: 2),
                         Expanded(
                           child: Column(

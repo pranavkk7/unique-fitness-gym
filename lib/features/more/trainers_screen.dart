@@ -30,8 +30,8 @@ class TrainersScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => _showTrainerSheet(context),
-        icon: const Icon(AppIcons.add),
-        label: const Text('Trainer', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: Icon(AppIcons.add),
+        label: Text('Trainer', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: gym.trainers.isEmpty
           ? EmptyState(icon: AppIcons.trainer, title: 'No trainers yet', subtitle: 'Add your coaches to assign members and classes.', actionLabel: 'Add trainer', onAction: () => _showTrainerSheet(context))
@@ -67,7 +67,7 @@ class _TrainerCard extends StatelessWidget {
               Container(
                 width: 52,
                 height: 52,
-                decoration: const BoxDecoration(shape: BoxShape.circle, gradient: AppColors.redGradient),
+                decoration: BoxDecoration(shape: BoxShape.circle, gradient: AppColors.redGradient),
                 alignment: Alignment.center,
                 child: Text(initials(trainer.name), style: AppText.headline.copyWith(fontSize: 20)),
               ),
@@ -78,7 +78,7 @@ class _TrainerCard extends StatelessWidget {
                   Text(trainer.speciality, style: AppText.small.copyWith(color: AppColors.muted)),
                 ]),
               ),
-              IconButton(tooltip: 'Call', icon: const Icon(AppIcons.call), onPressed: () => callNumber(context, trainer.phone)),
+              IconButton(tooltip: 'Call', icon: Icon(AppIcons.call), onPressed: () => callNumber(context, trainer.phone)),
             ]),
             const SizedBox(height: 12),
             Row(children: [
@@ -148,11 +148,11 @@ class _TrainerSheetState extends State<_TrainerSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SheetHeader(widget.trainer == null ? 'New trainer' : 'Edit trainer'),
-            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
+            TextFormField(controller: _name, textCapitalization: TextCapitalization.words, decoration: InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
             const SizedBox(height: 12),
-            TextFormField(controller: _speciality, decoration: const InputDecoration(labelText: 'Speciality', hintText: 'Boxing, strength, Zumba...', prefixIcon: Icon(AppIcons.boxing))),
+            TextFormField(controller: _speciality, decoration: InputDecoration(labelText: 'Speciality', hintText: 'Boxing, strength, Zumba...', prefixIcon: Icon(AppIcons.boxing))),
             const SizedBox(height: 12),
-            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(AppIcons.call))),
+            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Phone', prefixIcon: Icon(AppIcons.call))),
             if (gym.ownerUnlocked) ...[
               const SizedBox(height: 12),
               AmountField(controller: _salary, label: 'Monthly salary (optional)'),

@@ -190,10 +190,10 @@ class _FaceStatus extends StatelessWidget {
               padding: const EdgeInsets.all(14),
               child: Column(children: [
                 Row(children: [
-                  const Icon(AppIcons.faceId, color: AppColors.success),
+                  Icon(AppIcons.faceId, color: AppColors.success),
                   const SizedBox(width: 10),
-                  const Expanded(child: Text('Face registered on the device', style: AppText.body)),
-                  const StatusPill('Enrolled', color: AppColors.success, icon: AppIcons.check),
+                  Expanded(child: Text('Face registered on the device', style: AppText.body)),
+                  StatusPill('Enrolled', color: AppColors.success, icon: AppIcons.check),
                 ]),
                 const Divider(height: 22),
                 Row(children: [
@@ -216,7 +216,7 @@ class _FaceStatus extends StatelessWidget {
                   if (context.mounted) showMessage(context, device.error ?? 'Could not reach the device.');
                 }
               },
-              icon: const Icon(AppIcons.sync),
+              icon: Icon(AppIcons.sync),
               label: const Text('Sync with device'),
             ),
             TextButton(

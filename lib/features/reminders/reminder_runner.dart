@@ -91,7 +91,7 @@ class _RunnerState extends State<_Runner> {
                       const SizedBox(width: 10),
                       Expanded(child: Text(widget.kind.label, style: AppText.headline.copyWith(fontSize: 20))),
                       Text(_finished ? '$total of $total' : '${_index + 1} of $total', style: AppText.small.copyWith(color: AppColors.muted)),
-                      IconButton(tooltip: 'Close', icon: const Icon(AppIcons.close), onPressed: () => Navigator.pop(context)),
+                      IconButton(tooltip: 'Close', icon: Icon(AppIcons.close), onPressed: () => Navigator.pop(context)),
                     ]),
                   ),
                   Padding(
@@ -126,14 +126,14 @@ class _RunnerState extends State<_Runner> {
                     child: _finished
                         ? SizedBox(width: double.infinity, child: FilledButton(onPressed: () => Navigator.pop(context), child: const Text('Done')))
                         : Row(children: [
-                            IconButton(tooltip: 'Previous', onPressed: _index == 0 ? null : _back, icon: const Icon(AppIcons.chevronLeft)),
+                            IconButton(tooltip: 'Previous', onPressed: _index == 0 ? null : _back, icon: Icon(AppIcons.chevronLeft)),
                             TextButton(onPressed: _advance, child: const Text('Skip')),
                             const SizedBox(width: 8),
                             Expanded(
                               child: FilledButton.icon(
-                                style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.white),
+                                style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: AppColors.onWhatsapp),
                                 onPressed: _send,
-                                icon: const Icon(AppIcons.send),
+                                icon: Icon(AppIcons.send),
                                 label: const Text('Send'),
                               ),
                             ),

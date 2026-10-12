@@ -98,7 +98,7 @@ class _CloseDayScreenState extends State<CloseDayScreen> {
     final total = s.cash + s.upi + s.card + s.bank;
     final closed = gym.closeFor(gym.today);
     final history = gym.dayCloses.where((c) => !sameDay(c.date, gym.today)).toList()..sort((a, b) => b.date.compareTo(a.date));
-    const colors = AppColors.payMethods;
+    final colors = AppColors.payMethods;
 
     return SubPage(
       title: 'Close the day',
@@ -163,9 +163,9 @@ class _CloseDayScreenState extends State<CloseDayScreen> {
           ),
           const SizedBox(height: 18),
           FilledButton.icon(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.white),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: AppColors.onWhatsapp),
             onPressed: _saving ? null : _close,
-            icon: const Icon(AppIcons.closeDay),
+            icon: Icon(AppIcons.closeDay),
             label: Text(closed == null ? 'Close day & send to owner' : 'Update & send again'),
           ),
           if (history.isNotEmpty) ...[

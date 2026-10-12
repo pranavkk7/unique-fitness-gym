@@ -192,7 +192,7 @@ class _ConfettiPainter extends CustomPainter {
     final r = math.Random(i * 7919);
     return (r.nextDouble(), r.nextDouble() * 0.35, 0.6 + r.nextDouble() * 0.8, r.nextDouble() * math.pi * 2, r.nextInt(4), (r.nextDouble() - 0.5) * 0.25);
   });
-  static const _colors = [AppColors.primary, AppColors.primaryBright, Colors.white, AppColors.ember];
+  static List<Color> get _colors => [AppColors.primary, AppColors.primaryBright, Colors.white, AppColors.ember];
 
   _ConfettiPainter(this.t);
 

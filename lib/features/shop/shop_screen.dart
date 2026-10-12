@@ -41,7 +41,7 @@ class ShopScreen extends StatelessWidget {
     return SubPage(
       title: 'Shop',
       subtitle: '${products.length} items · ${gym.lowStock.length} low on stock',
-      actions: [IconButton(tooltip: 'Add item', icon: const Icon(AppIcons.addBox), onPressed: () => showProductSheet(context))],
+      actions: [IconButton(tooltip: 'Add item', icon: Icon(AppIcons.addBox), onPressed: () => showProductSheet(context))],
       floatingAction: products.isEmpty
           ? null
           : FloatingActionButton.extended(
@@ -49,8 +49,8 @@ class ShopScreen extends StatelessWidget {
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               onPressed: () => showSellSheet(context),
-              icon: const Icon(AppIcons.bag),
-              label: const Text('New sale', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+              icon: Icon(AppIcons.bag),
+              label: Text('New sale', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
             ),
       child: products.isEmpty
           ? EmptyState(
@@ -108,7 +108,7 @@ class ShopScreen extends StatelessWidget {
                           ]),
                         ),
                         StatusPill('${products[i].stock} in stock', color: products[i].lowStock ? AppColors.warning : AppColors.success),
-                        IconButton(tooltip: 'Restock ${products[i].name}', icon: const Icon(AppIcons.addCircleOutline, color: AppColors.muted), onPressed: () => showRestockSheet(context, products[i])),
+                        IconButton(tooltip: 'Restock ${products[i].name}', icon: Icon(AppIcons.addCircleOutline, color: AppColors.muted), onPressed: () => showRestockSheet(context, products[i])),
                       ]),
                     ),
                   ).entrance(context, index: i + 2),
@@ -225,7 +225,7 @@ class _SellSheetState extends State<_SellSheet> {
           const SizedBox(height: 18),
           FilledButton.icon(
             onPressed: _saving || _cart.isEmpty ? null : _save,
-            icon: const Icon(AppIcons.check),
+            icon: Icon(AppIcons.check),
             label: Text(_cart.isEmpty ? 'Add an item' : 'Take ${formatMoney(total)}'),
           ),
         ],
@@ -370,7 +370,7 @@ class _ProductSheetState extends State<_ProductSheet> {
                   await context.read<GymProvider>().saveProduct(widget.product!.copyWith(active: false));
                   if (context.mounted) Navigator.pop(context);
                 },
-                child: const Text('Stop selling this item', style: TextStyle(color: AppColors.danger)),
+                child: Text('Stop selling this item', style: TextStyle(color: AppColors.danger)),
               ),
             ],
           ],
@@ -413,9 +413,9 @@ class _RestockSheetState extends State<_RestockSheet> {
         children: [
           SheetHeader('Restock', subtitle: '${widget.product.name} · ${widget.product.stock} in stock now'),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            IconButton.filledTonal(tooltip: 'Fewer', onPressed: _qty > 1 ? () => setState(() => _qty--) : null, icon: const Icon(AppIcons.remove)),
+            IconButton.filledTonal(tooltip: 'Fewer', onPressed: _qty > 1 ? () => setState(() => _qty--) : null, icon: Icon(AppIcons.remove)),
             SizedBox(width: 90, child: Text('$_qty', textAlign: TextAlign.center, style: AppText.stat)),
-            IconButton.filledTonal(tooltip: 'More', onPressed: () => setState(() => _qty++), icon: const Icon(AppIcons.add)),
+            IconButton.filledTonal(tooltip: 'More', onPressed: () => setState(() => _qty++), icon: Icon(AppIcons.add)),
           ]),
           const SizedBox(height: 14),
           AmountField(controller: _cost, label: 'Cost per item (optional)', onChanged: (_) => setState(() {})),

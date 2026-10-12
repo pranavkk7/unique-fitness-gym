@@ -5,14 +5,15 @@ import '../core/theme/app_icons.dart';
 import 'json.dart';
 
 enum PayMethod {
-  cash('Cash', AppIcons.cash),
-  upi('UPI', AppIcons.qrCode),
-  card('Card', AppIcons.card),
-  bank('Bank transfer', AppIcons.bank);
+  cash('Cash', 'cash'),
+  upi('UPI', 'qrCode'),
+  card('Card', 'card'),
+  bank('Bank transfer', 'bank');
 
-  const PayMethod(this.label, this.icon);
+  const PayMethod(this.label, this._icon);
   final String label;
-  final IconData icon;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
 }
 
 enum PaymentKind {
@@ -78,18 +79,19 @@ class Payment {
 }
 
 enum ExpenseCategory {
-  rent('Rent', AppIcons.rent, Color(0xFF8B5CF6)),
-  salary('Salaries', AppIcons.badge, Color(0xFF3B82F6)),
-  electricity('Electricity & water', AppIcons.bolt, Color(0xFFFFB020)),
-  equipment('Equipment', AppIcons.barbell, Color(0xFFE11D2A)),
-  maintenance('Maintenance', AppIcons.build, Color(0xFFFF6B1A)),
-  marketing('Marketing', AppIcons.campaign, Color(0xFFFF4DA6)),
-  supplies('Supplies & cleaning', AppIcons.cleaning, Color(0xFF2FD07F)),
-  other('Other', AppIcons.more, Color(0xFF9A9AA3));
+  rent('Rent', 'rent', Color(0xFF8B5CF6)),
+  salary('Salaries', 'badge', Color(0xFF3B82F6)),
+  electricity('Electricity & water', 'bolt', Color(0xFFFFB020)),
+  equipment('Equipment', 'barbell', Color(0xFFE11D2A)),
+  maintenance('Maintenance', 'build', Color(0xFFFF6B1A)),
+  marketing('Marketing', 'campaign', Color(0xFFFF4DA6)),
+  supplies('Supplies & cleaning', 'cleaning', Color(0xFF2FD07F)),
+  other('Other', 'more', Color(0xFF9A9AA3));
 
-  const ExpenseCategory(this.label, this.icon, this.color);
+  const ExpenseCategory(this.label, this._icon, this.color);
   final String label;
-  final IconData icon;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
   final Color color;
 }
 

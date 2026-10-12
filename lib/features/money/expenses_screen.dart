@@ -40,16 +40,16 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showExpenseSheet(context),
-        icon: const Icon(AppIcons.add),
-        label: const Text('Add expense', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: Icon(AppIcons.add),
+        label: Text('Add expense', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 100),
         children: [
           Row(children: [
-            IconButton(tooltip: 'Previous month', icon: const Icon(AppIcons.chevronLeft), onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1))),
+            IconButton(tooltip: 'Previous month', icon: Icon(AppIcons.chevronLeft), onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1))),
             Expanded(child: Text(formatMonthYear(_month), textAlign: TextAlign.center, style: AppText.headline.copyWith(fontSize: 20))),
-            IconButton(tooltip: 'Next month', icon: const Icon(AppIcons.chevronRight), onPressed: isCurrent ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1))),
+            IconButton(tooltip: 'Next month', icon: Icon(AppIcons.chevronRight), onPressed: isCurrent ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1))),
           ]),
           const SizedBox(height: 8),
           Row(children: [
@@ -63,7 +63,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           _Salaries(month: _month),
           const SectionHeader('Entries'),
           if (list.isEmpty)
-            const AppCard(child: Text('Nothing recorded for this month.', style: AppText.bodyMuted))
+            AppCard(child: Text('Nothing recorded for this month.', style: AppText.bodyMuted))
           else
             for (var i = 0; i < list.length; i++)
               Padding(
@@ -75,7 +75,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 20),
                     decoration: BoxDecoration(color: AppColors.danger.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(20)),
-                    child: const Icon(AppIcons.delete, color: AppColors.danger),
+                    child: Icon(AppIcons.delete, color: AppColors.danger),
                   ),
                   confirmDismiss: (_) => confirmAction(context, title: 'Delete expense?', message: '${list[i].category.label}, ${formatMoney(list[i].amount)}'),
                   onDismissed: (_) => gym.deleteExpense(list[i].id),
@@ -130,7 +130,7 @@ class _Salaries extends StatelessWidget {
   Widget build(BuildContext context) {
     final gym = context.watch<GymProvider>();
     final staff = gym.trainers.where((t) => t.monthlySalary > 0).toList();
-    if (staff.isEmpty) return const AppCard(child: Text('Add trainer salaries under Trainers to pay them here in one tap.', style: AppText.bodyMuted));
+    if (staff.isEmpty) return AppCard(child: Text('Add trainer salaries under Trainers to pay them here in one tap.', style: AppText.bodyMuted));
     // Salaries are paid at the start of the next month for the month worked.
     final worked = DateTime(month.year, month.month - 1);
     return AppCard(
@@ -142,7 +142,7 @@ class _Salaries extends StatelessWidget {
             title: Text(t.name),
             subtitle: Text('${formatMoney(t.monthlySalary)} for ${formatMonthYear(worked)}'),
             trailing: gym.salaryPaid(t.id, worked)
-                ? const StatusPill('Paid', color: AppColors.success, icon: AppIcons.check)
+                ? StatusPill('Paid', color: AppColors.success, icon: AppIcons.check)
                 : TextButton(
                     onPressed: () async {
                       final ok = await gym.paySalary(t.id, worked);
@@ -208,7 +208,7 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
               },
             ),
             const SizedBox(height: 12),
-            TextField(controller: _note, decoration: const InputDecoration(labelText: 'Note (optional)', prefixIcon: Icon(AppIcons.notes))),
+            TextField(controller: _note, decoration: InputDecoration(labelText: 'Note (optional)', prefixIcon: Icon(AppIcons.notes))),
             const SizedBox(height: 20),
             FilledButton(
               onPressed: () async {

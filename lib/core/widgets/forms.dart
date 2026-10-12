@@ -73,7 +73,7 @@ class PickerField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon, size: 20),
-          suffixIcon: value != null && onClear != null ? IconButton(tooltip: 'Clear', icon: const Icon(AppIcons.close, size: 18), onPressed: onClear) : null,
+          suffixIcon: value != null && onClear != null ? IconButton(tooltip: 'Clear', icon: Icon(AppIcons.close, size: 18), onPressed: onClear) : null,
         ),
         child: Text(value ?? '', style: AppText.body),
       ),

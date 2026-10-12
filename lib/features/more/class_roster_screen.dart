@@ -38,7 +38,7 @@ class ClassRosterScreen extends StatelessWidget {
     return SubPage(
       title: c.title,
       subtitle: '${c.weekdays.map((d) => days[d - 1]).join(', ')} · ${minutesLabel(c.startMinutes)} · ${gym.trainerById(c.trainerId)?.name ?? 'No trainer'}',
-      actions: [if (onEdit != null) IconButton(tooltip: 'Edit class', icon: const Icon(AppIcons.edit), onPressed: onEdit)],
+      actions: [if (onEdit != null) IconButton(tooltip: 'Edit class', icon: Icon(AppIcons.edit), onPressed: onEdit)],
       floatingAction: FloatingActionButton.extended(
         heroTag: 'roster-fab',
         backgroundColor: full ? AppColors.surfaceHigher : AppColors.primary,
@@ -51,8 +51,8 @@ class ClassRosterScreen extends StatelessWidget {
                 final ok = await gym.enrollInClass(c.id, m.id);
                 if (context.mounted) showMessage(context, ok ? '${m.firstName} added to the batch.' : 'The batch is full.');
               },
-        icon: const Icon(AppIcons.personAdd),
-        label: Text(full ? 'Batch full' : 'Add member', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: Icon(AppIcons.personAdd),
+        label: Text(full ? 'Batch full' : 'Add member', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -79,7 +79,7 @@ class ClassRosterScreen extends StatelessWidget {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(minimumSize: const Size(0, 40)),
                     onPressed: roster.isEmpty ? null : () => _message(context, c, roster),
-                    icon: const Icon(AppIcons.campaign, size: 18),
+                    icon: Icon(AppIcons.campaign, size: 18),
                     label: const Text('Message batch'),
                   ),
                 ]),
@@ -87,19 +87,19 @@ class ClassRosterScreen extends StatelessWidget {
             ]),
           ).entrance(context),
           const SectionHeader('Members'),
-          if (roster.isEmpty) const EmptyState(icon: AppIcons.groups, title: 'No one in this batch', subtitle: 'Add members who have joined this class.'),
+          if (roster.isEmpty) EmptyState(icon: AppIcons.groups, title: 'No one in this batch', subtitle: 'Add members who have joined this class.'),
           for (var i = 0; i < roster.length; i++)
             Dismissible(
               key: ValueKey(roster[i].id),
               direction: DismissDirection.endToStart,
-              background: Container(alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20), child: const Icon(AppIcons.personRemove, color: AppColors.danger)),
+              background: Container(alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20), child: Icon(AppIcons.personRemove, color: AppColors.danger)),
               onDismissed: (_) => gym.removeFromClass(c.id, roster[i].id),
               child: MemberTile(
                 member: roster[i],
                 subtitle: inToday.contains(roster[i].id) ? 'In today' : null,
                 trailing: AnimatedSwitcher(
                   duration: Motion.fast,
-                  child: inToday.contains(roster[i].id) ? const Icon(AppIcons.checkCircle, color: AppColors.success) : const Icon(AppIcons.chevronRight, color: AppColors.muted),
+                  child: inToday.contains(roster[i].id) ? Icon(AppIcons.checkCircle, color: AppColors.success) : Icon(AppIcons.chevronRight, color: AppColors.muted),
                 ),
                 onTap: () => openPage(context, MemberProfileScreen(memberId: roster[i].id)),
               ),

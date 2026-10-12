@@ -92,9 +92,9 @@ class TierStyle {
 
   static TierStyle of(PlanTier tier) => switch (tier) {
         // Tiers are told apart by name and perks, in plain ink: metallic gradients wash out on white.
-        PlanTier.silver => const TierStyle([AppColors.textSecondary, AppColors.textSecondary], AppColors.text),
-        PlanTier.platinum => const TierStyle([AppColors.text, AppColors.text], AppColors.text),
-        PlanTier.other => const TierStyle([AppColors.text, AppColors.text], AppColors.text),
+        PlanTier.silver => TierStyle([AppColors.textSecondary, AppColors.textSecondary], AppColors.text),
+        PlanTier.platinum => TierStyle([AppColors.text, AppColors.text], AppColors.text),
+        PlanTier.other => TierStyle([AppColors.text, AppColors.text], AppColors.text),
       };
 
   LinearGradient get gradient => LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: metal);
@@ -145,7 +145,7 @@ class _TierCard extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: AppColors.surfaceGradient,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: selected ? AppColors.text : AppColors.border, width: selected ? 1.6 : 1),
+            border: Border.all(color: selected ? AppColors.ink : AppColors.border, width: selected ? 1.6 : 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +207,7 @@ class _DurationCard extends StatelessWidget {
             // Same language as the tier cards: white sheet, an iron edge when chosen.
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: selected ? AppColors.text : AppColors.border, width: selected ? 1.6 : 1),
+            border: Border.all(color: selected ? AppColors.ink : AppColors.border, width: selected ? 1.6 : 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

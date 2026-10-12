@@ -75,12 +75,12 @@ class AdmissionSuccessScreen extends StatelessWidget {
                     ).entrance(context, delay: const Duration(milliseconds: 600)),
                     const SizedBox(height: 22),
                     FilledButton.icon(
-                      style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.white),
+                      style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: AppColors.onWhatsapp),
                       onPressed: () async {
                         final ok = await openWhatsApp(context, m.phone, gym.messageFor(ReminderKind.welcome, m));
                         if (ok) await gym.logReminder(ReminderKind.welcome, m.id);
                       },
-                      icon: const Icon(AppIcons.chat),
+                      icon: Icon(AppIcons.chat),
                       label: const Text('Send welcome on WhatsApp'),
                     ).entrance(context, delay: const Duration(milliseconds: 700)),
                     const SizedBox(height: 10),
@@ -91,7 +91,7 @@ class AdmissionSuccessScreen extends StatelessWidget {
                             child: OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(minimumSize: const Size(0, 52)),
                               onPressed: () => shareReceiptPdf(context, result.receiptNo!),
-                              icon: const Icon(AppIcons.pdf),
+                              icon: Icon(AppIcons.pdf),
                               label: const Text('Receipt'),
                             ),
                           ),
@@ -124,7 +124,7 @@ class AdmissionSuccessScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Center(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text('Done', style: TextStyle(color: AppColors.muted)))),
+                    Center(child: TextButton(onPressed: () => Navigator.pop(context), child: Text('Done', style: TextStyle(color: AppColors.muted)))),
                   ],
                 ),
               ),

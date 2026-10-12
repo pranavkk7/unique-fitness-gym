@@ -39,8 +39,8 @@ class FeedbackScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => showFeedbackSheet(context),
-        icon: const Icon(AppIcons.review),
-        label: const Text('Add feedback', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: Icon(AppIcons.review),
+        label: Text('Add feedback', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -102,7 +102,7 @@ class FeedbackScreen extends StatelessWidget {
             const SectionHeader('All feedback'),
             for (var i = 0; i < rest.length; i++) Padding(padding: const EdgeInsets.only(bottom: 8), child: _FeedbackCard(entry: rest[i])).entrance(context, index: i < 10 ? i : 10),
           ],
-          if (all.isEmpty) const EmptyState(icon: AppIcons.review, title: 'No feedback yet', subtitle: 'Ask members how the gym is doing and note it here.'),
+          if (all.isEmpty) EmptyState(icon: AppIcons.review, title: 'No feedback yet', subtitle: 'Ask members how the gym is doing and note it here.'),
         ],
       ),
     );
@@ -153,7 +153,7 @@ class _FeedbackCard extends StatelessWidget {
         if (f.resolved && f.response.isNotEmpty) ...[
           const SizedBox(height: 8),
           Row(children: [
-            const Icon(AppIcons.reply, size: 16, color: AppColors.success),
+            Icon(AppIcons.reply, size: 16, color: AppColors.success),
             const SizedBox(width: 6),
             Expanded(child: Text(f.response, style: AppText.small.copyWith(color: AppColors.success))),
           ]),
@@ -165,10 +165,10 @@ class _FeedbackCard extends StatelessWidget {
               if (member != null)
                 TextButton.icon(
                   onPressed: () => openWhatsApp(context, member.phone, 'Hi ${member.firstName}, thank you for your feedback about ${f.category.label.toLowerCase()} at ${gym.settings.gymName}. '),
-                  icon: const Icon(AppIcons.chat, size: 18, color: AppColors.whatsapp),
+                  icon: Icon(AppIcons.chat, size: 18, color: AppColors.whatsapp),
                   label: const Text('Reply'),
                 ),
-              TextButton.icon(onPressed: () => _resolve(context), icon: const Icon(AppIcons.check, size: 18), label: const Text('Resolve')),
+              TextButton.icon(onPressed: () => _resolve(context), icon: Icon(AppIcons.check, size: 18), label: const Text('Resolve')),
             ]),
           ),
       ]),

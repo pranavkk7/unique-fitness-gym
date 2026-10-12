@@ -91,7 +91,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                             if (context.mounted) showMessage(context, device.error ?? 'Could not reach the device.');
                           }
                         },
-                  icon: device.busy ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.4)) : const Icon(AppIcons.sync),
+                  icon: device.busy ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.4)) : Icon(AppIcons.sync),
                 ),
             ],
           ),
@@ -129,8 +129,8 @@ class _CheckInScreenState extends State<CheckInScreen> {
           onChanged: (_) => setState(() {}),
           decoration: InputDecoration(
             hintText: 'Name, phone or UFG code',
-            prefixIcon: const Icon(AppIcons.search),
-            suffixIcon: _search.text.isEmpty ? null : IconButton(tooltip: 'Clear search', icon: const Icon(AppIcons.close), onPressed: () => setState(_search.clear)),
+            prefixIcon: Icon(AppIcons.search),
+            suffixIcon: _search.text.isEmpty ? null : IconButton(tooltip: 'Clear search', icon: Icon(AppIcons.close), onPressed: () => setState(_search.clear)),
           ),
         ),
         const SizedBox(height: 4),
@@ -169,7 +169,7 @@ class _Row extends StatelessWidget {
                 key: const ValueKey('done'),
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const StatusPill('In', color: AppColors.success, icon: AppIcons.check),
+                  StatusPill('In', color: AppColors.success, icon: AppIcons.check),
                   const SizedBox(height: 4),
                   Text(formatTime(done.time), style: AppText.small.copyWith(color: AppColors.muted, fontSize: 11)),
                 ],

@@ -38,8 +38,8 @@ class _TrainingPlansScreenState extends State<TrainingPlansScreen> {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => openPage(context, TrainingPlanEditor(kind: _kind)),
-        icon: const Icon(AppIcons.add),
-        label: const Text('New plan', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
+        icon: Icon(AppIcons.add),
+        label: Text('New plan', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800)),
       ),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
@@ -50,7 +50,7 @@ class _TrainingPlansScreenState extends State<TrainingPlansScreen> {
             onSelectionChanged: (v) => setState(() => _kind = v.first),
           ),
           const SizedBox(height: 14),
-          if (plans.isEmpty) const AppCard(child: Text('No plans of this kind yet.', style: AppText.bodyMuted)),
+          if (plans.isEmpty) AppCard(child: Text('No plans of this kind yet.', style: AppText.bodyMuted)),
           for (var i = 0; i < plans.length; i++)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
@@ -65,7 +65,7 @@ class _TrainingPlansScreenState extends State<TrainingPlansScreen> {
                       Text([if (plans[i].goal.isNotEmpty) plans[i].goal, '${plans[i].sections.length} sections', '${usedBy(plans[i])} members'].join(' · '), style: AppText.small.copyWith(color: AppColors.muted)),
                     ]),
                   ),
-                  IconButton(tooltip: 'Share PDF', icon: const Icon(AppIcons.pdf, color: AppColors.muted), onPressed: () => sharePlanPdf(context, plans[i])),
+                  IconButton(tooltip: 'Share PDF', icon: Icon(AppIcons.pdf, color: AppColors.muted), onPressed: () => sharePlanPdf(context, plans[i])),
                 ]),
               ),
             ).entrance(context, index: i),
@@ -130,7 +130,7 @@ class _TrainingPlanEditorState extends State<TrainingPlanEditor> {
         if (widget.plan != null)
           IconButton(
             tooltip: 'Delete plan',
-            icon: const Icon(AppIcons.delete),
+            icon: Icon(AppIcons.delete),
             onPressed: () async {
               if (await confirmAction(context, title: 'Delete plan?', message: 'Members using it will have it removed.') && context.mounted) {
                 await context.read<GymProvider>().deleteTrainingPlan(widget.plan!.id);
@@ -159,7 +159,7 @@ class _TrainingPlanEditorState extends State<TrainingPlanEditor> {
                     child: Column(children: [
                       Row(children: [
                         Expanded(child: TextField(controller: _sections[i].$1, decoration: InputDecoration(hintText: diet ? 'Breakfast' : 'Monday · Chest', border: InputBorder.none, filled: false), style: AppText.title)),
-                        IconButton(tooltip: 'Remove section', icon: const Icon(AppIcons.close, size: 18, color: AppColors.muted), onPressed: () => setState(() => _sections.removeAt(i))),
+                        IconButton(tooltip: 'Remove section', icon: Icon(AppIcons.close, size: 18, color: AppColors.muted), onPressed: () => setState(() => _sections.removeAt(i))),
                       ]),
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
@@ -169,7 +169,7 @@ class _TrainingPlanEditorState extends State<TrainingPlanEditor> {
                   ),
                 ),
               ),
-            OutlinedButton.icon(onPressed: () => setState(() => _sections.add((TextEditingController(), TextEditingController()))), icon: const Icon(AppIcons.add), label: const Text('Add section')),
+            OutlinedButton.icon(onPressed: () => setState(() => _sections.add((TextEditingController(), TextEditingController()))), icon: Icon(AppIcons.add), label: const Text('Add section')),
             const SizedBox(height: 14),
             TextFormField(controller: _notes, maxLines: null, decoration: const InputDecoration(labelText: 'Notes (optional)')),
           ],
@@ -202,8 +202,8 @@ class TrainingPlansSection extends StatelessWidget {
                 title: Text(plan?.name ?? 'No ${kind.label.toLowerCase()}'),
                 subtitle: Text(plan == null ? 'Tap to assign one' : plan.goal),
                 trailing: plan == null
-                    ? const Icon(AppIcons.addCircleOutline, color: AppColors.muted)
-                    : IconButton(tooltip: 'Share ${kind.label} PDF', icon: const Icon(AppIcons.share), onPressed: () => sharePlanPdf(context, plan, member: member)),
+                    ? Icon(AppIcons.addCircleOutline, color: AppColors.muted)
+                    : IconButton(tooltip: 'Share ${kind.label} PDF', icon: Icon(AppIcons.share), onPressed: () => sharePlanPdf(context, plan, member: member)),
               );
             }),
         ]),
@@ -221,7 +221,7 @@ class TrainingPlansSection extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
           child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             SheetHeader(kind.label, subtitle: member.name),
-            if (options.isEmpty) const Text('No plans yet. Add one under More > Workout & diet.', style: AppText.bodyMuted),
+            if (options.isEmpty) Text('No plans yet. Add one under More > Workout & diet.', style: AppText.bodyMuted),
             for (final p in options)
               ListTile(
                 onTap: () async {
@@ -238,7 +238,7 @@ class TrainingPlansSection extends StatelessWidget {
                   await gym.assignTrainingPlan(member.id, kind, null);
                   if (sheet.mounted) Navigator.pop(sheet);
                 },
-                child: const Text('Remove plan', style: TextStyle(color: AppColors.danger)),
+                child: Text('Remove plan', style: TextStyle(color: AppColors.danger)),
               ),
           ]),
         ),

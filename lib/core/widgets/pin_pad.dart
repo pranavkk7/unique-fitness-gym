@@ -63,7 +63,7 @@ class _PinPadState extends State<PinPad> with SingleTickerProviderStateMixin {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(AppIcons.lock, color: AppColors.primaryBright, size: 30),
+        Icon(AppIcons.lock, color: AppColors.primaryBright, size: 30),
         const SizedBox(height: 10),
         Text(widget.title, style: AppText.headline, textAlign: TextAlign.center),
         const SizedBox(height: 4),
@@ -108,7 +108,7 @@ class _PinPadState extends State<PinPad> with SingleTickerProviderStateMixin {
                       ? const SizedBox(width: 72, height: 60)
                       : Material(
                           color: AppColors.surfaceHigh,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18), side: const BorderSide(color: AppColors.border)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18), side: BorderSide(color: AppColors.border)),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(18),
                             onTap: () => _press(key),
@@ -117,7 +117,7 @@ class _PinPadState extends State<PinPad> with SingleTickerProviderStateMixin {
                               height: 60,
                               child: Center(
                                 child: key == '⌫'
-                                    ? const Icon(AppIcons.backspace, color: AppColors.textSecondary, semanticLabel: 'Delete')
+                                    ? Icon(AppIcons.backspace, color: AppColors.textSecondary, semanticLabel: 'Delete')
                                     : Text(key, style: AppText.headline.copyWith(fontStyle: FontStyle.normal, fontSize: 26)),
                               ),
                             ),

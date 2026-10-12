@@ -117,7 +117,7 @@ class _MembersScreenState extends State<MembersScreen> {
                   ),
                   PopupMenuButton<_Sort>(
                     tooltip: 'Sort',
-                    icon: const Icon(AppIcons.sort),
+                    icon: Icon(AppIcons.sort),
                     initialValue: _sort,
                     onSelected: (s) => setState(() => _sort = s),
                     itemBuilder: (_) => const [
@@ -137,12 +137,12 @@ class _MembersScreenState extends State<MembersScreen> {
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: 'Search name, phone or UFG code',
-                  prefixIcon: const Icon(AppIcons.search),
+                  prefixIcon: Icon(AppIcons.search),
                   suffixIcon: _search.text.isEmpty
                       ? null
                       : IconButton(
                           tooltip: 'Clear search',
-                          icon: const Icon(AppIcons.close),
+                          icon: Icon(AppIcons.close),
                           onPressed: () => setState(_search.clear),
                         ),
                 ),
@@ -205,8 +205,8 @@ class _MembersScreenState extends State<MembersScreen> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             onPressed: () => openPage(context, const AdmissionScreen()),
-            icon: const Icon(AppIcons.personAdd),
-            label: const Text('Admission', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+            icon: Icon(AppIcons.personAdd),
+            label: Text('Admission', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
           ),
         ),
       ],

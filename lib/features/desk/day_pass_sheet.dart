@@ -79,7 +79,7 @@ class _DayPassSheetState extends State<_DayPassSheet> {
           children: [
             SheetHeader(_trial ? 'Free trial' : 'Day pass', subtitle: _trial ? '${gym.settings.trialDays} days free. Saved as an enquiry with a follow-up when it ends.' : 'One paid visit. Saved as an enquiry so the desk can call tomorrow.'),
             SegmentedButton<bool>(
-              segments: const [
+              segments: [
                 ButtonSegment(value: false, icon: Icon(AppIcons.ticket), label: Text('Day pass')),
                 ButtonSegment(value: true, icon: Icon(AppIcons.hourglassHigh), label: Text('Free trial')),
               ],
@@ -87,9 +87,9 @@ class _DayPassSheetState extends State<_DayPassSheet> {
               onSelectionChanged: (v) => setState(() => _trial = v.first),
             ),
             const SizedBox(height: 16),
-            TextFormField(controller: _name, autofocus: true, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
+            TextFormField(controller: _name, autofocus: true, textCapitalization: TextCapitalization.words, decoration: InputDecoration(labelText: 'Name', prefixIcon: Icon(AppIcons.person)), validator: (v) => requiredText(v, 'Enter a name')),
             const SizedBox(height: 12),
-            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone', prefixIcon: Icon(AppIcons.phone)), validator: validatePhone),
+            TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Phone', prefixIcon: Icon(AppIcons.phone)), validator: validatePhone),
             if (!_trial) ...[
               const SizedBox(height: 12),
               AmountField(controller: _price, label: 'Day pass price', onChanged: (_) => setState(() {}), validator: (v) => (parseAmount(v ?? '') ?? 0) <= 0 ? 'Enter the price' : null),

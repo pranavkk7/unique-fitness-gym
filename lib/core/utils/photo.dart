@@ -21,9 +21,9 @@ Future<Uint8List?> pickMemberPhoto(BuildContext context, {bool allowRemove = fal
           mainAxisSize: MainAxisSize.min,
           children: [
             const SheetHeader('Member photo'),
-            ListTile(leading: const Icon(AppIcons.camera), title: const Text('Take a photo'), onTap: () => Navigator.pop(sheetContext, 'camera')),
-            ListTile(leading: const Icon(AppIcons.gallery), title: const Text('Choose from gallery'), onTap: () => Navigator.pop(sheetContext, 'gallery')),
-            if (allowRemove) ListTile(leading: const Icon(AppIcons.delete), title: const Text('Remove photo'), onTap: () => Navigator.pop(sheetContext, 'remove')),
+            ListTile(leading: Icon(AppIcons.camera), title: const Text('Take a photo'), onTap: () => Navigator.pop(sheetContext, 'camera')),
+            ListTile(leading: Icon(AppIcons.gallery), title: const Text('Choose from gallery'), onTap: () => Navigator.pop(sheetContext, 'gallery')),
+            if (allowRemove) ListTile(leading: Icon(AppIcons.delete), title: const Text('Remove photo'), onTap: () => Navigator.pop(sheetContext, 'remove')),
           ],
         ),
       ),

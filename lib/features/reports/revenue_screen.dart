@@ -188,7 +188,7 @@ class _MonthHero extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              Text('${(gym.targetProgress * 100).round()}% of ${formatMoneyCompact(gym.settings.monthlyTarget)} target', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12.5)),
+              Text('${(gym.targetProgress * 100).round()}% of ${formatMoneyCompact(gym.settings.monthlyTarget)} target', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12.5)),
             ]),
           ],
         ],
@@ -291,8 +291,8 @@ class _IncomeVsExpenses extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 4),
             child: Wrap(spacing: 16, runSpacing: 6, children: [
-              const _Legend(color: AppColors.seriesPrimary, label: 'Income'),
-              const _Legend(color: AppColors.seriesCompare, label: 'Expenses'),
+              _Legend(color: AppColors.seriesPrimary, label: 'Income'),
+              _Legend(color: AppColors.seriesCompare, label: 'Expenses'),
               Text('12-month profit ${formatMoneyCompact(totalProfit)}', style: AppText.small.copyWith(color: totalProfit >= 0 ? AppColors.success : AppColors.danger, fontWeight: FontWeight.w800)),
             ]),
           ),
@@ -305,7 +305,7 @@ class _IncomeVsExpenses extends StatelessWidget {
               LineChartData(
                 minY: 0,
                 maxY: maxY,
-                gridData: FlGridData(drawVerticalLine: false, horizontalInterval: step, getDrawingHorizontalLine: (_) => const FlLine(color: AppColors.border, strokeWidth: 1)),
+                gridData: FlGridData(drawVerticalLine: false, horizontalInterval: step, getDrawingHorizontalLine: (_) => FlLine(color: AppColors.border, strokeWidth: 1)),
                 borderData: FlBorderData(show: false),
                 titlesData: FlTitlesData(
                   topTitles: const AxisTitles(),

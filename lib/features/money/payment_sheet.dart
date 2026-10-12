@@ -59,7 +59,7 @@ class _MemberPickerState extends State<_MemberPicker> {
             TextField(
               autofocus: true,
               onChanged: (v) => setState(() => _query = v),
-              decoration: const InputDecoration(hintText: 'Name, phone or UFG code', prefixIcon: Icon(AppIcons.search)),
+              decoration: InputDecoration(hintText: 'Name, phone or UFG code', prefixIcon: Icon(AppIcons.search)),
             ),
             const SizedBox(height: 10),
             Expanded(
@@ -154,11 +154,11 @@ class _PaymentSheetState extends State<_PaymentSheet> {
             UpiQrPanel(show: _method == PayMethod.upi, amount: amount, note: '${memberCode(m.number)} ${m.firstName}'),
             CashChange(show: _method == PayMethod.cash, amount: amount),
             const SizedBox(height: 12),
-            TextField(controller: _note, decoration: const InputDecoration(labelText: 'Note (optional)', prefixIcon: Icon(AppIcons.notes))),
+            TextField(controller: _note, decoration: InputDecoration(labelText: 'Note (optional)', prefixIcon: Icon(AppIcons.notes))),
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: _saving ? null : _save,
-              icon: const Icon(AppIcons.check),
+              icon: Icon(AppIcons.check),
               label: Text(amount > 0 ? 'Record ${formatMoney(amount)}' : 'Record payment'),
             ),
             if (_kind != PaymentKind.membership && m.balanceDue > 0)
@@ -197,7 +197,7 @@ class UpiQrPanel extends StatelessWidget {
               padding: const EdgeInsets.only(top: 14),
               child: Material(
                 color: AppColors.surfaceHigh,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18), side: const BorderSide(color: AppColors.border)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18), side: BorderSide(color: AppColors.border)),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(18),
                   onTap: () => _showLarge(context, link, demo),
@@ -217,7 +217,7 @@ class UpiQrPanel extends StatelessWidget {
                               Text(demo ? 'Sample QR for the demo' : gym.settings.gymName, style: AppText.small.copyWith(color: demo ? AppColors.warning : AppColors.muted)),
                               const SizedBox(height: 6),
                               Row(children: [
-                                const Icon(AppIcons.expand, size: 13, color: AppColors.muted),
+                                Icon(AppIcons.expand, size: 13, color: AppColors.muted),
                                 const SizedBox(width: 4),
                                 Flexible(child: Text('Tap to show it big', style: AppText.small.copyWith(color: AppColors.muted, fontSize: 11.5))),
                               ]),
@@ -347,7 +347,7 @@ class _CashChangeState extends State<CashChange> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [
-                      const Icon(AppIcons.cash, size: 18, color: AppColors.success),
+                      Icon(AppIcons.cash, size: 18, color: AppColors.success),
                       const SizedBox(width: 8),
                       Text('Cash given', style: AppText.label.copyWith(color: AppColors.text)),
                     ]),
@@ -393,20 +393,20 @@ Future<void> showReceiptActions(BuildContext context, String receiptNo, {bool ju
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (justPaid) const Icon(AppIcons.checkCircle, color: AppColors.success, size: 44),
+            if (justPaid) Icon(AppIcons.checkCircle, color: AppColors.success, size: 44),
             const SizedBox(height: 8),
             Text(justPaid ? '${formatMoney(total)} received' : 'Receipt $receiptNo', style: AppText.headline, textAlign: TextAlign.center),
             Text('$receiptNo · ${gym.payerOf(lines.first)}', style: AppText.bodyMuted, textAlign: TextAlign.center),
             const SizedBox(height: 18),
             FilledButton.icon(
-              style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: Colors.white),
+              style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, foregroundColor: AppColors.onWhatsapp),
               onPressed: member == null
                   ? null
                   : () {
                       Navigator.pop(sheetContext);
                       openWhatsApp(context, member.phone, gym.receiptText(receiptNo));
                     },
-              icon: const Icon(AppIcons.chat),
+              icon: Icon(AppIcons.chat),
               label: const Text('Send on WhatsApp'),
             ),
             const SizedBox(height: 10),
@@ -416,7 +416,7 @@ Future<void> showReceiptActions(BuildContext context, String receiptNo, {bool ju
                 Navigator.pop(sheetContext);
                 shareReceiptPdf(context, receiptNo);
               },
-              icon: const Icon(AppIcons.pdf),
+              icon: Icon(AppIcons.pdf),
               label: const Text('Share PDF receipt'),
             ),
             TextButton(onPressed: () => Navigator.pop(sheetContext), child: const Text('Done')),

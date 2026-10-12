@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import 'skin.dart';
+
 /// Motion tokens. One set of durations and curves keeps the whole app moving the same way.
 class Motion {
   Motion._();
@@ -24,9 +26,14 @@ class Motion {
 }
 
 extension EntranceX on Widget {
-  /// Content appears in place. Staggered fade-ins on every list read as decoration, so the app keeps
-  /// motion for the dashboard's one opening moment and for responses to what people do.
-  Widget entrance(BuildContext context, {int index = 0, double offset = 0.06, Duration? delay}) => this;
+  /// Classic fades the widget in and lifts it slightly (give list items their [index] for a stagger).
+  /// Plate & Chalk shows content in place and keeps motion for the dashboard's one opening moment
+  /// and for responses to what people do.
+  Widget entrance(BuildContext context, {int index = 0, double offset = 0.06, Duration? delay}) {
+    if (!Skin.classic || Motion.reduced(context)) return this;
+    final wait = (delay ?? Duration.zero) + Motion.stagger * index.clamp(0, 10);
+    return animate(delay: wait).fadeIn(duration: Motion.medium, curve: Motion.enter).slideY(begin: offset, end: 0, duration: Motion.slow, curve: Motion.settle);
+  }
 
   /// The opt-in version of the old entrance, for the one place a reveal helps.
   Widget reveal(BuildContext context, {Duration delay = Duration.zero}) {

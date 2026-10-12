@@ -70,15 +70,16 @@ class PtPackage {
 // ---------------------------------------------------------------------------------------------
 
 enum ProductCategory {
-  supplement('Supplements', AppIcons.science),
-  drink('Drinks', AppIcons.drink),
-  merch('Merchandise', AppIcons.shirt),
-  gear('Gear', AppIcons.boxing),
-  other('Other', AppIcons.category);
+  supplement('Supplements', 'science'),
+  drink('Drinks', 'drink'),
+  merch('Merchandise', 'shirt'),
+  gear('Gear', 'boxing'),
+  other('Other', 'category');
 
-  const ProductCategory(this.label, this.icon);
+  const ProductCategory(this.label, this._icon);
   final String label;
-  final IconData icon;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
 }
 
 class Product {
@@ -295,12 +296,13 @@ class PlanSection {
 }
 
 enum TrainingPlanKind {
-  workout('Workout plan', AppIcons.barbell),
-  diet('Diet plan', AppIcons.food);
+  workout('Workout plan', 'barbell'),
+  diet('Diet plan', 'food');
 
-  const TrainingPlanKind(this.label, this.icon);
+  const TrainingPlanKind(this.label, this._icon);
   final String label;
-  final IconData icon;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
 }
 
 /// A workout or diet template that trainers assign to members and send as a PDF.
@@ -334,16 +336,17 @@ class TrainingPlan {
 // ---------------------------------------------------------------------------------------------
 
 enum FeedbackCategory {
-  equipment('Equipment', AppIcons.barbell),
-  cleanliness('Cleanliness', AppIcons.cleaning),
-  trainers('Trainers', AppIcons.trainer),
-  timing('Timing & crowd', AppIcons.schedule),
-  facilities('Facilities', AppIcons.shower),
-  other('Other', AppIcons.bubble);
+  equipment('Equipment', 'barbell'),
+  cleanliness('Cleanliness', 'cleaning'),
+  trainers('Trainers', 'trainer'),
+  timing('Timing & crowd', 'schedule'),
+  facilities('Facilities', 'shower'),
+  other('Other', 'bubble');
 
-  const FeedbackCategory(this.label, this.icon);
+  const FeedbackCategory(this.label, this._icon);
   final String label;
-  final IconData icon;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
 }
 
 class FeedbackEntry {

@@ -49,7 +49,7 @@ class ProgressReportsScreen extends StatelessWidget {
               FilledButton.icon(
                 style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: Colors.black),
                 onPressed: pending == 0 ? null : () => runReminderQueue(context, ReminderKind.progress),
-                icon: const Icon(AppIcons.send),
+                icon: Icon(AppIcons.send),
                 label: Text(pending == 0 ? 'All sent' : 'Send all on WhatsApp'),
               ),
             ]),
@@ -59,7 +59,7 @@ class ProgressReportsScreen extends StatelessWidget {
             AppCard(child: RankedBars(items: [for (final r in reports.take(5)) (r.member.name, r.visits.toDouble(), '${r.visits} visits')], color: AppColors.categorical[2])),
           ],
           const SectionHeader('Members'),
-          if (reports.isEmpty) const EmptyState(icon: AppIcons.insights, title: 'No visits yet', subtitle: 'Reports appear once members check in this month.'),
+          if (reports.isEmpty) EmptyState(icon: AppIcons.insights, title: 'No visits yet', subtitle: 'Reports appear once members check in this month.'),
           for (var i = 0; i < reports.length; i++)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
@@ -106,12 +106,12 @@ class _ReportTile extends StatelessWidget {
         ),
         AnimatedSwitcher(
           duration: Motion.fast,
-          child: sent ? const Padding(padding: EdgeInsets.only(right: 4), child: Icon(AppIcons.doneAll, color: AppColors.success, size: 20)) : const SizedBox.shrink(),
+          child: sent ? Padding(padding: EdgeInsets.only(right: 4), child: Icon(AppIcons.doneAll, color: AppColors.success, size: 20)) : const SizedBox.shrink(),
         ),
-        IconButton(tooltip: 'Share PDF', icon: const Icon(AppIcons.pdf, color: AppColors.muted), onPressed: () => shareProgressPdf(context, r.member)),
+        IconButton(tooltip: 'Share PDF', icon: Icon(AppIcons.pdf, color: AppColors.muted), onPressed: () => shareProgressPdf(context, r.member)),
         IconButton(
           tooltip: 'Send on WhatsApp',
-          icon: const Icon(AppIcons.chat, color: AppColors.whatsapp),
+          icon: Icon(AppIcons.chat, color: AppColors.whatsapp),
           onPressed: () async {
             final ok = await openWhatsApp(context, r.member.phone, gym.progressText(r));
             if (ok) await gym.logReminder(ReminderKind.progress, r.member.id);

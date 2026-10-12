@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/theme/app_icons.dart';
+import '../core/theme/skin.dart';
 
 import 'json.dart';
 
@@ -113,19 +114,23 @@ class Plan {
 }
 
 enum ClassType {
-  // Muted plate colours: they tell classes apart on the timetable without competing with alerts.
-  boxing('Boxing & Self-Defence', AppIcons.boxing, Color(0xFF1F5FBF)),
-  kickBoxing('Kick Boxing', AppIcons.martialArts, Color(0xFF3D4A5C)),
-  zumba('Zumba', AppIcons.music, Color(0xFF8A3B6E)),
-  kidsBoxing('Kids Boxing', AppIcons.child, Color(0xFF9A6700)),
-  strength('Strength', AppIcons.barbell, Color(0xFF1B1D21)),
-  cardio('Cardio & HIIT', AppIcons.fire, Color(0xFFB4530A)),
-  yoga('Yoga & Mobility', AppIcons.yoga, Color(0xFF2E7D4F));
+  // Plate & Chalk uses muted plate colours that tell classes apart without competing with alerts;
+  // Classic keeps the original bright ones.
+  boxing('Boxing & Self-Defence', 'boxing', Color(0xFF1F5FBF), Color(0xFFE11D2A)),
+  kickBoxing('Kick Boxing', 'martialArts', Color(0xFF3D4A5C), Color(0xFFFF6B1A)),
+  zumba('Zumba', 'music', Color(0xFF8A3B6E), Color(0xFFFF4DA6)),
+  kidsBoxing('Kids Boxing', 'child', Color(0xFF9A6700), Color(0xFFFFB020)),
+  strength('Strength', 'barbell', Color(0xFF1B1D21), Color(0xFF3B82F6)),
+  cardio('Cardio & HIIT', 'fire', Color(0xFFB4530A), Color(0xFFFFB020)),
+  yoga('Yoga & Mobility', 'yoga', Color(0xFF2E7D4F), Color(0xFF2FD07F));
 
-  const ClassType(this.label, this.icon, this.color);
+  const ClassType(this.label, this._icon, this._color, this._classicColor);
   final String label;
-  final IconData icon;
-  final Color color;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
+  final Color _color;
+  final Color _classicColor;
+  Color get color => Skin.classic ? _classicColor : _color;
 }
 
 class GymClass {
@@ -239,18 +244,19 @@ class CheckIn {
 /// The kinds of WhatsApp message the front desk sends. Each has its own template and its own
 /// "don't send again for N days" window so nobody gets spammed.
 enum ReminderKind {
-  expiring('Expiring soon', AppIcons.hourglassLow, Color(0xFFFFB020), 3),
-  expired('Expired', AppIcons.history, Color(0xFFFF4D4F), 7),
-  due('Pending dues', AppIcons.wallet, Color(0xFFFF6B1A), 3),
-  birthday('Birthdays', AppIcons.cake, Color(0xFFFF4DA6), 1),
-  inactive('Missing workouts', AppIcons.run, Color(0xFF3B82F6), 7),
-  followUp('Enquiry follow-ups', AppIcons.support, Color(0xFFB57BFF), 1),
-  welcome('Welcome', AppIcons.celebrate, Color(0xFF2FD07F), 36500),
-  progress('Progress reports', AppIcons.insights, Color(0xFF199E70), 25);
+  expiring('Expiring soon', 'hourglassLow', Color(0xFFFFB020), 3),
+  expired('Expired', 'history', Color(0xFFFF4D4F), 7),
+  due('Pending dues', 'wallet', Color(0xFFFF6B1A), 3),
+  birthday('Birthdays', 'cake', Color(0xFFFF4DA6), 1),
+  inactive('Missing workouts', 'run', Color(0xFF3B82F6), 7),
+  followUp('Enquiry follow-ups', 'support', Color(0xFFB57BFF), 1),
+  welcome('Welcome', 'celebrate', Color(0xFF2FD07F), 36500),
+  progress('Progress reports', 'insights', Color(0xFF199E70), 25);
 
-  const ReminderKind(this.label, this.icon, this.color, this.cooldownDays);
+  const ReminderKind(this.label, this._icon, this.color, this.cooldownDays);
   final String label;
-  final IconData icon;
+  final String _icon;
+  IconData get icon => AppIcons.named(_icon);
   final Color color;
 
   /// After a message is sent, the person drops off this list for this many days.

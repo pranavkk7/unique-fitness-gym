@@ -41,13 +41,13 @@ class MemberProfileScreen extends StatelessWidget {
     final gym = context.watch<GymProvider>();
     final m = gym.memberById(memberId);
     if (m == null) {
-      return const SubPage(title: 'Member', child: EmptyState(icon: AppIcons.personOff, title: 'Member not found', subtitle: 'They may have been deleted.'));
+      return SubPage(title: 'Member', child: EmptyState(icon: AppIcons.personOff, title: 'Member not found', subtitle: 'They may have been deleted.'));
     }
     return SubPage(
       title: m.firstName,
       subtitle: memberCode(m.number),
       actions: [
-        IconButton(tooltip: 'Edit details', icon: const Icon(AppIcons.edit), onPressed: () => openPage(context, MemberEditScreen(memberId: m.id))),
+        IconButton(tooltip: 'Edit details', icon: Icon(AppIcons.edit), onPressed: () => openPage(context, MemberEditScreen(memberId: m.id))),
         _MoreMenu(member: m),
       ],
       child: ListView(
@@ -166,16 +166,16 @@ class _MoreMenu extends StatelessWidget {
       },
       itemBuilder: (_) => [
         if (frozen)
-          const PopupMenuItem(value: 'unfreeze', child: ListTile(leading: Icon(AppIcons.play), title: Text('End freeze'), contentPadding: EdgeInsets.zero))
+          PopupMenuItem(value: 'unfreeze', child: ListTile(leading: Icon(AppIcons.play), title: Text('End freeze'), contentPadding: EdgeInsets.zero))
         else if (gym.isRunning(member))
-          const PopupMenuItem(value: 'freeze', child: ListTile(leading: Icon(AppIcons.freeze), title: Text('Freeze membership'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'measure', child: ListTile(leading: Icon(AppIcons.scale), title: Text('Add body check'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'face', child: ListTile(leading: Icon(AppIcons.faceId), title: Text('Face ID'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'pt', child: ListTile(leading: Icon(AppIcons.trainer), title: Text('Sell PT package'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'sale', child: ListTile(leading: Icon(AppIcons.bag), title: Text('Shop sale'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'report', child: ListTile(leading: Icon(AppIcons.insights), title: Text('Progress report PDF'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'feedback', child: ListTile(leading: Icon(AppIcons.review), title: Text('Note feedback'), contentPadding: EdgeInsets.zero)),
-        const PopupMenuItem(value: 'delete', child: ListTile(leading: Icon(AppIcons.delete, color: AppColors.danger), title: Text('Delete member'), contentPadding: EdgeInsets.zero)),
+          PopupMenuItem(value: 'freeze', child: ListTile(leading: Icon(AppIcons.freeze), title: Text('Freeze membership'), contentPadding: EdgeInsets.zero)),
+        PopupMenuItem(value: 'measure', child: ListTile(leading: Icon(AppIcons.scale), title: Text('Add body check'), contentPadding: EdgeInsets.zero)),
+        PopupMenuItem(value: 'face', child: ListTile(leading: Icon(AppIcons.faceId), title: Text('Face ID'), contentPadding: EdgeInsets.zero)),
+        PopupMenuItem(value: 'pt', child: ListTile(leading: Icon(AppIcons.trainer), title: Text('Sell PT package'), contentPadding: EdgeInsets.zero)),
+        PopupMenuItem(value: 'sale', child: ListTile(leading: Icon(AppIcons.bag), title: Text('Shop sale'), contentPadding: EdgeInsets.zero)),
+        PopupMenuItem(value: 'report', child: ListTile(leading: Icon(AppIcons.insights), title: Text('Progress report PDF'), contentPadding: EdgeInsets.zero)),
+        PopupMenuItem(value: 'feedback', child: ListTile(leading: Icon(AppIcons.review), title: Text('Note feedback'), contentPadding: EdgeInsets.zero)),
+        PopupMenuItem(value: 'delete', child: ListTile(leading: Icon(AppIcons.delete, color: AppColors.danger), title: Text('Delete member'), contentPadding: EdgeInsets.zero)),
       ],
     );
   }
@@ -204,12 +204,12 @@ class _Header extends StatelessWidget {
               bottom: 2,
               child: Material(
                 color: AppColors.primary,
-                shape: const CircleBorder(side: BorderSide(color: AppColors.background, width: 3)),
+                shape: CircleBorder(side: BorderSide(color: AppColors.background, width: 3)),
                 child: IconButton(
                   tooltip: member.hasPhoto ? 'Change photo' : 'Add photo',
                   iconSize: 18,
                   visualDensity: VisualDensity.compact,
-                  icon: const Icon(AppIcons.camera, color: Colors.white),
+                  icon: Icon(AppIcons.camera, color: Colors.white),
                   onPressed: () async {
                     final bytes = await pickMemberPhoto(context, allowRemove: member.hasPhoto);
                     if (bytes == null) return;
@@ -292,7 +292,7 @@ class _ContactActions extends StatelessWidget {
                   onTap: () => Navigator.pop(sheetContext, k),
                 ),
               ListTile(
-                leading: const IconBadge(AppIcons.editNote, color: AppColors.textSecondary, size: 38),
+                leading: IconBadge(AppIcons.editNote, color: AppColors.textSecondary, size: 38),
                 title: const Text('Blank message'),
                 onTap: () => Navigator.pop(sheetContext, null),
               ),
@@ -367,7 +367,7 @@ class _MembershipCard extends StatelessWidget {
               Expanded(
                 child: FilledButton.icon(
                   onPressed: () => showRenewSheet(context, member),
-                  icon: const Icon(AppIcons.renew),
+                  icon: Icon(AppIcons.renew),
                   label: const Text('Renew'),
                 ),
               ),
@@ -376,7 +376,7 @@ class _MembershipCard extends StatelessWidget {
                 child: OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(minimumSize: const Size(0, 54)),
                   onPressed: () => showCollectPayment(context, member: member),
-                  icon: const Icon(AppIcons.rupee),
+                  icon: Icon(AppIcons.rupee),
                   label: const Text('Payment'),
                 ),
               ),
@@ -402,7 +402,7 @@ class _DueBanner extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
       child: Row(
         children: [
-          const Icon(AppIcons.error, color: AppColors.danger),
+          Icon(AppIcons.error, color: AppColors.danger),
           const SizedBox(width: 12),
           Expanded(child: Text('${formatMoney(member.balanceDue)} balance due', style: AppText.title.copyWith(color: AppColors.danger, fontSize: 15.5))),
           TextButton(
@@ -455,13 +455,13 @@ class _Attendance extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: today
-                ? const StatusPill('Checked in today', color: AppColors.success, icon: AppIcons.checkCircle)
+                ? StatusPill('Checked in today', color: AppColors.success, icon: AppIcons.checkCircle)
                 : OutlinedButton.icon(
                     onPressed: () async {
                       final r = await gym.checkIn(member.id, allowExpired: true);
                       if (context.mounted) showMessage(context, r == CheckInOutcome.recorded ? '${member.firstName} checked in.' : 'Already checked in today.');
                     },
-                    icon: const Icon(AppIcons.login),
+                    icon: Icon(AppIcons.login),
                     label: const Text('Check in now'),
                   ),
           ),
@@ -493,7 +493,7 @@ class _Progress extends StatelessWidget {
                 style: AppText.bodyMuted,
               ),
             ),
-            const Icon(AppIcons.add, color: AppColors.muted),
+            Icon(AppIcons.add, color: AppColors.muted),
           ],
         ),
       );
@@ -530,7 +530,7 @@ class _Progress extends StatelessWidget {
               LineChartData(
                 minY: minY,
                 maxY: maxY,
-                gridData: FlGridData(drawVerticalLine: false, horizontalInterval: step, getDrawingHorizontalLine: (_) => const FlLine(color: AppColors.border, strokeWidth: 1)),
+                gridData: FlGridData(drawVerticalLine: false, horizontalInterval: step, getDrawingHorizontalLine: (_) => FlLine(color: AppColors.border, strokeWidth: 1)),
                 borderData: FlBorderData(show: false),
                 titlesData: FlTitlesData(
                   topTitles: const AxisTitles(),
@@ -628,7 +628,7 @@ class _History extends StatelessWidget {
   Widget build(BuildContext context) {
     final gym = context.watch<GymProvider>();
     final subs = gym.subscriptionsFor(member.id);
-    if (subs.isEmpty) return const AppCard(child: Text('No memberships recorded.', style: AppText.bodyMuted));
+    if (subs.isEmpty) return AppCard(child: Text('No memberships recorded.', style: AppText.bodyMuted));
     return AppCard(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
       child: Column(
@@ -696,7 +696,7 @@ class _Payments extends StatelessWidget {
   Widget build(BuildContext context) {
     final gym = context.watch<GymProvider>();
     final payments = gym.paymentsFor(member.id);
-    if (payments.isEmpty) return const AppCard(child: Text('No payments yet.', style: AppText.bodyMuted));
+    if (payments.isEmpty) return AppCard(child: Text('No payments yet.', style: AppText.bodyMuted));
     // One row per receipt (an admission has a fee line and a plan line on one receipt).
     final receipts = <String, List<Payment>>{};
     for (final p in payments) {
@@ -714,7 +714,7 @@ class _Payments extends StatelessWidget {
               isThreeLine: true,
               trailing: IconButton(
                 tooltip: 'Share receipt',
-                icon: const Icon(AppIcons.share),
+                icon: Icon(AppIcons.share),
                 onPressed: () => showReceiptActions(context, e.key),
               ),
             ),

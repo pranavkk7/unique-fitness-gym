@@ -34,7 +34,7 @@ class DeviceScreen extends StatelessWidget {
     return SubPage(
       title: 'Face ID device',
       subtitle: device.configured ? device.label : 'eSSL / ZKTeco terminal',
-      actions: [IconButton(tooltip: 'Setup guide', icon: const Icon(AppIcons.help), onPressed: () => _openGuide(context))],
+      actions: [IconButton(tooltip: 'Setup guide', icon: Icon(AppIcons.help), onPressed: () => _openGuide(context))],
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 40),
         children: [
@@ -82,7 +82,7 @@ class DeviceScreen extends StatelessWidget {
           ),
           SectionHeader('Not registered yet · ${notRegistered.length}'),
           if (notRegistered.isEmpty)
-            const AppCard(child: Text('Every member with a running plan has Face ID.', style: AppText.bodyMuted))
+            AppCard(child: Text('Every member with a running plan has Face ID.', style: AppText.bodyMuted))
           else
             for (final m in notRegistered.take(20))
               MemberTile(
@@ -100,14 +100,14 @@ class DeviceScreen extends StatelessWidget {
               MemberTile(
                 member: m,
                 subtitle: 'Device ID ${m.deviceUserId} · ${gym.statusOf(m) == MemberStatus.frozen ? 'frozen' : (gym.daysLeft(m) < 0 ? 'plan ended' : 'unpaid dues')}',
-                trailing: const Icon(AppIcons.block, color: AppColors.danger),
+                trailing: Icon(AppIcons.block, color: AppColors.danger),
               ),
           ],
           const SectionHeader('Members already on the device'),
           AppCard(
             onTap: device.busy ? null : () => _showLinkSheet(context),
             child: Row(children: [
-              const IconBadge(AppIcons.link, color: AppColors.seriesCompare),
+              IconBadge(AppIcons.link, color: AppColors.seriesCompare),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -115,7 +115,7 @@ class DeviceScreen extends StatelessWidget {
                   Text('For faces enrolled before the app. Names are matched for you.', style: AppText.small.copyWith(color: AppColors.muted)),
                 ]),
               ),
-              const Icon(AppIcons.chevronRight, color: AppColors.muted),
+              Icon(AppIcons.chevronRight, color: AppColors.muted),
             ]),
           ),
           if (!device.isDemo && device.configured) ...[
@@ -149,7 +149,7 @@ class _FirstTimeCard extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          const IconBadge(AppIcons.rocket, color: AppColors.primaryBright),
+          IconBadge(AppIcons.rocket, color: AppColors.primaryBright),
           const SizedBox(width: 12),
           Expanded(child: Text('First-time setup', style: AppText.headline.copyWith(fontSize: 20))),
         ]),
@@ -159,7 +159,7 @@ class _FirstTimeCard extends StatelessWidget {
           style: AppText.body.copyWith(color: AppColors.textSecondary, height: 1.4),
         ),
         const SizedBox(height: 14),
-        SizedBox(width: double.infinity, child: FilledButton.icon(onPressed: onGuide, icon: const Icon(AppIcons.guide), label: const Text('Open setup guide'))),
+        SizedBox(width: double.infinity, child: FilledButton.icon(onPressed: onGuide, icon: Icon(AppIcons.guide), label: const Text('Open setup guide'))),
       ]),
     );
   }
@@ -195,7 +195,7 @@ class _StatusHero extends StatelessWidget {
                 style: AppText.small.copyWith(color: Colors.white70),
               ),
             ),
-            const Icon(AppIcons.faceId, color: Colors.white70, size: 30),
+            Icon(AppIcons.faceId, color: Colors.white70, size: 30),
           ]),
           const SizedBox(height: 14),
           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
@@ -209,12 +209,12 @@ class _StatusHero extends StatelessWidget {
             if (info != null)
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 Text('${info.faces} faces', style: AppText.headline.copyWith(fontSize: 20, color: Colors.white)),
-                Text('${info.records} door entries stored', style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
+                Text('${info.records} door entries stored', style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
               ]),
           ]),
           if (device.error != null) ...[
             const SizedBox(height: 10),
-            Text(device.error!, style: const TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontWeight: FontWeight.w600)),
+            Text(device.error!, style: TextStyle(fontFamilyFallback: AppText.fallback, fontFamily: AppText.bodyFont, color: Colors.white, fontWeight: FontWeight.w600)),
           ],
           const SizedBox(height: 16),
           Row(children: [
@@ -230,8 +230,8 @@ class _StatusHero extends StatelessWidget {
                         } catch (_) {/* shown on the card */}
                       },
                 icon: device.busy
-                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2.4, color: AppColors.primaryDeep))
-                    : const Icon(AppIcons.sync),
+                    ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2.4, color: AppColors.primaryDeep))
+                    : Icon(AppIcons.sync),
                 label: Text(device.busy ? 'Syncing' : 'Sync now'),
               ),
             ),
@@ -306,7 +306,7 @@ class _ConnectionFormState extends State<_ConnectionForm> {
     return AppCard(
       padding: const EdgeInsets.all(16),
       child: Column(children: [
-        TextField(controller: _host, keyboardType: TextInputType.url, decoration: const InputDecoration(labelText: 'Device IP address', hintText: 'e.g. 192.168.1.201', prefixIcon: Icon(AppIcons.router))),
+        TextField(controller: _host, keyboardType: TextInputType.url, decoration: InputDecoration(labelText: 'Device IP address', hintText: 'e.g. 192.168.1.201', prefixIcon: Icon(AppIcons.router))),
         const SizedBox(height: 12),
         Row(children: [
           Expanded(child: TextField(controller: _port, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Port'))),
@@ -375,7 +375,7 @@ class _LinkSheet extends StatelessWidget {
           SheetHeader('Match device users', subtitle: '${unlinked.length} people on the device are not linked to a member.'),
           Expanded(
             child: unlinked.isEmpty
-                ? const EmptyState(icon: AppIcons.taskDone, title: 'All matched', subtitle: 'Every person on the device is linked to a member.')
+                ? EmptyState(icon: AppIcons.taskDone, title: 'All matched', subtitle: 'Every person on the device is linked to a member.')
                 : ListView.builder(
                     itemCount: unlinked.length,
                     itemBuilder: (context, i) {

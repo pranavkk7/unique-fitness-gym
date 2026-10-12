@@ -112,7 +112,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
           children: [
             const SectionHeader('Gym', padding: EdgeInsets.fromLTRB(2, 10, 2, 12)),
-            TextFormField(controller: _gymName, decoration: const InputDecoration(labelText: 'Gym name', prefixIcon: Icon(AppIcons.store)), validator: (v) => requiredText(v, 'Enter the gym name')),
+            TextFormField(controller: _gymName, decoration: InputDecoration(labelText: 'Gym name', prefixIcon: Icon(AppIcons.store)), validator: (v) => requiredText(v, 'Enter the gym name')),
             const SizedBox(height: 12),
             Row(children: [
               Expanded(child: TextFormField(controller: _branch, decoration: const InputDecoration(labelText: 'Branch'))),
@@ -120,23 +120,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Expanded(child: TextFormField(controller: _owner, decoration: const InputDecoration(labelText: 'Owner name'))),
             ]),
             const SizedBox(height: 12),
-            TextFormField(controller: _address, maxLines: 2, decoration: const InputDecoration(labelText: 'Address (on receipts)', prefixIcon: Icon(AppIcons.place))),
+            TextFormField(controller: _address, maxLines: 2, decoration: InputDecoration(labelText: 'Address (on receipts)', prefixIcon: Icon(AppIcons.place))),
             const SizedBox(height: 12),
-            TextFormField(controller: _tagline, decoration: const InputDecoration(labelText: 'Tagline (on receipts)', prefixIcon: Icon(AppIcons.sparkle))),
+            TextFormField(controller: _tagline, decoration: InputDecoration(labelText: 'Tagline (on receipts)', prefixIcon: Icon(AppIcons.sparkle))),
             const SizedBox(height: 12),
             Row(children: [
-              Expanded(child: TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Gym phone (in messages)', prefixIcon: Icon(AppIcons.call)))),
+              Expanded(child: TextFormField(controller: _phone, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Gym phone (in messages)', prefixIcon: Icon(AppIcons.call)))),
               const SizedBox(width: 10),
               Expanded(child: TextFormField(controller: _altPhone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Second phone'))),
             ]),
             const SizedBox(height: 12),
             TextFormField(
               controller: _upi,
-              decoration: const InputDecoration(labelText: 'UPI ID for scan-to-pay', hintText: 'e.g. uniquefitness@okaxis', prefixIcon: Icon(AppIcons.qrCode)),
+              decoration: InputDecoration(labelText: 'UPI ID for scan-to-pay', hintText: 'e.g. uniquefitness@okaxis', prefixIcon: Icon(AppIcons.qrCode)),
               validator: (v) => (v == null || v.trim().isEmpty || RegExp(r'^[\w.\-]{2,}@[a-zA-Z]{2,}$').hasMatch(v.trim())) ? null : 'Check the UPI ID (name@bank)',
             ),
             const SizedBox(height: 12),
-            TextFormField(controller: _ownerPhone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Owner\'s WhatsApp (day-close report)', prefixIcon: Icon(AppIcons.closeDay))),
+            TextFormField(controller: _ownerPhone, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Owner\'s WhatsApp (day-close report)', prefixIcon: Icon(AppIcons.closeDay))),
             const SectionHeader('Money'),
             Row(children: [
               Expanded(child: AmountField(controller: _fee, label: 'Admission fee')),
@@ -160,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(children: [
                 ListTile(
-                  leading: const IconBadge(AppIcons.pin, color: AppColors.primaryBright, size: 38),
+                  leading: IconBadge(AppIcons.pin, color: AppColors.primaryBright, size: 38),
                   title: Text(gym.settings.hasPin ? 'Change owner PIN' : 'Set an owner PIN'),
                   subtitle: const Text('Staff can use the desk; revenue, expenses and settings need the PIN.'),
                   onTap: () async {
@@ -169,7 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 if (gym.settings.hasPin)
                   ListTile(
-                    leading: const IconBadge(AppIcons.lockOpen, color: AppColors.muted, size: 38),
+                    leading: IconBadge(AppIcons.lockOpen, color: AppColors.muted, size: 38),
                     title: const Text('Remove PIN'),
                     onTap: () async {
                       if (await confirmAction(context, title: 'Remove PIN?', message: 'Everyone using this phone will see income and settings.', confirmLabel: 'Remove')) {
@@ -184,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(children: [
                 ListTile(
-                  leading: const IconBadge(AppIcons.upload, color: AppColors.success, size: 38),
+                  leading: IconBadge(AppIcons.upload, color: AppColors.success, size: 38),
                   title: const Text('Back up now'),
                   subtitle: const Text('Save everything, photos included, to Drive or WhatsApp'),
                   onTap: _backup,
@@ -202,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () => shareFile(context, name: 'ufg-members-${isoDay(gym.today)}.csv', content: gym.exportMembersCsv(), mimeType: 'text/csv'),
                 ),
                 ListTile(
-                  leading: const IconBadge(AppIcons.sparkle, color: AppColors.ember, size: 38),
+                  leading: IconBadge(AppIcons.sparkle, color: AppColors.ember, size: 38),
                   title: const Text('Load demo data'),
                   subtitle: const Text('Fictional members to try the app'),
                   onTap: () async {
@@ -212,7 +212,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 ListTile(
-                  leading: const IconBadge(AppIcons.deleteForever, color: AppColors.danger, size: 38),
+                  leading: IconBadge(AppIcons.deleteForever, color: AppColors.danger, size: 38),
                   title: const Text('Erase all data'),
                   subtitle: const Text('Keeps gym details and PIN'),
                   onTap: () async {
