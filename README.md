@@ -219,3 +219,8 @@ flutter test tool/screenshots_test.dart --update-goldens --dart-define=SKIN=nigh
   permission.
 - **Fonts and icons:** Archivo and Barlow (SIL Open Font License), Phosphor icons (MIT), Material
   icons (Apache 2.0) and a rupee-sign subset of Roboto (Apache 2.0). Licences are in `assets/fonts`.
+
+## Licence
+
+All rights reserved. The app was made for one gym, and the code is published for viewing only:
+see [LICENSE](LICENSE). Fonts and icons keep their own licences (above).
